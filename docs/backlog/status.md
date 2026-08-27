@@ -6,10 +6,10 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Pendente
 
-- **`jogo/jogo.py` ainda está na fatia 2** (só labirinto + movimento do jogador). Para cumprir o
-  papel de demo pronta, precisa ser levado até o jogo completo do design: bons hábitos, tentações
-  com IA, oração (power-pellet), estatura, vidas, 4 fases e telas (inicial/vitória/derrota). Ver
-  `docs/design-do-jogo.md`.
+- **`jogo/jogo.py` — playtest visual pendente.** A 1ª versão completa está escrita (ver Feito
+  2026-08-27), mas só foi validada headless (sintaxe + conectividade do mapa + simulação de
+  lógica). Falta rodar numa máquina com tela para ajustar velocidades, tamanho da janela,
+  legibilidade e "sensação" do movimento. Sprites e sons continuam fora (item à parte).
 - **`apresentacao.html` dos módulos 0, 1 e 2** — combinado com o usuário deixar a apresentação
   HTML por último, só depois do `material-professor.md`/`material-aluno.md` de cada módulo estar
   revisado. Os `.md` dos três já estão prontos; falta gerar os slides quando o usuário confirmar
@@ -27,7 +27,15 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   mostrada aos alunos no Módulo 1 como motivação ("propaganda"). Passa a ser desenvolvido como
   entregável completo e independente — não fatiado pelos módulos; a invariante "nunca vazar
   conceito futuro" não se aplica a ele. Atualizado: `CLAUDE.md`, `docs/design-do-jogo.md`,
-  `jogo/README.md`, novo `.claude/rules/jogo.md`. Falta escrever o jogo completo (ver Pendente).
+  `jogo/README.md`, novo `.claude/rules/jogo.md`.
+- 2026-08-27 — **1ª versão completa de `jogo/jogo.py` escrita.** Labirinto Pac-Man 19×17 (mapa
+  como lista de strings), jogador alinhado à grade (classe-base `AndarilhoDaGrade`), tentações
+  com IA simples (aleatório + perseguir, fogem no modo oração, voltam pra casa quando vencidas),
+  oração como power-pellet (6 s), estatura, 3 vidas, 4 fases com dificuldade crescente, telas de
+  início/intervalo/vitória/derrota com Lucas 2:52. Tudo com formas (sem assets, v1). A tela de
+  derrota dá destaque a **JESUS** ("já venceu na cruz") e exorta à perseverança nas disciplinas
+  espirituais (Romanos 8:37) — o jogo nunca diz que o pecado venceu. Validado headless
+  (`py_compile`, flood-fill do mapa, simulação da lógica das 4 fases). Falta playtest visual.
 - 2026-08-22 — Harness do `.claude/` limpo (removido material do projeto PontoWeb30, que estava
   aqui por engano) e reconstruído para este projeto via `harness-architect`.
 - 2026-08-22 — Ferramentas do curso definidas: Thonny único (Pydroid e Google Colab descartados).
