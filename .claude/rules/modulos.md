@@ -9,8 +9,9 @@ paths:
   foram ensinados até aquele ponto. Não use nem exija nada além disso no `exemplo.py` ou no
   roteiro (ver invariante "nunca vazar conceito futuro" no `CLAUDE.md`).
 - `exemplo.py` roda no **VS Code** com Pygame Zero (`import pgzrun` no topo, `pgzrun.go()` no
-  final), usando o venv `ambiente-virtual/.venv/` do projeto como interpretador. Não escreva código que dependa
-  de Thonny, Pydroid/Android ou Google Colab — todos descartados como ferramentas do curso.
+  final). Para validar (`py_compile`), use o venv do jogo (`jogo/.venv/`); na aula, o aluno roda
+  no `.venv/` que ele cria no Módulo 1. Não escreva código que dependa de Thonny, Pydroid/Android
+  ou Google Colab — todos descartados como ferramentas do curso.
 - Mantenha comentários e textos de tela em português, tom simples e direto para criança de 9-11
   anos.
 - Ao introduzir um item novo do jogo (hábito bom/ruim), mantenha coerência com a lista já

@@ -60,7 +60,8 @@ jogo/
 
 - **Pygame Zero**: `import pgzrun` no topo, `pgzrun.go()` no fim; `WIDTH`/`HEIGHT`, `draw()`,
   `update(dt)`, `on_key_down`.
-- Roda com o venv `ambiente-virtual/.venv/` (Python 3.12). Tem que passar `py_compile`.
+- Roda com o venv próprio do jogo em `jogo/.venv/` (Python 3.12; ver `jogo/README.md`). Tem que
+  passar `py_compile`.
 - Comentários e textos de tela em **português**, tom para criança de 9–11 anos.
 - v1 desenha tudo com formas (`Rect`, `screen.draw.filled_circle`) e cores — sem assets. Sprites
   e sons entram como item separado do backlog.

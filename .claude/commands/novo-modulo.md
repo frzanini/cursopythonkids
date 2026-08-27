@@ -18,7 +18,7 @@ argument-hint: "<número> <slug-curto>"
    - `apresentacao.html` — slides autocontidos (sem CDN/internet) resumindo os conceitos e a
      parte do jogo do módulo.
    - `exemplo.py` — evoluindo o exemplo do módulo anterior, usando só conceitos já liberados.
-4. Rode `ambiente-virtual\.venv\Scripts\python.exe -m py_compile docs/modulo-$ARGUMENTS/exemplo.py` e conserte até
+4. Rode `jogo\.venv\Scripts\python.exe -m py_compile docs/modulo-$ARGUMENTS/exemplo.py` e conserte até
    compilar limpo.
 5. Atualize a tabela de módulos em `docs/crescendo-como-jesus-conteudo-programatico.md` com o
    link do novo módulo.

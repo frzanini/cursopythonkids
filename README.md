@@ -28,23 +28,27 @@ Módulos 3–12 ainda não escritos. Ver `docs/backlog/status.md`.
 
 ## Ambiente de desenvolvimento
 
-Projeto determinístico: **Python 3.12** (versão fixa — tem wheel pré-compilada de `pygame`),
-venv próprio e `requirements.txt` com versões exatas.
+**Python 3.12** (versão fixa — tem wheel pré-compilada de `pygame`), gerido com
+[`uv`](https://docs.astral.sh/uv/). Dois ambientes:
+
+- **Jogo de referência** (`jogo/`): venv próprio em `jogo/.venv/` + `jogo/requirements.txt`.
+  Passo a passo completo em **[`jogo/README.md`](jogo/README.md)**.
+- **Lado do aluno**: cada aluno cria o `.venv/` dele na raiz durante o Módulo 1
+  (ver `docs/preparacao-ambiente/instalacao_vscode.md`).
+
+Rodar o jogo de referência:
 
 ```sh
-py -3.12 -m venv ambiente-virtual/.venv
-ambiente-virtual\.venv\Scripts\python.exe -m pip install -r requirements.txt
+uv venv --python 3.12 jogo/.venv
+uv pip install --python jogo/.venv/Scripts/python.exe -r jogo/requirements.txt
+jogo/.venv/Scripts/python.exe jogo/jogo.py
 ```
 
-No VS Code: `Ctrl+Shift+P` → *Python: Select Interpreter* → `ambiente-virtual/.venv`.
-
-Validar a sintaxe de um exemplo:
+Validar a sintaxe de um exemplo de módulo:
 
 ```sh
-ambiente-virtual\.venv\Scripts\python.exe -m py_compile docs/<modulo>/exemplo.py
+jogo/.venv/Scripts/python.exe -m py_compile docs/<modulo>/exemplo.py
 ```
-
-Rodar o jogo: no VS Code, com o venv selecionado, botão **Run Python File**.
 
 ## Ferramentas do curso
 

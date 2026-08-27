@@ -20,20 +20,23 @@ removido) — ver `docs/backlog/status.md`.
 
 ## Ambiente
 
-Projeto **determinístico**: venv próprio em `ambiente-virtual/.venv/` (Python 3.12 — versão fixa,
-com wheel de `pygame` disponível) + `requirements.txt` com versões exatas (`pip freeze`). Não
-usar o Python global da máquina. Criar/recriar: `py -3.12 -m venv ambiente-virtual/.venv` seguido
-de `ambiente-virtual\.venv\Scripts\python.exe -m pip install -r requirements.txt`. No VS Code,
-selecionar esse venv como interpretador (`Ctrl+Shift+P` → *Python: Select Interpreter* →
-`ambiente-virtual/.venv`).
+Dois ambientes, ambos Python 3.12 (versão fixa — wheel de `pygame` disponível) e geridos com
+`uv`. Nenhum usa o Python global da máquina.
+
+- **Jogo de referência:** venv próprio em `jogo/.venv/` + `jogo/requirements.txt` (versões
+  travadas). Setup completo em `jogo/README.md`. É o ambiente que os agentes usam para rodar/
+  validar o gabarito.
+- **Lado do aluno:** cada aluno cria o `.venv/` dele na raiz durante o Módulo 1 (ver
+  `docs/modulo-01-*/` e `docs/preparacao-ambiente/instalacao_vscode.md`). Não é versionado nem
+  mantido aqui.
 
 ## Comandos
 
-- validar sintaxe de um exemplo: `ambiente-virtual\.venv\Scripts\python.exe -m py_compile docs/<modulo>/exemplo.py`
-  (roda automaticamente via hook a cada edição de `exemplo.py`, ver `.claude/settings.json`)
-- rodar de fato o jogo: no VS Code, com o venv selecionado como interpretador, botão **Run
-  Python File** ou terminal `ambiente-virtual\.venv\Scripts\python.exe jogo.py` — este ambiente de
-  agente não tem display, então não dá pra abrir a janela do jogo aqui, só checar sintaxe/import.
+- validar sintaxe de um exemplo: `jogo\.venv\Scripts\python.exe -m py_compile docs/<modulo>/exemplo.py`
+  (o hook em `.claude/settings.json` também roda `py_compile` via `py` a cada edição de `exemplo.py`)
+- rodar/validar o jogo: `jogo\.venv\Scripts\python.exe jogo\jogo.py` (abre a janela) ou
+  `... -m py_compile jogo\jogo.py` — este ambiente de agente não tem display, então aqui só dá
+  pra checar sintaxe/import, não abrir a janela.
 
 ## Invariantes (nunca quebrar)
 
