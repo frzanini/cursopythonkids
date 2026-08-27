@@ -10,6 +10,10 @@ preparação, sem código) ensinando programação a crianças de 9–11 anos at
 incremental de um jogo cristão inspirado em Lucas 2:52. Ver
 `docs/crescendo-como-jesus-conteudo-programatico.md` para o programa completo.
 
+O jogo de referência em `jogo/` é entregue **pronto e jogável** (não fatiado): serve de gabarito
+para os módulos e, principalmente, de **demonstração** para animar os alunos no início do curso
+("no fim, o seu vai ficar assim"). Design completo em `docs/design-do-jogo.md`.
+
 ## Stack
 
 Python + Pygame Zero, editado e executado no **VS Code**. Thonny, Pydroid 3 (Android) e Google
@@ -25,7 +29,7 @@ Dois ambientes, ambos Python 3.12 (versão fixa — wheel de `pygame` disponíve
 
 - **Jogo de referência:** venv próprio em `jogo/.venv/` + `jogo/requirements.txt` (versões
   travadas). Setup completo em `jogo/README.md`. É o ambiente que os agentes usam para rodar/
-  validar o gabarito.
+  validar o gabarito (a demo pronta).
 - **Lado do aluno:** cada aluno cria o `.venv/` dele na raiz durante o Módulo 1 (ver
   `docs/modulo-01-*/` e `docs/preparacao-ambiente/instalacao_vscode.md`). Não é versionado nem
   mantido aqui.

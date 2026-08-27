@@ -21,9 +21,9 @@ força para vencer as tentações por alguns segundos.
 
 O versículo (Lucas 2:52) aparece na tela inicial e na tela de vitória.
 
-## Jogo de referência (pasta `jogo/`)
+## Jogo de referência / demo (pasta `jogo/`)
 
-Todo o código-fonte do jogo de referência (o "gabarito") mora em **`jogo/`** na raiz:
+Todo o código-fonte do jogo mora em **`jogo/`** na raiz:
 
 ```
 jogo/
@@ -33,8 +33,18 @@ jogo/
   README.md      # como rodar
 ```
 
-É o gabarito jogável — os módulos do curso reconstroem ele por partes, e cada
-`docs/modulo-NN/exemplo.py` é um recorte parcial desse alvo.
+Tem **dois papéis**:
+
+1. **Demo motivacional** — é um jogo **completo e jogável**, mostrado pronto aos alunos logo no
+   começo do curso (Módulo 1) como "propaganda": eles veem onde vão chegar e se animam a
+   construir o seu. Por isso é desenvolvido **até o fim, de uma vez** — não acompanha o ritmo
+   fatiado dos módulos.
+2. **Gabarito** — é o alvo que o curso reconstrói por partes; cada `docs/modulo-NN/exemplo.py`
+   é um recorte parcial deste jogo.
+
+Os módulos nunca "cortam" o `jogo/jogo.py` para o estado de uma aula — o fatiamento vive só nos
+`exemplo.py`. A invariante "nunca vazar conceito futuro" (`CLAUDE.md`) vale para os `exemplo.py`,
+**não** para `jogo/jogo.py`.
 
 ### Regras
 
@@ -116,8 +126,10 @@ Isso troca a instrução hoje presente no guia de instalação e no Módulo 1 (q
 
 - **Módulo 0** — inalterado.
 - **`docs/crescendo-como-jesus-conteudo-programatico.md`** — reescrever a descrição do jogo
-  (Snake → Pac-Man), a tabela de módulos (acima) e a lista de itens bons/ruins.
-- **Módulo 1** — ajustar a seção "O jogo que vamos construir" para o Pac-Man cristão.
+  (Snake → Pac-Man), a tabela de módulos (acima) e a lista de itens bons/ruins; registrar que o
+  **jogo pronto é demonstrado no Módulo 1** (bloco de demonstração).
+- **Módulo 1** — ajustar a seção "O jogo que vamos construir" para o Pac-Man cristão e incluir a
+  **demonstração do jogo pronto** (rodar `jogo/jogo.py` na aula) como gancho de motivação.
 - **Módulo 2** — ajustar as partes que descrevem o personagem/decisão no contexto do jogo novo.
 - **`CLAUDE.md`** — trocar "mecânica da cobrinha" pela de labirinto; apontar o código-fonte do
   jogo para `jogo/jogo.py` (hoje diz `jogo.py` na raiz); conferir invariantes.

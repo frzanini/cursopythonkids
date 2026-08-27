@@ -6,6 +6,10 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Pendente
 
+- **`jogo/jogo.py` ainda está na fatia 2** (só labirinto + movimento do jogador). Para cumprir o
+  papel de demo pronta, precisa ser levado até o jogo completo do design: bons hábitos, tentações
+  com IA, oração (power-pellet), estatura, vidas, 4 fases e telas (inicial/vitória/derrota). Ver
+  `docs/design-do-jogo.md`.
 - **`apresentacao.html` dos módulos 0, 1 e 2** — combinado com o usuário deixar a apresentação
   HTML por último, só depois do `material-professor.md`/`material-aluno.md` de cada módulo estar
   revisado. Os `.md` dos três já estão prontos; falta gerar os slides quando o usuário confirmar
@@ -19,6 +23,11 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Feito
 
+- 2026-08-27 — **Redefinido o papel de `jogo/`**: além de gabarito, é a **demo pronta** do curso,
+  mostrada aos alunos no Módulo 1 como motivação ("propaganda"). Passa a ser desenvolvido como
+  entregável completo e independente — não fatiado pelos módulos; a invariante "nunca vazar
+  conceito futuro" não se aplica a ele. Atualizado: `CLAUDE.md`, `docs/design-do-jogo.md`,
+  `jogo/README.md`, novo `.claude/rules/jogo.md`. Falta escrever o jogo completo (ver Pendente).
 - 2026-08-22 — Harness do `.claude/` limpo (removido material do projeto PontoWeb30, que estava
   aqui por engano) e reconstruído para este projeto via `harness-architect`.
 - 2026-08-22 — Ferramentas do curso definidas: Thonny único (Pydroid e Google Colab descartados).
