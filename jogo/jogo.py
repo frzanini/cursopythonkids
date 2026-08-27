@@ -73,42 +73,55 @@ class Jogador:
         self.prox_dx = 0     # direcao que o jogador pediu e esta "guardada"
         self.prox_dy = 0
 
+    def parado(self):
+        return self.dx == 0 and self.dy == 0
+
     def pedir_direcao(self, dx, dy):
-        self.prox_dx = dx
-        self.prox_dy = dy
-        # Se o jogador pediu exatamente o contrario de onde vai, vira na hora.
-        if (dx, dy) == (-self.dx, -self.dy):
+        # Reversao imediata: se ja esta andando e pediu o contrario, vira na hora
+        # passando a "sair" do quadradinho para onde estava indo.
+        if not self.parado() and (dx, dy) == (-self.dx, -self.dy):
+            self.col += self.dx
+            self.linha += self.dy
             self.dx, self.dy = dx, dy
+            self.prox_dx = self.prox_dy = 0
+        else:
+            self.prox_dx, self.prox_dy = dx, dy
+
+    def _decidir_no_centro(self):
+        """Ja esta encaixado no centro de um quadradinho: escolhe a direcao."""
+        if (self.prox_dx or self.prox_dy) and not eh_parede(
+            self.col + self.prox_dx, self.linha + self.prox_dy
+        ):
+            self.dx, self.dy = self.prox_dx, self.prox_dy
+            self.prox_dx = self.prox_dy = 0
+        elif eh_parede(self.col + self.dx, self.linha + self.dy):
+            self.dx = self.dy = 0
 
     def atualizar(self, dt):
         passo = VELOCIDADE * dt
-        alvo_x, alvo_y = centro(self.col, self.linha)
-        no_centro = abs(self.x - alvo_x) <= passo and abs(self.y - alvo_y) <= passo
 
-        if no_centro:
-            # Encaixa certinho no centro do quadradinho.
-            self.x, self.y = alvo_x, alvo_y
-            # Tenta virar para a direcao guardada, se nao tiver parede la.
-            if (self.prox_dx or self.prox_dy) and not eh_parede(
-                self.col + self.prox_dx, self.linha + self.prox_dy
-            ):
-                self.dx, self.dy = self.prox_dx, self.prox_dy
-                self.prox_dx = self.prox_dy = 0
-            # Se tem parede bem na frente, para.
-            if eh_parede(self.col + self.dx, self.linha + self.dy):
-                self.dx = self.dy = 0
+        if self.parado():
+            # Encaixado no centro; so comeca a andar se puder ir para a
+            # direcao guardada.
+            self._decidir_no_centro()
+            return
 
-        # Anda na direcao atual.
+        # Esta andando: avanca em direcao ao centro do proximo quadradinho.
+        alvo_x, alvo_y = centro(self.col + self.dx, self.linha + self.dy)
         self.x += self.dx * passo
         self.y += self.dy * passo
 
-        # Chegou no centro do proximo quadradinho? Entao ele vira o atual.
-        prox_x, prox_y = centro(self.col + self.dx, self.linha + self.dy)
-        if (self.dx and abs(self.x - prox_x) <= passo) or (
-            self.dy and abs(self.y - prox_y) <= passo
-        ):
+        chegou = (
+            (self.dx == 1 and self.x >= alvo_x)
+            or (self.dx == -1 and self.x <= alvo_x)
+            or (self.dy == 1 and self.y >= alvo_y)
+            or (self.dy == -1 and self.y <= alvo_y)
+        )
+        if chegou:
             self.col += self.dx
             self.linha += self.dy
+            self.x, self.y = alvo_x, alvo_y
+            self._decidir_no_centro()
 
     def desenhar(self):
         screen.draw.filled_circle((self.x, self.y), TILE * 0.4, COR_JOGADOR)
