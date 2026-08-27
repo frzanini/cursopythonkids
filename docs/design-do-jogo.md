@@ -1,0 +1,99 @@
+# Design do jogo — "Crescendo como Jesus" (estilo Pac-Man)
+
+> Documento-fonte do jogo de referência e da decomposição em módulos. As issues do GitHub
+> derivam daqui. Mantido junto com o código; o `backlog-keeper` espelha o estado das issues em
+> `docs/backlog/status.md`.
+
+## Visão
+
+Jogo de labirinto no estilo **Pac-Man**, com a temática de Lucas 2:52. A criança anda pelo
+labirinto da vida coletando **bons hábitos** e desviando das **tentações**. A **oração** dá
+força para vencer as tentações por alguns segundos.
+
+| Elemento Pac-Man | No nosso jogo |
+|---|---|
+| Pac-Man (jogador) | A criança crescendo em estatura |
+| Pastilhas | Bons hábitos: 🙏 oração · 📖 Bíblia · ⛪ culto · ❤️ obedecer · 🤝 ajudar |
+| Fantasmas | Tentações / más influências: 😡 desobediência · 🤥 mentira · 😴 preguiça · 📱 distração |
+| Power-pellet | 🙏 **Oração** — por ~6 s as tentações fogem e podem ser vencidas |
+| Limpar a tela | Encher a vida de virtude → completa a fase |
+| Níveis | 4 fases: **Sabedoria → Estatura → Graça com Deus → Graça com os homens** |
+
+O versículo (Lucas 2:52) aparece na tela inicial e na tela de vitória.
+
+## Jogo de referência (pasta `jogo/`)
+
+Todo o código-fonte do jogo de referência (o "gabarito") mora em **`jogo/`** na raiz:
+
+```
+jogo/
+  jogo.py        # o jogo completo, jogável
+  images/        # sprites (entram depois; pgzero procura aqui)
+  sounds/        # efeitos e música (entram depois)
+  README.md      # como rodar
+```
+
+É o gabarito jogável — os módulos do curso reconstroem ele por partes, e cada
+`docs/modulo-NN/exemplo.py` é um recorte parcial desse alvo.
+
+### Regras
+
+- **Labirinto**: 1 mapa fixo, desenhado à mão como lista de strings (`#` parede, `.` bom hábito,
+  `o` oração, ` ` vazio, `P` início do jogador, `T` início da tentação). Tile de ~20 px.
+- **Jogador**: move alinhado à grade nas 4 direções; a próxima direção fica "guardada" e é
+  aplicada quando dá pra virar. Não atravessa parede.
+- **Tentações (IA simples)**: em cada cruzamento escolhem direção — na maior parte das vezes
+  aleatória, com uma probabilidade `p` de perseguir (andar na direção do jogador). Nunca dão
+  meia-volta. Respeitam parede.
+- **Colisões**:
+  - jogador × bom hábito → some, **+10 de estatura**.
+  - jogador × oração → entra em **modo oração** por ~6 s (tentações ficam "assustadas" e fogem).
+  - jogador × tentação, **sem** modo oração → perde 1 vida, posições reiniciam.
+  - jogador × tentação, **com** modo oração → tentação é vencida, volta pra casa, ganha pontos.
+- **Fase completa**: todos os bons hábitos coletados → próxima fase (mesmo mapa; +velocidade,
+  +1 tentação, itens repopulados).
+- **Vidas**: começa com 3. Zerou → tela de derrota. Completou as 4 fases → tela de vitória.
+- **Telas**: inicial (título + versículo + "aperte ENTER") · jogo (HUD: estatura, vidas, nome da
+  fase) · vitória · derrota.
+
+### Restrições técnicas
+
+- **Pygame Zero**: `import pgzrun` no topo, `pgzrun.go()` no fim; `WIDTH`/`HEIGHT`, `draw()`,
+  `update(dt)`, `on_key_down`.
+- Roda com o venv `ambiente-virtual/.venv/` (Python 3.12). Tem que passar `py_compile`.
+- Comentários e textos de tela em **português**, tom para criança de 9–11 anos.
+- v1 desenha tudo com formas (`Rect`, `screen.draw.filled_circle`) e cores — sem assets. Sprites
+  e sons entram como item separado do backlog.
+
+## Decomposição em módulos (básico → avançado)
+
+Cada módulo é uma capacidade concreta do jogo. Ordem respeita a invariante **"nunca vazar
+conceito futuro"** (ver `CLAUDE.md`). Substitui a tabela atual (baseada em Snake) em
+`docs/crescendo-como-jesus-conteudo-programatico.md`.
+
+| # | Módulo | Conceitos novos | Parte do jogo |
+|---|---|---|---|
+| 0 | Conhecendo o computador | SO, arquivos, pastas, caminho | *(preparação — não constrói o jogo)* |
+| 1 | Conhecendo a programação | algoritmo, IDE, PyPI/`pgzero`, instalar VS Code + Pygame Zero | Primeira janela (`WIDTH`/`HEIGHT`, cor de fundo, título) |
+| 2 | O personagem e a primeira decisão | coordenadas X/Y, booleano, `if`/`else`, um evento de tecla | A criança aparece na tela e reage a uma tecla |
+| 3 | Movimentando o personagem | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
+| 4 | Os muros do labirinto | desenhar mapa a partir de uma grade, operadores relacionais | Não atravessa parede nem sai da tela |
+| 5 | Os bons hábitos no mapa | **listas**, laço `for` | Vários itens desenhados; somem ao coletar |
+| 6 | A estatura (pontuação) | contadores, texto/HUD na tela | Placar de estatura sobe ao coletar |
+| 7 | As tentações entram | `random`, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
+| 8 | Encostar na tentação | **funções** (`def`), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar |
+| 9 | A força da oração | estado com tempo (`dt`/timer), condições compostas | Power-pellet: tentações fogem e são vencidas |
+| 10 | Tentação mais esperta | perseguição (mover em direção ao jogador), lista de tentações | Várias tentações, mistura aleatório + perseguir |
+| 11 | Fases e vitória | estados do jogo, condição de fim de fase | 4 fases temáticas com dificuldade crescente + vitória |
+| 12 | Personalização e apresentação final | revisão geral, criatividade | Trocar cores/itens/labirinto, som, identidade do aluno |
+
+### Impacto no conteúdo já escrito
+
+- **Módulo 0** — inalterado.
+- **`docs/crescendo-como-jesus-conteudo-programatico.md`** — reescrever a descrição do jogo
+  (Snake → Pac-Man), a tabela de módulos (acima) e a lista de itens bons/ruins.
+- **Módulo 1** — ajustar a seção "O jogo que vamos construir" para o Pac-Man cristão.
+- **Módulo 2** — ajustar as partes que descrevem o personagem/decisão no contexto do jogo novo.
+- **`CLAUDE.md`** — trocar "mecânica da cobrinha" pela de labirinto; apontar o código-fonte do
+  jogo para `jogo/jogo.py` (hoje diz `jogo.py` na raiz); conferir invariantes.
+- **`.claude/rules/modulos.md`** — atualizar a lista de itens (inclui 😴 preguiça, 📱 distração).
