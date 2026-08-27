@@ -88,6 +88,30 @@ conceito futuro"** (ver `CLAUDE.md`). Substitui a tabela atual (baseada em Snake
 | 11 | Fases e vitória | estados do jogo, condição de fim de fase | 4 fases temáticas com dificuldade crescente + vitória |
 | 12 | Personalização e apresentação final | revisão geral, criatividade | Trocar cores/itens/labirinto, som, identidade do aluno |
 
+## Organização na máquina do aluno
+
+O aluno trabalha numa pasta própria (fora deste repo). Layout que o curso ensina:
+
+```
+crescendo-como-jesus/        <- pasta do aluno (a "raiz" dele)
+  .venv/                     <- UM ambiente virtual, criado no Módulo 1 (uv, Python 3.12)
+  jogo.py                    <- o projeto que cresce a aula toda, na raiz
+  images/  sounds/           <- assets do jogo
+  aula-01/  aula-02/  ...    <- uma subpasta por aula, para os testes soltos daquela aula
+```
+
+- **Um `.venv` só**, na raiz da pasta do aluno, selecionado uma vez no VS Code; serve o `jogo.py`
+  e todas as subpastas `aula-NN/`. As subpastas de aula **não** têm `.venv`.
+- O **jogo** mora na **raiz** da pasta do aluno (espelha o repo, onde o gabarito roda a partir de
+  `jogo/`). O Pygame Zero resolve `images/`/`sounds/` relativo ao script, então cada `aula-NN/`
+  que precise de assets usa os seus.
+- Subpastas nomeadas `aula-01`, `aula-02`, ... (não `modulo-NN`, para não confundir com os
+  `docs/modulo-NN/` deste repo).
+
+Isso troca a instrução hoje presente no guia de instalação e no Módulo 1 (que fala de um `.venv`
+único chamado "venv do Jogo"). Ajustar em: `docs/preparacao-ambiente/instalacao_vscode.md`,
+`docs/modulo-01-*/` (texto e diagramas), `docs/modulo-00-*/` se citar estrutura de pastas.
+
 ### Impacto no conteúdo já escrito
 
 - **Módulo 0** — inalterado.
