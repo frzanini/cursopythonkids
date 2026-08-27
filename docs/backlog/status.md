@@ -1,0 +1,53 @@
+# Backlog — Crescendo como Jesus
+
+Mantido pelo agente `backlog-keeper` (`.claude/agents/backlog-keeper.md`). Não é gerado por
+git/gh (o repositório não usa controle de versão) — cada linha é registrada manualmente quando
+uma entrega/decisão acontece ou uma pendência é identificada.
+
+## Pendente
+
+- **`apresentacao.html` dos módulos 0, 1 e 2** — combinado com o usuário deixar a apresentação
+  HTML por último, só depois do `material-professor.md`/`material-aluno.md` de cada módulo estar
+  revisado. Os `.md` dos três já estão prontos; falta gerar os slides quando o usuário confirmar
+  a revisão do texto.
+- **Módulos 3 a 12** ainda não foram escritos — só existem como linha na tabela de
+  `docs/crescendo-como-jesus-conteudo-programatico.md` (título + conceitos-chave).
+- **Definir um padrão/template para `apresentacao.html`** (estilo visual, se usa alguma lib
+  local embutida para slides ou HTML+CSS puro) antes de gerar a primeira apresentação real.
+- **`docs/error/*.png`** (5 imagens) não são referenciadas em nenhum `.md` — decidir se documentam
+  algum erro conhecido (e onde entram) ou se podem ser removidas.
+
+## Feito
+
+- 2026-08-22 — Harness do `.claude/` limpo (removido material do projeto PontoWeb30, que estava
+  aqui por engano) e reconstruído para este projeto via `harness-architect`.
+- 2026-08-22 — Ferramentas do curso definidas: Thonny único (Pydroid e Google Colab descartados).
+- 2026-08-22 — Venv próprio criado (`.venv/`, Python 3.12, `pgzero`/`pygame`/`numpy`), gate
+  automático de sintaxe (`py_compile`) via hook `PostToolUse` em `exemplo.py`.
+- 2026-08-22 — Estrutura de 4 materiais por módulo definida (professor/aluno/apresentação/código)
+  e registrada em `CLAUDE.md`, `docs/crescendo-como-jesus-conteudo-programatico.md` e
+  `.claude/rules/modulos.md`; `/novo-modulo` atualizado pra gerar os 4 arquivos.
+- 2026-08-22 — `CLAUDE.md` revisado; limite de 200 linhas anotado no topo do arquivo.
+- 2026-08-22 — Módulos 1 e 2 migrados para o formato novo: `material-professor.md` +
+  `material-aluno.md` criados, `.md` único antigo removido, link da tabela em
+  `docs/crescendo-como-jesus-conteudo-programatico.md` atualizado. `apresentacao.html` dos dois
+  fica pendente por decisão do usuário (gerar só depois do texto revisado).
+- 2026-08-22 — **Thonny descartado como ferramenta do curso** — motivo: Python embutido do
+  Thonny é recente demais, sem wheel pré-compilada de `pygame` disponível, e a compilação a
+  partir do código-fonte quebra (`ModuleNotFoundError: setuptools._distutils.msvccompiler`,
+  removido nas versões novas do setuptools). Curso passa a usar **VS Code** com o venv
+  determinístico do projeto (Python 3.12 fixo). Atualizado: `CLAUDE.md`,
+  `.claude/rules/modulos.md`, `.claude/settings.local.json` (permissão `thonny.org` trocada por
+  `code.visualstudio.com`/`pypi.org`), `docs/crescendo-como-jesus-conteudo-programatico.md`
+  (Ferramentas + nota de teclado, já que tablet também não é mais usado), comentários dos dois
+  `exemplo.py`. Guia `docs/preparacao-ambiente/instalacao_vscode.md` escrito (substitui o
+  `instalacao_pydroid.md.obsoleto`, que foi removido).
+- 2026-08-22 — Módulo 1 ganhou 3 seções novas no roteiro (professor e aluno): "O jogo que vamos
+  construir" (visão geral do projeto final), "O que é uma IDE" e "Pacotes livres e gratuitos"
+  (PyPI, `pgzero`). Roteiro de tempo redistribuído para caber as seções novas em 1h30.
+- 2026-08-22 — **Módulo 0 criado** (`docs/modulo-00-sistema-operacional-e-pastas/`):
+  sistema operacional (Windows/Linux), arquivos, pastas, caminho — preparação antes do Módulo 1,
+  fora da sequência de 12 que constroem o jogo (decisão do usuário: virou Módulo 0 em vez de
+  renumerar os módulos existentes). Sem `exemplo.py` (não ensina Python ainda) — exceção
+  registrada em `.claude/rules/modulos.md` e `CLAUDE.md`. Tabela de módulos e carga horária
+  (18h → 19h30) atualizadas em `docs/crescendo-como-jesus-conteudo-programatico.md`.
