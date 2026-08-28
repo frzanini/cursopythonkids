@@ -23,6 +23,11 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Feito
 
+- 2026-08-27 — **Diagrama do ambiente virtual devolvido ao Módulo 0**, agora no contexto
+  pasta/projeto: `mermaid` mostrando computador → Python 3.12 (via `uv`) → `.venv/` dentro de
+  `crescendo-como-jesus/`, usado por `jogo.py` e por todas as `aula-NN/`. Entrou no
+  `material-aluno.md` (seção 5) e no `material-professor.md` (seção 11, ao lado do diagrama
+  conceitual "sem venv × com venv").
 - 2026-08-27 — **Módulo 0 reescrito: preparação de ambiente completa** (issue #15). Deixa a
   máquina do aluno pronta pra codar — SO/pastas/terminal + instalar `uv`, Python 3.12, VS Code +
   extensão Python, criar a pasta `crescendo-como-jesus/` com `aula-NN/`, o `.venv` e o `pgzero`,
