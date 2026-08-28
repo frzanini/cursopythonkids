@@ -82,14 +82,19 @@ Cada módulo é uma capacidade concreta do jogo. Ordem respeita a invariante **"
 conceito futuro"** (ver `CLAUDE.md`). Substitui a tabela atual (baseada em Snake) em
 `docs/crescendo-como-jesus-conteudo-programatico.md`.
 
+O **Módulo 4** é o mais pesado em conceito: listas + `for` precisam ser ensinados ali, porque o
+mapa do labirinto é uma lista de strings e desenhá-lo exige percorrê-la. Espera-se que a teoria
+tome boa parte da aula e que a construção do labirinto se complete no Módulo 5 (de propósito mais
+leve, servindo de reforço) — a atividade do Módulo 4 pode continuar no encontro seguinte.
+
 | # | Módulo | Conceitos novos | Parte do jogo |
 |---|---|---|---|
 | 0 | Conhecendo o computador | SO, arquivos, pastas, caminho | *(preparação — não constrói o jogo)* |
 | 1 | Conhecendo a programação | algoritmo, IDE, PyPI/`pgzero`, instalar VS Code + Pygame Zero | Primeira janela (`WIDTH`/`HEIGHT`, cor de fundo, título) |
 | 2 | O personagem e a primeira decisão | coordenadas X/Y, booleano, `if`/`else`, um evento de tecla | A criança aparece na tela e reage a uma tecla |
 | 3 | Movimentando o personagem | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
-| 4 | Os muros do labirinto | desenhar mapa a partir de uma grade, operadores relacionais | Não atravessa parede nem sai da tela |
-| 5 | Os bons hábitos no mapa | **listas**, laço `for` | Vários itens desenhados; somem ao coletar |
+| 4 | Os muros do labirinto | **listas**, laço `for`, ler o mapa de uma grade (lista de strings), operadores relacionais | Paredes desenhadas a partir do mapa; não atravessa parede nem sai da tela |
+| 5 | Os bons hábitos no mapa | reforço de listas/`for`; remover item de uma lista ao coletar | Vários itens espalhados pelo mapa; somem ao coletar |
 | 6 | A estatura (pontuação) | contadores, texto/HUD na tela | Placar de estatura sobe ao coletar |
 | 7 | As tentações entram | `random`, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
 | 8 | Encostar na tentação | **funções** (`def`), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar |

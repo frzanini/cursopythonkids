@@ -91,8 +91,8 @@ O jogo final deve possuir: tela inicial (com o versículo), um **labirinto** com
 | 1 | [Conhecendo a programação](modulo-01-conhecendo-a-programacao/material-professor.md) | jogo do curso, o que é programa e algoritmo, sequência de execução, primeira janela (`WIDTH`/`HEIGHT`, cor de fundo, título) | Primeira janela do jogo |
 | 2 | [O personagem e a primeira decisão](modulo-02-personagem-e-primeira-decisao/material-professor.md) | objetos, coordenadas, eixos X/Y, valores lógicos, `if`/`else`, eventos de clique | Personagem aparece e reage a uma decisão (sim/não) |
 | 3 | Movimentando o personagem | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
-| 4 | Os muros do labirinto | desenhar o mapa a partir de uma grade, operadores relacionais | Não atravessa parede nem sai da tela |
-| 5 | Os bons hábitos no mapa | listas, laço `for` | Vários itens desenhados pelo mapa; somem ao coletar |
+| 4 | Os muros do labirinto | **listas**, laço `for`, ler o mapa de uma grade (lista de strings), operadores relacionais | Paredes desenhadas a partir do mapa; o jogador não atravessa parede nem sai da tela |
+| 5 | Os bons hábitos no mapa | reforço de listas e `for`; tirar um item da lista ao coletar | Bons hábitos espalhados pelo mapa; somem quando o jogador passa por cima |
 | 6 | A estatura (pontuação) | contadores, texto/HUD na tela | Placar de estatura sobe a cada hábito coletado |
 | 7 | As tentações entram | `random`, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
 | 8 | Encostar na tentação | funções (`def`), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar as vidas |
@@ -100,6 +100,12 @@ O jogo final deve possuir: tela inicial (com o versículo), um **labirinto** com
 | 10 | Tentação mais esperta | perseguição (mover em direção ao jogador), lista de tentações | Várias tentações, misturando andar aleatório e perseguir |
 | 11 | Fases e vitória | estados do jogo, condição de fim de fase | 4 fases temáticas com dificuldade crescente + tela de vitória |
 | 12 | Personalização e apresentação final | revisão geral, criatividade | Trocar cores/itens/labirinto, som, identidade visual do aluno |
+
+> O **Módulo 4** carrega dois conceitos de peso (listas e laço `for`) antes de usá-los para ler o
+> mapa do labirinto. É esperado que a parte teórica ocupe boa parte da aula e que a construção do
+> labirinto termine de assentar no Módulo 5 — que é, de propósito, mais leve em conceito novo e
+> serve de reforço. Não tem problema a atividade prática do Módulo 4 "vazar" para o encontro
+> seguinte.
 
 Cada módulo tem sua própria pasta com o material do professor, o material do aluno e o
 `exemplo.py` da aula (ver "Materiais por módulo" abaixo). Os slides (`apresentacao.html`) são

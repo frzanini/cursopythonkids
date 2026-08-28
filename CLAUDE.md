@@ -46,8 +46,8 @@ Dois ambientes, ambos Python 3.12 (versão fixa — wheel de `pygame` disponíve
 ## Invariantes (nunca quebrar)
 
 - **Nunca vazar conceito futuro:** um módulo não pode exigir/usar um conceito Python que só é
-  ensinado num módulo posterior (ex.: módulo 3 não pode depender de listas, que só vem no
-  módulo 5). Ver a tabela de módulos em `docs/crescendo-como-jesus-conteudo-programatico.md`
+  ensinado num módulo posterior (ex.: módulo 3 não pode depender de listas, que só vêm no
+  módulo 4). Ver a tabela de módulos em `docs/crescendo-como-jesus-conteudo-programatico.md`
   para saber o que já foi ensinado até cada ponto.
 - Público-alvo é criança de 9–11 anos sem experiência prévia: linguagem simples, sem jargão
   desnecessário.
