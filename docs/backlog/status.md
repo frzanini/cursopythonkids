@@ -25,6 +25,13 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Feito
 
+- 2026-08-28 — **Módulo 1 ganhou a seção "De onde vem o `pgzrun`?"** em `material-aluno.md` e
+  `material-professor.md` (`docs/modulo-01-conhecendo-a-programacao/`), explicando o conceito de
+  biblioteca/pacote e a diferença entre `pgzero` (pacote instalado no `.venv`) e `pgzrun` (a peça/
+  módulo importado dele). Inclui diagrama `mermaid` do fluxo Módulo 0 → `.venv` → `import pgzrun`
+  → Python procura no `.venv` → acha (`screen`, `draw()`...) ou não acha (`ModuleNotFoundError`).
+  Tabelas de "Palavras novas" ganharam "Biblioteca / pacote" e `pgzrun`; mensagens de erro
+  esperadas passam a distinguir `screen is not defined` de `ModuleNotFoundError`.
 - 2026-08-27 — **`apresentacao.html` adiado para o fim do projeto.** Decisão do usuário: os
   slides deixam de ser um arquivo por módulo e passam a ser o último entregável do curso —
   gerados de uma vez para todos os módulos, com o conteúdo das aulas já revisado. Removidas as

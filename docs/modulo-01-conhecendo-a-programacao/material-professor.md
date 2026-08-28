@@ -132,12 +132,40 @@ import pgzrun
 pgzrun.go()
 ```
 
-- `import pgzrun` — **traz** para o nosso programa o pacote **Pygame Zero** (o `pgzero`
-  instalado no Módulo 0). É ele que vai nos dar `screen`, `draw()` e o resto.
+- `import pgzrun` — **traz** para o nosso programa um código pronto que veio **de fora**. É ele
+  que vai nos dar `screen`, `draw()` e o resto. De onde esse código vem está logo abaixo.
 - `pgzrun.go()` — **liga o motor do jogo**: abre a janela e fica num laço, redesenhando a tela e
   escutando o teclado. Fica sempre na **última** linha.
 - Rodar: abre uma **janela preta** do tamanho padrão. Destacar: são essas duas linhas que fazem o
   botão **Run** funcionar; sem elas apareceria `screen is not defined`.
+
+**De onde vem o `pgzrun`?** Vale parar aqui uns 2 minutos — é a primeira vez no curso que o aluno
+usa código que não foi ele quem escreveu.
+
+- Ninguém digitou o `pgzrun` na nossa máquina: ele vem de uma **biblioteca** (também chamada
+  **pacote**) — um monte de código pronto que outras pessoas escreveram e deixaram disponível
+  para todo mundo usar, para a gente não ter que fazer tudo do zero.
+- A biblioteca aqui chama-se **Pygame Zero**. No **Módulo 0**, o comando de instalação baixou ela
+  da internet e guardou **dentro do `.venv/`** do projeto. Por isso ela só funciona neste
+  projeto, e só quando o interpretador `.venv` está selecionado (canto inferior direito do VS Code).
+- Detalhe que confunde: **instalamos `pgzero`, mas escrevemos `import pgzrun`**. O pacote inteiro
+  se chama `pgzero`; o `pgzrun` é uma **peça de dentro dele** — a "chave de ligar" que abre a
+  janela. Os dois são da mesma biblioteca.
+- Quando o Python lê `import pgzrun`, ele **sai procurando** essa peça nas bibliotecas do
+  `.venv`. Se acha, o nosso programa ganha de presente o `screen`, o `draw()`, o `screen.fill()`,
+  o `screen.draw.text()` e o resto. Se não acha (interpretador errado), dá
+  `ModuleNotFoundError: No module named 'pgzero'`.
+
+```mermaid
+flowchart TB
+    M0["🧰 Módulo 0: você instalou a<br/>biblioteca Pygame Zero (pgzero)"]
+    M0 --> VENV["📦 .venv/ do projeto<br/>guarda o pgzero aqui dentro"]
+    CODE["📄 No jogo.py você escreve:<br/><b>import pgzrun</b>"]
+    CODE --> PROC["🔎 O Python procura essa peça<br/>nas bibliotecas do .venv"]
+    VENV --> PROC
+    PROC --> OK["✅ Achou! agora o programa tem<br/>screen, draw(), screen.fill(), screen.draw.text()..."]
+    PROC --> FAIL["❌ Não achou (interpretador .venv<br/>não selecionado) → ModuleNotFoundError"]
+```
 
 **Passo 2 — tamanho e título da janela.** Entre o `import` e o `pgzrun.go()`:
 
@@ -229,15 +257,17 @@ NOME_DO_CRIADOR = "Escreva seu nome aqui"
 Mostrar o [`exemplo.py`](exemplo.py) completo — é o mesmo código, com **um passo a mais** (o
 versículo de Lucas 2:52 na tela), que é exatamente o desafio extra da aula.
 
-> Por que rodar funciona: o `import pgzrun` na primeira linha busca o pacote instalado no
-> `.venv` do Módulo 0. Se o interpretador `.venv` não estiver selecionado (canto inferior
-> direito), é aí que aparece `screen is not defined` — o Python não achou o `pgzrun`.
+> Por que rodar funciona: o `import pgzrun` na primeira linha busca a biblioteca **Pygame Zero**
+> instalada no `.venv` do Módulo 0 (ver o diagrama do Passo 1). Se o interpretador `.venv` não
+> estiver selecionado (canto inferior direito), o Python não acha o `pgzrun` e dá
+> `ModuleNotFoundError`. Já o `screen is not defined` é outra coisa: aí falta a própria linha
+> `import pgzrun` (ou o `pgzrun.go()`).
 
 ```mermaid
 flowchart TB
-    A[".venv do Módulo 0<br/>(pgzero instalado)"] --> B["VS Code apontando pro .venv<br/>(canto inferior direito)"]
-    B --> C["jogo.py começa com: import pgzrun"]
-    C --> D["pgzrun.go() liga o motor<br/>e abre a janela"]
+    A["📦 .venv do Módulo 0<br/>(Pygame Zero / pgzero instalado)"] --> B["VS Code apontando pro .venv<br/>(canto inferior direito)"]
+    B --> C["jogo.py começa com: import pgzrun<br/>→ Python encontra a biblioteca"]
+    C --> D["pgzrun.go() na última linha<br/>liga o motor e abre a janela"]
 ```
 
 ### 7. Atividade prática (25 min)
@@ -270,6 +300,7 @@ Cada um constrói **do zero**, seguindo o passo a passo da demonstração — n�
 - Visão geral do projeto final (jogo de labirinto estilo Pac-Man)
 - Programa e algoritmo
 - Sequência de execução
+- Bibliotecas / pacotes: código pronto que vem de fora (`import`), e onde ele mora (o `.venv`)
 - Textos (strings) e o `+` que junta textos
 - Variáveis
 - Funções (`def`) e indentação
@@ -292,8 +323,10 @@ incluir o versículo-base do curso (Lucas 2:52) e o nome do aluno.
 | IDE | Um programa que junta editor, execução e mensagens de erro num só lugar |
 | VS Code | A IDE que usamos no curso |
 | Executar (Run) | Mandar o computador seguir as instruções do programa |
-| `import` | Trazer para o nosso programa um código pronto de fora (um pacote) |
-| `pgzero` (Pygame Zero) | O pacote que dá `screen`, `draw()` e o resto do jogo — instalado no Módulo 0 |
+| `import` | Trazer para o nosso programa um código pronto de fora (uma biblioteca) |
+| Biblioteca / pacote | Um monte de código pronto que outras pessoas escreveram para todo mundo usar |
+| `pgzero` (Pygame Zero) | A biblioteca que dá `screen`, `draw()` e o resto do jogo — instalada no `.venv` no Módulo 0 |
+| `pgzrun` | A peça de dentro do `pgzero` que liga o jogo (`import pgzrun` no topo, `pgzrun.go()` no fim) |
 | Variável | Um nome que guarda um valor (`WIDTH = 800`) |
 | `WIDTH` / `HEIGHT` / `TITLE` | Nomes que o Pygame Zero reconhece: largura, altura e título da janela |
 | Função | Pedaço de código com nome, executado quando é chamado (criada com `def`) |

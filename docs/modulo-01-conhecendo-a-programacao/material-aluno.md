@@ -24,6 +24,7 @@ fazer só o começo: a **primeira tela**.
 
 - O que é um **programa** e um **algoritmo**
 - Como o computador executa as instruções: **uma de cada vez, na ordem** em que foram escritas
+- O que é uma **biblioteca** e de onde vem o código do **Pygame Zero**
 - O que é uma **variável**
 - O que é uma **função** e por que o **recuo** (indentação) importa tanto no Python
 - Escrever e rodar o nosso **primeiro programa** em Python, com o **Pygame Zero**
@@ -117,16 +118,43 @@ import pgzrun
 pgzrun.go()
 ```
 
-- `import pgzrun` — **traz** para o seu programa o pacote **Pygame Zero** (o `pgzero` que você
-  instalou no Módulo 0). É ele que dá `screen`, `draw()` e o resto do jogo. Vai sempre na
-  **primeira** linha.
+- `import pgzrun` — **traz** para o seu programa um código pronto que veio **de fora**. É ele que
+  dá `screen`, `draw()` e o resto do jogo. Vai sempre na **primeira** linha.
 - `pgzrun.go()` — **liga o motor do jogo**: abre a janela e fica repetindo "desenha a tela,
   escuta o teclado, desenha de novo...". Vai sempre na **última** linha.
+
+#### De onde vem o `pgzrun`?
+
+Você não escreveu esse código, e ele não estava na sua máquina antes do curso. Ele vem de uma
+**biblioteca** (também chamada **pacote**): um monte de código pronto que outras pessoas
+escreveram e deixaram disponível para todo mundo usar — assim você não precisa fazer tudo do zero.
+
+- A biblioteca que usamos se chama **Pygame Zero**. No **Módulo 0**, ela foi baixada da internet
+  e guardada **dentro do `.venv/`** do seu projeto.
+- Repare numa coisa: você instalou o **`pgzero`**, mas escreve **`import pgzrun`**. O pacote
+  inteiro é o `pgzero`; o `pgzrun` é uma **peça de dentro dele** — a "chave de ligar" que abre a
+  janela do jogo.
+- Quando o Python lê `import pgzrun`, ele vai **procurar** essa peça nas bibliotecas do `.venv`.
+  Se acha, o seu programa ganha o `screen`, o `draw()`, o `screen.fill()` e o resto. Se não acha
+  (interpretador errado), aparece `ModuleNotFoundError: No module named 'pgzero'`.
+
+```mermaid
+flowchart TB
+    M0["🧰 Módulo 0: você instalou a<br/>biblioteca Pygame Zero (pgzero)"]
+    M0 --> VENV["📦 .venv/ do projeto<br/>guarda o pgzero aqui dentro"]
+    CODE["📄 No jogo.py você escreve:<br/><b>import pgzrun</b>"]
+    CODE --> PROC["🔎 O Python procura essa peça<br/>nas bibliotecas do .venv"]
+    VENV --> PROC
+    PROC --> OK["✅ Achou! agora o programa tem<br/>screen, draw(), screen.fill()..."]
+    PROC --> FAIL["❌ Não achou (interpretador .venv<br/>não selecionado) → ModuleNotFoundError"]
+```
 
 **Rode.** Deve abrir uma **janelinha preta**, do tamanho padrão — já é um jogo Pygame Zero de
 verdade, só que vazio. Feche a janela para continuar.
 
-> Se aparecer o erro `screen is not defined`, é porque falta uma dessas duas linhas.
+> Se aparecer o erro `screen is not defined`, é porque falta uma dessas duas linhas (`import
+> pgzrun` ou `pgzrun.go()`). Se aparecer `ModuleNotFoundError`, é o interpretador `.venv` que não
+> está selecionado.
 
 ### Passo 2 — tamanho e título da janela
 
@@ -269,8 +297,10 @@ comparar no fim ou para destravar se você empacar.
 | Python | A linguagem que usamos para escrever os programas |
 | VS Code | A IDE (o programa) onde escrevemos e rodamos o código |
 | Executar (Run) | Mandar o computador seguir as instruções do programa |
-| `import` | Trazer para o nosso programa um código pronto de fora (um pacote) |
-| `pgzero` (Pygame Zero) | O pacote que dá `screen`, `draw()` e o resto do jogo — instalado no Módulo 0 |
+| `import` | Trazer para o nosso programa um código pronto de fora (uma biblioteca) |
+| Biblioteca / pacote | Um monte de código pronto que outras pessoas escreveram para todo mundo usar |
+| `pgzero` (Pygame Zero) | A biblioteca que dá `screen`, `draw()` e o resto do jogo — instalada no `.venv` no Módulo 0 |
+| `pgzrun` | A peça de dentro do `pgzero` que liga o jogo (`import pgzrun` no topo, `pgzrun.go()` no fim) |
 | Variável | Um nome que guarda um valor (`WIDTH = 800`) |
 | `WIDTH` / `HEIGHT` / `TITLE` | Nomes que o Pygame Zero reconhece: largura, altura e título da janela |
 | Função | Um pedaço de código com nome, executado quando alguém chama (criada com `def`) |
