@@ -1,7 +1,9 @@
 # Como preparar o computador (VS Code)
 
-Este guia serve para preparar o computador antes da aula de Python. Precisa de **computador**
-(Windows/Mac/Linux) — o curso não usa mais tablet/celular.
+Guia companheiro do **Módulo 0** — os mesmos passos em forma de checklist seco, para preparar o
+computador antes de começar a programar. Precisa de **computador** (Windows/Mac/Linux) — o curso
+não usa mais tablet/celular. A versão didática, passo a passo e com o porquê de cada peça, está
+em `docs/modulo-00-sistema-operacional-e-pastas/`.
 
 ## 0. Verificar o que já está instalado
 
@@ -85,14 +87,26 @@ buscar "Python").
 > **Sem `winget`/`snap` disponível?** Baixe o instalador manualmente em
 > https://code.visualstudio.com — o resultado final é o mesmo, só muda o jeito de instalar.
 
-## 4. Abrir a pasta do projeto e criar o ambiente virtual (venv) com `uv`
+## 4. Criar a pasta do curso e o ambiente virtual (venv) com `uv`
+
+Estrutura na máquina do aluno (ver `docs/design-do-jogo.md` § "Organização na máquina do
+aluno"):
+
+```
+crescendo-como-jesus/     <- pasta-raiz do aluno (Área de Trabalho ou Documentos)
+  .venv/                  <- criado aqui, neste passo
+  aula-01/ aula-02/ ...   <- uma subpasta por aula (use "aula-NN", não "modulo-NN")
+```
+
+Criar pelo terminal: `cd` até onde a pasta vai ficar, depois `mkdir crescendo-como-jesus`,
+`cd crescendo-como-jesus`, `mkdir aula-01`.
 
 O projeto usa um **venv** (ambiente virtual) próprio, pra não instalar nada no Python global do
 computador. Isso deixa o ambiente **determinístico** — todo mundo usa exatamente as mesmas
 versões de pacote.
 
-1. Abra a pasta do projeto no VS Code: pelo terminal, `cd` até a pasta e digite `code .` (ou,
-   sem terminal, **File > Open Folder...** dentro do VS Code).
+1. Abra `crescendo-como-jesus/` no VS Code: no terminal, dentro dela, digite `code .` (ou, sem
+   terminal, **File > Open Folder...** dentro do VS Code).
 2. Abra o terminal integrado (**Terminal > New Terminal**, ou `` Ctrl+` ``).
 3. Crie o venv com a versão certa do Python:
    ```
@@ -119,7 +133,7 @@ versões de pacote.
 
 ## 5. Testar se está tudo funcionando
 
-1. Crie um arquivo `teste.py` com:
+1. Crie um arquivo `aula-01/teste.py` (descartável, só para conferir — não é aula de Python):
    ```python
    print("ambiente pronto para a aula")
    ```

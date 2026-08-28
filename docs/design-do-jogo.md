@@ -104,32 +104,36 @@ O aluno trabalha numa pasta própria (fora deste repo). Layout que o curso ensin
 
 ```
 crescendo-como-jesus/        <- pasta do aluno (a "raiz" dele)
-  .venv/                     <- UM ambiente virtual, criado no Módulo 1 (uv, Python 3.12)
-  jogo.py                    <- o projeto que cresce a aula toda, na raiz
+  .venv/                     <- UM ambiente virtual, criado no Módulo 0 (uv, Python 3.12)
+  jogo.py                    <- o projeto que cresce a aula toda, na raiz (nasce no Módulo 1)
   images/  sounds/           <- assets do jogo
   aula-01/  aula-02/  ...    <- uma subpasta por aula, para os testes soltos daquela aula
 ```
 
-- **Um `.venv` só**, na raiz da pasta do aluno, selecionado uma vez no VS Code; serve o `jogo.py`
-  e todas as subpastas `aula-NN/`. As subpastas de aula **não** têm `.venv`.
+- **Um `.venv` só**, na raiz da pasta do aluno, criado e selecionado no VS Code **no Módulo 0**;
+  serve o `jogo.py` e todas as subpastas `aula-NN/`. As subpastas de aula **não** têm `.venv`.
 - O **jogo** mora na **raiz** da pasta do aluno (espelha o repo, onde o gabarito roda a partir de
   `jogo/`). O Pygame Zero resolve `images/`/`sounds/` relativo ao script, então cada `aula-NN/`
   que precise de assets usa os seus.
 - Subpastas nomeadas `aula-01`, `aula-02`, ... (não `modulo-NN`, para não confundir com os
   `docs/modulo-NN/` deste repo).
 
-Isso troca a instrução hoje presente no guia de instalação e no Módulo 1 (que fala de um `.venv`
-único chamado "venv do Jogo"). Ajustar em: `docs/preparacao-ambiente/instalacao_vscode.md`,
-`docs/modulo-01-*/` (texto e diagramas), `docs/modulo-00-*/` se citar estrutura de pastas.
+Toda a preparação de ambiente (instalar `uv`/Python/VS Code, criar a pasta, o `.venv` e instalar
+o `pgzero`) é feita no **Módulo 0** — ver issue #15. O guia
+`docs/preparacao-ambiente/instalacao_vscode.md` é o companheiro seco desse módulo. O Módulo 1 (e
+seguintes) assume a máquina pronta e não repete passo de instalação.
 
 ### Impacto no conteúdo já escrito
 
-- **Módulo 0** — inalterado.
+- **Módulo 0** — reescrito para cobrir a preparação de ambiente completa (issue #15) e a
+  estrutura de pastas `crescendo-como-jesus/` + `aula-NN/`.
 - **`docs/crescendo-como-jesus-conteudo-programatico.md`** — reescrever a descrição do jogo
   (Snake → Pac-Man), a tabela de módulos (acima) e a lista de itens bons/ruins; registrar que o
   **jogo pronto é demonstrado no Módulo 1** (bloco de demonstração).
-- **Módulo 1** — ajustar a seção "O jogo que vamos construir" para o Pac-Man cristão e incluir a
-  **demonstração do jogo pronto** (rodar `jogo/jogo.py` na aula) como gancho de motivação.
+- **Módulo 1** — ajustar a seção "O jogo que vamos construir" para o Pac-Man cristão, incluir a
+  **demonstração do jogo pronto** (rodar `jogo/jogo.py` na aula) como gancho de motivação, e
+  **remover as seções de instalação de ambiente** (uv, Python, venv, Pygame Zero), que passaram
+  para o Módulo 0 — ver issue #15.
 - **Módulo 2** — ajustar as partes que descrevem o personagem/decisão no contexto do jogo novo.
 - **`CLAUDE.md`** — trocar "mecânica da cobrinha" pela de labirinto; apontar o código-fonte do
   jogo para `jogo/jogo.py` (hoje diz `jogo.py` na raiz); conferir invariantes.

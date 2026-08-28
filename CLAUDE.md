@@ -6,7 +6,7 @@
 ## O que é este repositório
 
 Conteúdo didático (não é um produto de software): 12 módulos de aula (mais um Módulo 0 de
-preparação, sem código) ensinando programação a crianças de 9–11 anos através da construção
+preparação de ambiente, sem código) ensinando programação a crianças de 9–11 anos através da construção
 incremental de um jogo cristão inspirado em Lucas 2:52. Ver
 `docs/crescendo-como-jesus-conteudo-programatico.md` para o programa completo.
 
@@ -30,9 +30,10 @@ Dois ambientes, ambos Python 3.12 (versão fixa — wheel de `pygame` disponíve
 - **Jogo de referência:** venv próprio em `jogo/.venv/` + `jogo/requirements.txt` (versões
   travadas). Setup completo em `jogo/README.md`. É o ambiente que os agentes usam para rodar/
   validar o gabarito (a demo pronta).
-- **Lado do aluno:** cada aluno cria o `.venv/` dele na raiz durante o Módulo 1 (ver
-  `docs/modulo-01-*/` e `docs/preparacao-ambiente/instalacao_vscode.md`). Não é versionado nem
-  mantido aqui.
+- **Lado do aluno:** o **Módulo 0** deixa a máquina pronta — instala Python 3.12 (via `uv`) e o
+  VS Code, e cria a pasta `crescendo-como-jesus/` (raiz do aluno) com `.venv/` + `pgzero` e as
+  subpastas `aula-NN/`. Do Módulo 1 em diante não se instala mais nada. Ver `docs/modulo-00-*/`
+  e `docs/preparacao-ambiente/instalacao_vscode.md`. Não é versionado nem mantido aqui.
 
 ## Comandos
 
@@ -64,7 +65,7 @@ Cada módulo tem sua própria pasta (`docs/modulo-NN-slug/`) com quatro arquivos
 - `material-aluno.md` — versão enxuta que o aluno acompanha durante a aula.
 - `apresentacao.html` — slides autocontidos (sem dependência de internet) da aula.
 - `exemplo.py` — código-exemplo do módulo. **Exceção: Módulo 0** não tem `exemplo.py` (não
-  ensina Python ainda, é preparação de SO/pastas).
+  ensina Python ainda, é preparação de ambiente: SO, pastas, `uv`/Python/VS Code, `.venv`).
 
 Módulos 0, 1 e 2 já estão no formato novo (falta só `apresentacao.html` dos três — pendente de
 propósito, ver `docs/backlog/status.md`). Módulos 3–12 ainda não foram escritos. Ver

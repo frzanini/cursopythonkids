@@ -47,8 +47,8 @@ curso — ver `docs/backlog/status.md` para o histórico.
 
 ## Carga horária
 
-- 12 módulos que constroem o jogo + Módulo 0 de preparação (computador/SO/pastas), 1 aula cada,
-  1h30 por aula → **19h30 totais**
+- 12 módulos que constroem o jogo, 1 aula de 1h30 cada → 18h; + **Módulo 0** de preparação de
+  ambiente (~3h, pode ser 2 encontros) → **~21h totais**
 - Estrutura sugerida por aula:
   - 15 min — apresentação do conceito
   - 20 min — demonstração
@@ -83,8 +83,8 @@ O jogo final deve possuir: tela inicial, personagem controlado pelo teclado, ite
 
 | # | Módulo | Conceitos-chave | Parte do jogo |
 |---|--------|------------------|----------------|
-| 0 | [Conhecendo o computador](modulo-00-sistema-operacional-e-pastas/material-professor.md) | sistema operacional, Windows/Linux, arquivos, pastas, caminho | *(preparação — não constrói o jogo)* |
-| 1 | [Conhecendo a programação](modulo-01-conhecendo-a-programacao/material-professor.md) | jogo do curso, algoritmo, IDE, pacotes livres, instalação do VS Code e do Pygame Zero | Primeira janela do jogo |
+| 0 | [Preparando o computador](modulo-00-sistema-operacional-e-pastas/material-professor.md) | SO, Windows/Linux, arquivos, pastas, caminho, terminal; Python 3.12, `uv`, VS Code + extensão, pacote/PyPI, ambiente virtual; estrutura de pastas do aluno | *(preparação de ambiente — não constrói o jogo)* |
+| 1 | [Conhecendo a programação](modulo-01-conhecendo-a-programacao/material-professor.md) | jogo do curso, o que é programa e algoritmo, sequência de execução, primeira janela (`WIDTH`/`HEIGHT`, cor de fundo, título) | Primeira janela do jogo |
 | 2 | [O personagem e a primeira decisão](modulo-02-personagem-e-primeira-decisao/material-professor.md) | objetos, coordenadas, eixos X/Y, valores lógicos, `if`/`else`, eventos de clique | Personagem aparece e reage a uma decisão (sim/não) |
 | 3 | Movimentando o personagem | entrada de dados, eventos de teclado | Movimento com as setas |
 | 4 | Criando os limites da tela | `if`/`else` (reforço), operadores relacionais | Personagem não sai da tela |

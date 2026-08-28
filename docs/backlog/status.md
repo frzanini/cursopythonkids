@@ -23,6 +23,14 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Feito
 
+- 2026-08-27 — **Módulo 0 reescrito: preparação de ambiente completa** (issue #15). Deixa a
+  máquina do aluno pronta pra codar — SO/pastas/terminal + instalar `uv`, Python 3.12, VS Code +
+  extensão Python, criar a pasta `crescendo-como-jesus/` com `aula-NN/`, o `.venv` e o `pgzero`,
+  selecionar o interpretador, e um teste de fumaça. Não ensina nada de Python/jogo. Alinhados:
+  `CLAUDE.md`, `docs/crescendo-como-jesus-conteudo-programatico.md` (linhas 0 e 1 da tabela +
+  carga horária → ~21h), `docs/design-do-jogo.md`, `docs/preparacao-ambiente/instalacao_vscode.md`
+  (guia companheiro), `.claude/rules/modulos.md`. Pendente em #10: tirar as seções de instalação
+  (4–7) do Módulo 1, que agora duplicam o Módulo 0.
 - 2026-08-27 — **Redefinido o papel de `jogo/`**: além de gabarito, é a **demo pronta** do curso,
   mostrada aos alunos no Módulo 1 como motivação ("propaganda"). Passa a ser desenvolvido como
   entregável completo e independente — não fatiado pelos módulos; a invariante "nunca vazar
