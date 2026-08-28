@@ -1,13 +1,15 @@
 # Crescendo como Jesus
 
-Curso de programação com Python para crianças de 9 a 11 anos, sem experiência prévia. Ao longo de 12 módulos, os alunos constroem — passo a passo — um jogo com temática cristã inspirado em Lucas 2:52:
+Curso de programação com Python para crianças de 9 a 11 anos, sem experiência prévia. Ao longo de 12 módulos (mais um Módulo 0 de preparação de ambiente), os alunos constroem — passo a passo — um jogo com temática cristã inspirado em Lucas 2:52:
 
 > "E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens." (Lucas 2:52)
 
-O jogo usa a mesma mecânica da cobrinha (o personagem cresce à medida que coleta itens), mas em vez de comida, o personagem cresce em **estatura espiritual** ao coletar bons hábitos: 🙏 Oração, 📖 Leitura da Bíblia, ⛪ Ir ao culto, ❤️ Obedecer aos pais, 🤝 Ajudar o próximo. Itens que atrapalham (😡 desobediência, 🤥 mentira, distrações) fazem o personagem perder uma vida ao serem tocados.
+O jogo é um **labirinto no estilo Pac-Man**: a criança anda pelo "labirinto da vida" coletando **bons hábitos** — 🙏 Oração, 📖 Leitura da Bíblia, ⛪ Ir ao culto, ❤️ Obedecer aos pais, 🤝 Ajudar o próximo —, que aumentam sua **estatura espiritual**, e desviando das **tentações** — 😡 desobediência, 🤥 mentira, 😴 preguiça, 📱 distração —, que custam uma vida ao serem tocadas. A **oração** funciona como "power-pellet": por alguns segundos as tentações fogem e podem ser vencidas. São 4 fases: **Sabedoria → Estatura → Graça com Deus → Graça com os homens**. O versículo de Lucas 2:52 aparece na tela inicial e na de vitória.
 
 Usa **Python + Pygame Zero** no **VS Code**, com um venv próprio (ambiente determinístico —
 versões de pacote fixas, ver `requirements.txt`).
+
+O jogo de referência completo vive na pasta `jogo/` e é **demonstrado pronto e jogável no Módulo 1**, como motivação ("é aqui que você vai chegar"). Design completo em `docs/design-do-jogo.md`.
 
 ## Objetivo geral
 
@@ -23,10 +25,12 @@ Ao final do curso, o aluno deverá ser capaz de:
 - utilizar decisões (`if` / `else`);
 - criar repetições (laços);
 - criar e utilizar funções;
-- trabalhar com listas;
+- trabalhar com listas e laços (`for`);
 - compreender coordenadas na tela (eixos X e Y);
 - capturar comandos do teclado;
-- movimentar personagens e detectar colisões;
+- movimentar personagens por um labirinto e detectar colisões;
+- usar o acaso com `random`;
+- controlar o tempo e os estados do jogo (telas e fases);
 - criar sistemas de estatura (pontuação) e vidas;
 - organizar um pequeno projeto de programação;
 - testar e corrigir erros no código (debugging).
@@ -77,7 +81,7 @@ Contínua, observando: participação, compreensão dos conceitos, capacidade de
 
 ## Projeto final
 
-O jogo final deve possuir: tela inicial, personagem controlado pelo teclado, itens bons que fazem o personagem crescer em estatura, itens ruins que custam uma vida, placar de estatura, sistema de vidas, condição de vitória, condição de derrota, pelo menos uma fase e identidade visual própria do aluno.
+O jogo final deve possuir: tela inicial (com o versículo), um **labirinto** com paredes, personagem controlado pelo teclado que não atravessa parede, **bons hábitos** espalhados pelo mapa que aumentam a estatura, **tentações** que se movem sozinhas e custam uma vida ao encostar, a **oração** como poder temporário (as tentações fogem e podem ser vencidas), placar de estatura, sistema de vidas, condição de vitória e de derrota, pelo menos uma fase (o alvo são 4) e identidade visual própria do aluno.
 
 ## Módulos
 
@@ -86,16 +90,16 @@ O jogo final deve possuir: tela inicial, personagem controlado pelo teclado, ite
 | 0 | [Preparando o computador](modulo-00-sistema-operacional-e-pastas/material-professor.md) | SO, Windows/Linux, arquivos, pastas, caminho, terminal; Python 3.12, `uv`, VS Code + extensão, pacote/PyPI, ambiente virtual; estrutura de pastas do aluno | *(preparação de ambiente — não constrói o jogo)* |
 | 1 | [Conhecendo a programação](modulo-01-conhecendo-a-programacao/material-professor.md) | jogo do curso, o que é programa e algoritmo, sequência de execução, primeira janela (`WIDTH`/`HEIGHT`, cor de fundo, título) | Primeira janela do jogo |
 | 2 | [O personagem e a primeira decisão](modulo-02-personagem-e-primeira-decisao/material-professor.md) | objetos, coordenadas, eixos X/Y, valores lógicos, `if`/`else`, eventos de clique | Personagem aparece e reage a uma decisão (sim/não) |
-| 3 | Movimentando o personagem | entrada de dados, eventos de teclado | Movimento com as setas |
-| 4 | Criando os limites da tela | `if`/`else` (reforço), operadores relacionais | Personagem não sai da tela |
-| 5 | O corpo que cresce | listas, repetição | Corpo do personagem (estatura) segue a cabeça |
-| 6 | Colisão com o próprio corpo | colisão, posição anterior | Cuidado ao se enrolar sobre os próprios passos |
-| 7 | Colocando os bons hábitos no mapa | listas, laços, posição aleatória | Itens: oração, Bíblia, culto, obediência, ajudar o próximo |
-| 8 | Criando a estatura (pontuação) | contadores, atualização de texto | Placar de estatura |
-| 9 | Itens que atrapalham | condições, eventos | Desobediência, mentira, distrações no mapa |
-| 10 | Sistema de vidas | colisão, reinício de posição | Perde vida ao tocar item ruim ou em si mesmo |
-| 11 | Vitória, derrota e fases | condições compostas, estados do jogo | Fases: sabedoria, estatura, graça com Deus, graça com os homens |
-| 12 | Personalização e apresentação final | revisão geral, criatividade | Finalização e customização |
+| 3 | Movimentando o personagem | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
+| 4 | Os muros do labirinto | desenhar o mapa a partir de uma grade, operadores relacionais | Não atravessa parede nem sai da tela |
+| 5 | Os bons hábitos no mapa | listas, laço `for` | Vários itens desenhados pelo mapa; somem ao coletar |
+| 6 | A estatura (pontuação) | contadores, texto/HUD na tela | Placar de estatura sobe a cada hábito coletado |
+| 7 | As tentações entram | `random`, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
+| 8 | Encostar na tentação | funções (`def`), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar as vidas |
+| 9 | A força da oração | estado com tempo (`dt`/timer), condições compostas | Power-pellet: as tentações fogem e podem ser vencidas |
+| 10 | Tentação mais esperta | perseguição (mover em direção ao jogador), lista de tentações | Várias tentações, misturando andar aleatório e perseguir |
+| 11 | Fases e vitória | estados do jogo, condição de fim de fase | 4 fases temáticas com dificuldade crescente + tela de vitória |
+| 12 | Personalização e apresentação final | revisão geral, criatividade | Trocar cores/itens/labirinto, som, identidade visual do aluno |
 
 Cada módulo tem sua própria pasta com o material do professor, o material do aluno e o
 `exemplo.py` da aula (ver "Materiais por módulo" abaixo). Os slides (`apresentacao.html`) são

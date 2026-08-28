@@ -19,9 +19,10 @@ paths:
   se deu certo (a versão impressa, "a pasta X aparece no explorador", "nenhuma mensagem de
   erro", o prompt mudando para `(.venv)`, etc.) — assim o aluno sabe se pode seguir ou se algo
   falhou.
-- Ao introduzir um item novo do jogo (hábito bom/ruim), mantenha coerência com a lista já
-  estabelecida em `docs/crescendo-como-jesus-conteudo-programatico.md` (🙏📖⛪❤️🤝 vs 😡🤥
-  distrações) — não invente categoria nova sem atualizar esse documento também.
+- Ao introduzir um item novo do jogo (hábito bom/tentação), mantenha coerência com a lista já
+  estabelecida em `docs/crescendo-como-jesus-conteudo-programatico.md` e `docs/design-do-jogo.md`
+  (bons hábitos 🙏📖⛪❤️🤝 vs tentações 😡🤥😴📱) — não invente categoria nova sem atualizar esses
+  documentos também.
 - Cada módulo tem 2 arquivos de conteúdo + código: `material-professor.md` (roteiro completo),
   `material-aluno.md` (versão enxuta que o aluno segue) e `exemplo.py`. `material-aluno.md` nunca
   deve conter as notas de condução que só interessam ao professor (tempo por bloco, dicas de como
