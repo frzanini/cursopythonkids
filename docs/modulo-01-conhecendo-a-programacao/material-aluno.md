@@ -237,12 +237,12 @@ Cada parte de `screen.draw.text(...)`:
 
 **Rode de novo.** A mensagem aparece no centro da tela.
 
-### Passo 5 — o seu nome como criador
+### Passo 5 — o seu nome como pecador
 
 Mais uma chamada de `screen.draw.text`, um pouco **mais abaixo** na tela — repare no `+ 60`:
 
 ```python
-NOME_DO_CRIADOR = "Escreva seu nome aqui"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
 
 
 def draw():
@@ -254,7 +254,7 @@ def draw():
         color=COR_DO_TEXTO,
     )
     screen.draw.text(
-        "Criado por: " + NOME_DO_CRIADOR,
+        "Pecador: " + NOME_DO_PECADOR,
         center=(WIDTH // 2, HEIGHT // 2 + 60),
         fontsize=24,
         color=COR_DO_TEXTO,
@@ -277,7 +277,7 @@ Crie uma tela com:
 - [ ] título do jogo (aparece na barra da janela);
 - [ ] uma mensagem de boas-vindas na tela;
 - [ ] uma cor de fundo escolhida por você;
-- [ ] seu nome como criador, escrito na tela.
+- [ ] seu nome como pecador, escrito na tela.
 
 Construa **do zero**, seguindo os passos acima — não copie o `exemplo.py` pronto; ele é só para
 comparar no fim ou para destravar se você empacar.

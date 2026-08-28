@@ -16,6 +16,11 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   `material-aluno.md` + `exemplo.py`).
 - **`docs/error/*.png`** (5 imagens) não são referenciadas em nenhum `.md` — decidir se documentam
   algum erro conhecido (e onde entram) ou se podem ser removidas.
+- **Divergência entre `docs/design-do-jogo.md` e `docs/crescendo-como-jesus-conteudo-programatico.md`
+  sobre o Módulo 2.** O design do jogo diz que o Módulo 2 usa "um evento de tecla", enquanto o
+  conteúdo programático diz "eventos de clique". O material reescrito (`docs/modulo-02-personagem-
+  e-primeira-decisao/`) seguiu clique (`on_mouse_down`). Falta decidir qual documento está certo e
+  alinhar o outro.
 - **[FINAL DO PROJETO] Gerar `apresentacao.html` de todos os módulos** — os slides são o **último
   entregável do curso**: definir o template (HTML+CSS puro, autocontido, navegável por teclado) e
   gerar os slides de todos os módulos de uma vez, só depois que o conteúdo de todas as aulas
@@ -25,6 +30,25 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Feito
 
+- 2026-08-28 — **Módulo 2 reescrito no padrão passo-a-passo do Módulo 1**
+  (`docs/modulo-02-personagem-e-primeira-decisao/material-aluno.md` e `material-professor.md`).
+  Antes só havia o `exemplo.py` pronto, sem passo a passo didático; agora são 6 passos
+  incrementais — coordenadas/personagem parado, pergunta na tela, botões Sim/Não com `Rect`,
+  detecção de clique com `on_mouse_down(pos)`, guardar a resposta com `global`, mensagem final por
+  resposta — cada um com código, explicação do conceito novo e o resultado esperado ao rodar,
+  permitindo o aluno fazer a aula sozinho. Conceitos novos documentados: `Rect`, `collidepoint`,
+  `filled_circle`, `filled_rect`, `topleft`, `global`, `==` vs `=`, `if`/`elif`/`else`. Continuidade
+  com o Módulo 1 corrigida: o `jogo.py` é o mesmo arquivo que evolui o curso inteiro (não um
+  projeto novo por aula), então o Módulo 2 passa a reaproveitar explicitamente as variáveis
+  `COR_DE_FUNDO` e `COR_DO_TEXTO` criadas no Módulo 1 (antes o `exemplo.py` usava literais soltos
+  `"skyblue"`/`"white"`) e preserva o nome do aluno na tela (antes centralizado como boas-vindas,
+  agora um texto pequeno no canto inferior esquerdo via `topleft`). Todos os `exemplo.py` tocados
+  validados com `py_compile` sem erro.
+- 2026-08-28 — **Variável renomeada `NOME_DO_CRIADOR` → `NOME_DO_PECADOR`** em todos os módulos
+  existentes (1 e 2): decisão do usuário — "Criador" remete a Deus, e a variável guarda o nome do
+  aluno, que segundo o evangelho é pecador. Texto exibido na tela também mudou de
+  `"Criado por: "` para `"Pecador: "`. Atualizado em `exemplo.py`, `material-aluno.md` e
+  `material-professor.md` dos módulos 1 e 2.
 - 2026-08-28 — **Módulo 1 ganhou a seção "De onde vem o `pgzrun`?"** em `material-aluno.md` e
   `material-professor.md` (`docs/modulo-01-conhecendo-a-programacao/`), explicando o conceito de
   biblioteca/pacote e a diferença entre `pgzero` (pacote instalado no `.venv`) e `pgzrun` (a peça/

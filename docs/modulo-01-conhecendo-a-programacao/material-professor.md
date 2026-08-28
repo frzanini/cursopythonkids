@@ -30,7 +30,7 @@ Se algum aluno chegou sem isso, resolver **antes** da aula com o Módulo 0 / o g
 ## Parte do jogo
 
 A primeira janela do `jogo.py` — tela inicial com título, mensagem de boas-vindas, cor de fundo e
-o nome do criador.
+o nome do pecador.
 
 ## Roteiro da aula
 
@@ -235,14 +235,14 @@ Explicar cada parte de `screen.draw.text(...)`:
 - `color=COR_DO_TEXTO` — a cor do texto (mesma ideia de variável do passo 3).
 - Rodar: o texto aparece no centro.
 
-**Passo 5 — o nome do criador.** Mais uma chamada de `screen.draw.text`, um pouco mais abaixo:
+**Passo 5 — o nome do pecador.** Mais uma chamada de `screen.draw.text`, um pouco mais abaixo:
 
 ```python
-NOME_DO_CRIADOR = "Escreva seu nome aqui"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
 
 # dentro de draw(), depois do texto de boas-vindas:
     screen.draw.text(
-        "Criado por: " + NOME_DO_CRIADOR,
+        "Pecador: " + NOME_DO_PECADOR,
         center=(WIDTH // 2, HEIGHT // 2 + 60),
         fontsize=24,
         color=COR_DO_TEXTO,
@@ -277,14 +277,14 @@ Cada aluno cria o próprio `jogo.py` (na raiz de `crescendo-como-jesus/`), com:
 - título do jogo (na barra da janela);
 - mensagem de boas-vindas (texto desenhado na tela);
 - cor de fundo escolhida por ele;
-- nome do criador (o próprio aluno) exibido na tela.
+- nome do pecador (o próprio aluno) exibido na tela.
 
 Cada um constrói **do zero**, seguindo o passo a passo da demonstração — não copiar o
 [`exemplo.py`](exemplo.py) pronto; ele serve só para comparar no fim ou destravar quem empacou.
 
 ### 8. Desafios (5 min)
 
-- **Missão principal:** tela com título, boas-vindas, cor de fundo e nome do criador.
+- **Missão principal:** tela com título, boas-vindas, cor de fundo e nome do pecador.
 - **Desafio extra:** uma segunda linha de texto — o versículo de Lucas 2:52 — brincando com
   `fontsize` e `COR_DO_TEXTO`.
 - **Desafio criativo:** trocar as cores para combinar com o tema que o aluno imagina para o jogo.

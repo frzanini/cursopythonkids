@@ -11,6 +11,10 @@ HEIGHT = 600
 
 TITLE = "Crescendo como Jesus"
 
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
 PERGUNTA = "Você orou hoje?"
 
 # Posição e tamanho do personagem (um círculo, por enquanto)
@@ -29,13 +33,20 @@ botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
 
 
 def draw():
-    screen.fill("skyblue")
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
 
     screen.draw.text(
         PERGUNTA,
         center=(WIDTH // 2, HEIGHT // 2 - 160),
         fontsize=32,
-        color="white",
+        color=COR_DO_TEXTO,
     )
 
     # O personagem: cresce e muda de cor quando a resposta é "Sim"

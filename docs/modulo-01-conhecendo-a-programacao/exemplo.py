@@ -13,7 +13,7 @@ HEIGHT = 600
 
 TITLE = "Crescendo como Jesus"
 
-NOME_DO_CRIADOR = "Escreva seu nome aqui"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
 VERSICULO = "\"Jesus crescia em sabedoria, estatura e graça...\" (Lucas 2:52)"
 COR_DE_FUNDO = "skyblue"
 COR_DO_TEXTO = "white"
@@ -34,7 +34,7 @@ def draw():
         color=COR_DO_TEXTO,
     )
     screen.draw.text(
-        "Criado por: " + NOME_DO_CRIADOR,
+        "Pecador: " + NOME_DO_PECADOR,
         center=(WIDTH // 2, HEIGHT // 2 + 40),
         fontsize=24,
         color=COR_DO_TEXTO,
