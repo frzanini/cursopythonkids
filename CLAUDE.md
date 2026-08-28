@@ -57,18 +57,21 @@ Dois ambientes, ambos Python 3.12 (versão fixa — wheel de `pygame` disponíve
 
 ## Estrutura de módulo
 
-Cada módulo tem sua própria pasta (`docs/modulo-NN-slug/`) com quatro arquivos:
+Cada módulo tem sua própria pasta (`docs/modulo-NN-slug/`) com dois arquivos de conteúdo:
 
 - `material-professor.md` — roteiro completo da aula (conceitos, demonstração, atividade,
   desafios, tempo por bloco). Segue um padrão comum mas **não é rígido** — adapte ao conteúdo,
   não force a divisão de minutos.
 - `material-aluno.md` — versão enxuta que o aluno acompanha durante a aula.
-- `apresentacao.html` — slides autocontidos (sem dependência de internet) da aula.
 - `exemplo.py` — código-exemplo do módulo. **Exceção: Módulo 0** não tem `exemplo.py` (não
   ensina Python ainda, é preparação de ambiente: SO, pastas, `uv`/Python/VS Code, `.venv`).
 
-Módulos 0, 1 e 2 já estão no formato novo (falta só `apresentacao.html` dos três — pendente de
-propósito, ver `docs/backlog/status.md`). Módulos 3–12 ainda não foram escritos. Ver
+O `apresentacao.html` (slides) **não** é feito por módulo agora: é o **último entregável do
+curso**, gerado de uma vez para todos os módulos no fim do projeto, depois que todo o conteúdo
+das aulas estiver revisado — ver `docs/backlog/status.md` e a issue #12. A prioridade atual é
+revisar e escrever o conteúdo das aulas (`material-*.md` + `exemplo.py`).
+
+Módulos 0, 1 e 2 já estão no formato novo. Módulos 3–12 ainda não foram escritos. Ver
 `docs/crescendo-como-jesus-conteudo-programatico.md` § Materiais por módulo.
 
 ## Onde fica o quê

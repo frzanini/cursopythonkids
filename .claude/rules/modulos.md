@@ -22,11 +22,13 @@ paths:
 - Ao introduzir um item novo do jogo (hábito bom/ruim), mantenha coerência com a lista já
   estabelecida em `docs/crescendo-como-jesus-conteudo-programatico.md` (🙏📖⛪❤️🤝 vs 😡🤥
   distrações) — não invente categoria nova sem atualizar esse documento também.
-- Cada módulo tem 4 arquivos: `material-professor.md` (roteiro completo), `material-aluno.md`
-  (versão enxuta que o aluno segue), `apresentacao.html` (slides autocontidos) e `exemplo.py`.
-  `material-aluno.md` e `apresentacao.html` nunca devem conter as notas de condução que só
-  interessam ao professor (tempo por bloco, dicas de como explicar) — isso fica só no
-  `material-professor.md`. **Exceção: Módulo 0** (`modulo-00-sistema-operacional-e-pastas/`) não
+- Cada módulo tem 2 arquivos de conteúdo + código: `material-professor.md` (roteiro completo),
+  `material-aluno.md` (versão enxuta que o aluno segue) e `exemplo.py`. `material-aluno.md` nunca
+  deve conter as notas de condução que só interessam ao professor (tempo por bloco, dicas de como
+  explicar) — isso fica só no `material-professor.md`. O `apresentacao.html` (slides) **não** é
+  feito por módulo: é o último entregável do curso, gerado para todos os módulos de uma vez no
+  fim do projeto, com o conteúdo das aulas já revisado (issue #12). Não crie `apresentacao.html`
+  ao escrever um módulo novo. **Exceção: Módulo 0** (`modulo-00-sistema-operacional-e-pastas/`) não
   tem `exemplo.py` — é preparação de ambiente (SO, pastas, terminal, `uv`/Python 3.12/VS Code,
   criação do `.venv` e da pasta `crescendo-como-jesus/` com `aula-NN/`), não ensina Python ainda.
 - Do Módulo 1 em diante, **não** repita passos de instalação de ambiente — a máquina já está

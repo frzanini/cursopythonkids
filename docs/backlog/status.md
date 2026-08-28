@@ -10,19 +10,28 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   2026-08-27), mas só foi validada headless (sintaxe + conectividade do mapa + simulação de
   lógica). Falta rodar numa máquina com tela para ajustar velocidades, tamanho da janela,
   legibilidade e "sensação" do movimento. Sprites e sons continuam fora (item à parte).
-- **`apresentacao.html` dos módulos 0, 1 e 2** — combinado com o usuário deixar a apresentação
-  HTML por último, só depois do `material-professor.md`/`material-aluno.md` de cada módulo estar
-  revisado. Os `.md` dos três já estão prontos; falta gerar os slides quando o usuário confirmar
-  a revisão do texto.
 - **Módulos 3 a 12** ainda não foram escritos — só existem como linha na tabela de
-  `docs/crescendo-como-jesus-conteudo-programatico.md` (título + conceitos-chave).
-- **Definir um padrão/template para `apresentacao.html`** (estilo visual, se usa alguma lib
-  local embutida para slides ou HTML+CSS puro) antes de gerar a primeira apresentação real.
+  `docs/crescendo-como-jesus-conteudo-programatico.md` (título + conceitos-chave). **Prioridade
+  atual do projeto: revisar e escrever o conteúdo das aulas** (`material-professor.md` +
+  `material-aluno.md` + `exemplo.py`).
 - **`docs/error/*.png`** (5 imagens) não são referenciadas em nenhum `.md` — decidir se documentam
   algum erro conhecido (e onde entram) ou se podem ser removidas.
+- **[FINAL DO PROJETO] Gerar `apresentacao.html` de todos os módulos** — os slides são o **último
+  entregável do curso**: definir o template (HTML+CSS puro, autocontido, navegável por teclado) e
+  gerar os slides de todos os módulos de uma vez, só depois que o conteúdo de todas as aulas
+  estiver escrito e revisado. Não é feito módulo a módulo. Rastreado na issue #12. Removido dos
+  materiais por módulo em `CLAUDE.md`, `.claude/rules/modulos.md`,
+  `docs/crescendo-como-jesus-conteudo-programatico.md` e `/novo-modulo`.
 
 ## Feito
 
+- 2026-08-27 — **`apresentacao.html` adiado para o fim do projeto.** Decisão do usuário: os
+  slides deixam de ser um arquivo por módulo e passam a ser o último entregável do curso —
+  gerados de uma vez para todos os módulos, com o conteúdo das aulas já revisado. Removidas as
+  menções a "4 arquivos por módulo"/slides de `CLAUDE.md`, `.claude/rules/modulos.md`,
+  `docs/crescendo-como-jesus-conteudo-programatico.md` e do comando `/novo-modulo`. A issue #12
+  virou a tarefa única de "definir template + gerar todos os slides no fim"; nenhuma outra issue
+  cita apresentação HTML. Prioridade declarada: revisar/escrever o conteúdo das aulas.
 - 2026-08-27 — **Diagrama do ambiente virtual devolvido ao Módulo 0**, agora no contexto
   pasta/projeto: `mermaid` mostrando computador → Python 3.12 (via `uv`) → `.venv/` dentro de
   `crescendo-como-jesus/`, usado por `jogo.py` e por todas as `aula-NN/`. Entrou no

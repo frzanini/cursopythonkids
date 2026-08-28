@@ -97,8 +97,9 @@ O jogo final deve possuir: tela inicial, personagem controlado pelo teclado, ite
 | 11 | Vitória, derrota e fases | condições compostas, estados do jogo | Fases: sabedoria, estatura, graça com Deus, graça com os homens |
 | 12 | Personalização e apresentação final | revisão geral, criatividade | Finalização e customização |
 
-Cada módulo tem sua própria pasta com três materiais (ver "Materiais por módulo" abaixo) e o
-`exemplo.py` da aula.
+Cada módulo tem sua própria pasta com o material do professor, o material do aluno e o
+`exemplo.py` da aula (ver "Materiais por módulo" abaixo). Os slides (`apresentacao.html`) são
+entregues no fim do projeto, não por módulo.
 
 ## Materiais por módulo
 
@@ -109,10 +110,12 @@ Cada `docs/modulo-NN-slug/` deve conter:
   do professor para conduzir a aula; hoje corresponde ao antigo `modulo-NN-slug.md`.
 - **`material-aluno.md`** — versão enxuta que o aluno acompanha durante a aula (o que fazer,
   passo a passo, sem as notas de condução que só interessam ao professor).
-- **`apresentacao.html`** — slides da aula em HTML, autocontido (sem dependência de internet
-  durante a aula), para abrir e projetar.
 - **`exemplo.py`** — código-exemplo da aula. Exceção: o Módulo 0 não tem esse arquivo, por não
   ensinar Python ainda.
 
-> Status: módulos 0, 1 e 2 migrados para essa estrutura em 2026-08-22 (`apresentacao.html` ainda
-> pendente para os três — ver `docs/backlog/status.md`). Módulos 3–12 ainda não existem.
+O **`apresentacao.html`** (slides autocontidos, sem internet, para projetar) é o **último
+entregável do curso**: será gerado de uma vez para todos os módulos no fim do projeto, quando o
+conteúdo de todas as aulas estiver revisado (ver `docs/backlog/status.md` e issue #12). Não é
+feito módulo a módulo. A prioridade agora é revisar e escrever o conteúdo das aulas.
+
+> Status: módulos 0, 1 e 2 migrados para essa estrutura. Módulos 3–12 ainda não existem.
