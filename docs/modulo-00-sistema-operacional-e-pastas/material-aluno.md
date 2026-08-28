@@ -1,27 +1,29 @@
-# Módulo 0 — Conhecendo o computador (material do aluno)
+# Módulo 0 — Preparando o computador (material do aluno)
 
-## O que vamos aprender hoje
+## O que vamos fazer hoje
 
-Antes de começar a programar, vamos entender melhor o computador que vamos usar:
+Ainda **não** vamos programar. Hoje a gente deixa o computador **pronto para escrever código** —
+instala as ferramentas, organiza as pastas e monta o ambiente do projeto. No fim, dá pra
+começar o Módulo 1 sem parar pra instalar nada.
 
-- O que é um **sistema operacional**
-- **Windows** e **Linux** — dois exemplos de sistema operacional
-- O que são **arquivos** e **pastas**
-- O que é o **caminho** de um arquivo
-- Como usar o **terminal** para navegar entre pastas
-- O que é uma **IDE**, e conhecer o **VS Code** — o programa que vamos usar no curso
+Você vai entender:
+
+- o que é um **sistema operacional**; **Windows** e **Linux**
+- o que são **arquivos**, **pastas**, **caminho** e **extensão**
+- como usar o **terminal** para navegar e criar pastas
+- as ferramentas do curso: **Python 3.12** (a linguagem), **`uv`**, **VS Code** e o pacote **`pgzero`**
+- o que é um **ambiente virtual (venv)**
 
 ## Sistema operacional (SO)
 
 É o programa principal que gerencia o computador — abre outros programas, guarda seus arquivos,
-controla o teclado e o mouse. Quando você liga o computador, é o SO que aparece primeiro.
+controla o teclado e o mouse. Quando você liga o computador, é o SO que aparece.
 
-**Windows** e **Linux** são dois exemplos de SO. O curso funciona igual nos dois — só muda um
-pouco a aparência das janelas.
+**Windows** e **Linux** são dois exemplos de SO. O curso funciona igual nos dois — só muda a
+aparência das janelas e alguns comandos de instalação. Só precisa saber **qual SO o seu
+computador usa**.
 
-O SO fica "no meio" entre o computador de verdade (teclado, mouse, tela, disco) e os
-aplicativos que você usa (navegador, jogos, VS Code). Nenhum aplicativo fala direto com o
-computador — ele sempre passa pelo SO:
+Nenhum aplicativo fala direto com o computador — ele sempre passa pelo SO:
 
 ```mermaid
 flowchart TB
@@ -33,89 +35,183 @@ flowchart TB
     SO <--> APPS
 ```
 
-## Arquivos e pastas
+## Arquivos, pastas, caminho e extensão
 
 - **Arquivo**: uma coisa guardada no computador (um texto, uma foto, um programa).
-- **Pasta**: uma "caixa" que guarda arquivos, pra organizar tudo.
-- **Extensão**: a partezinha depois do ponto no nome do arquivo, tipo `.png` ou `.py` — ela diz
-  que tipo de arquivo é aquele.
+- **Pasta**: uma "caixa" que guarda arquivos, pra organizar.
+- **Caminho (path)**: o "endereço" de um arquivo ou pasta — o caminho que você percorre, pasta
+  por pasta, até chegar nele. Igual o endereço de uma casa.
+- **Extensão**: a partezinha depois do ponto no nome do arquivo (`.png`, `.py`) — diz que tipo
+  de arquivo é. Os arquivos de Python terminam em `.py`.
 
-## Caminho (path)
+## Terminal (CLI): usando o computador por comandos
 
-É o "endereço" de um arquivo ou pasta — o caminho que você percorre, pasta por pasta, até
-chegar nele. Igual o endereço de uma casa: sem ele, ninguém acha o que você procura.
-
-## Terminal (CLI): navegando por comandos
-
-Além de clicar nos ícones do gerenciador de arquivos, dá pra navegar entre pastas **digitando
-comandos**. Isso se chama **terminal** (ou CLI). O Módulo 1 já vai usar o terminal, então vale
-aprender o básico agora.
+Além de clicar nos ícones, dá pra usar o computador **digitando comandos**. Isso se chama
+**terminal** (ou CLI). Hoje a gente instala quase tudo por aqui.
 
 **Como abrir:**
 
 - **Windows:** menu Iniciar, digite "PowerShell" e aperte Enter.
-- **Linux:** aperte `Ctrl+Alt+T`, ou procure "Terminal" no menu de aplicativos.
+- **Linux:** aperte `Ctrl+Alt+T`, ou procure "Terminal" no menu.
 
 **Comandos básicos:**
 
-| O que eu quero fazer | Comando |
+| O que eu quero fazer | Comando | O que deve aparecer |
+|---|---|---|
+| Ver em qual pasta eu estou | `pwd` | o caminho completo da pasta atual |
+| Ver o que tem dentro da pasta atual | `dir` (Windows) ou `ls` (Linux) | a lista de arquivos e pastas dali |
+| Entrar numa pasta | `cd nome-da-pasta` | nada; confira com `pwd` |
+| Voltar uma pasta | `cd ..` | nada; confira com `pwd` |
+| Criar uma pasta nova | `mkdir nome-da-pasta` | nada; a pasta aparece no `dir`/`ls` |
+| Remover uma pasta vazia | `rmdir nome-da-pasta` | nada; a pasta some do `dir`/`ls` |
+
+No terminal, **"deu certo" quase sempre é "não apareceu nada"** — a gente confere o efeito com
+`pwd` ou `dir`/`ls`. Se aparecer uma linha de erro, leia o que ela diz.
+
+## As ferramentas do curso
+
+| Ferramenta | Para que serve |
 |---|---|
-| Ver em qual pasta eu estou | `pwd` |
-| Ver o que tem dentro da pasta atual | `dir` (Windows) ou `ls` (Linux) |
-| Entrar numa pasta (andar pra frente) | `cd nome-da-pasta` |
-| Voltar uma pasta (andar pra trás) | `cd ..` |
-| Criar uma pasta nova | `mkdir nome-da-pasta` |
-| Remover uma pasta (só se estiver vazia) | `rmdir nome-da-pasta` |
-| Abrir a pasta atual no VS Code | `code .` |
+| **Python 3.12** | A linguagem do curso — é ela que a gente vem aprender. A versão é **3.12** de propósito (garante o `pygame` pronto). |
+| **`uv`** | O instalador do curso: instala o Python, cria o ambiente virtual e instala os pacotes, tudo com os mesmos comandos. Como é ele que traz o Python, é a **primeira** coisa a rodar. |
+| **VS Code** + extensão **Python** | A **IDE**: junta editor, terminal e mensagens de erro num lugar só. O VS Code **não** é uma linguagem — é onde a gente escreve e roda o código. |
+| **`pgzero`** (Pygame Zero) | Um **pacote** pronto, baixado de graça do **PyPI**, que dá os recursos de janela e desenho do jogo. Instalado **dentro** do ambiente virtual. |
 
-Repare: é o mesmo passeio que você já faz clicando no gerenciador de arquivos — só que agora
-digitado.
+## Passo a passo (siga na ordem)
 
-## IDE: o VS Code
+### 1. Ver o que já está instalado
 
-Pra programar, a gente precisa escrever código, rodar ele e ver se deu erro. Um programa que
-junta tudo isso num só lugar se chama **IDE**. O **VS Code** é a IDE que vamos usar no curso.
+No terminal:
 
-Dentro do VS Code tem:
+```
+python --version
+uv --version
+code --version
+```
 
-- a área de edição, onde escrevemos o código;
-- o terminal integrado — o mesmo terminal que você acabou de aprender a usar, só que já dentro
-  do próprio VS Code;
-- o explorador de arquivos na lateral, que mostra as pastas e arquivos do projeto — o mesmo
-  passeio de pastas que você já conhece.
+**O que deve aparecer:** para o que já está instalado, uma linha com a versão (ex.:
+`Python 3.12.4`). Para o que falta, um erro tipo `'python' não é reconhecido` /
+`command not found` — normal, é só instalar abaixo.
 
-Uma forma rápida de abrir o VS Code já na pasta certa: no terminal, `cd` até chegar na pasta e
-digitar `code .` (o ponto significa "esta pasta aqui").
+### 2. Instalar o Python 3.12 (com o `uv`)
 
-O VS Code não é uma linguagem de programação — é só o programa onde vamos escrever e rodar o
-código Python, a partir do Módulo 1.
+O curso é de Python — mas quem instala o Python pra gente é o `uv`, então ele vem primeiro.
 
-## Instalando o VS Code (pelo terminal)
+- Instalar o `uv`:
+  - **Windows:** `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+  - **Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
+  - Deve terminar com uma mensagem de sucesso do instalador.
+- **Feche e abra o terminal de novo** e confirme: `uv --version` → deve imprimir algo como
+  `uv 0.4.20`.
+- Instalar o Python 3.12: `uv python install 3.12` → baixa (barra de progresso) e termina com
+  `Installed Python 3.12.x`, sem erro.
+- Confirmar: `uv python list` → deve ter uma linha com `3.12` e um caminho ao lado.
 
-Abra o terminal e digite:
+### 3. Instalar o VS Code e a extensão Python
 
-- **Windows:** `winget install -e --id Microsoft.VisualStudioCode`
-- **Linux:** `sudo snap install code --classic`
+- Instalar o VS Code:
+  - **Windows:** `winget install -e --id Microsoft.VisualStudioCode`
+  - **Linux:** `sudo snap install code --classic`
+  - Deve mostrar o progresso e terminar com sucesso.
+- **Feche e abra o terminal de novo** e confirme: `code --version` → responde com três linhas.
+- Abra o VS Code, clique no ícone de extensões (`Ctrl+Shift+X`), busque **Python** (da
+  Microsoft) e clique em **Install** → o botão passa a mostrar "Uninstall".
 
-Feche e abra o terminal de novo, e confirme que instalou com `code --version`. Se der algum
-problema, veja `docs/preparacao-ambiente/instalacao_vscode.md` § 3.
+> Se o `winget`/`snap` não funcionar, baixe o VS Code em https://code.visualstudio.com.
 
-## Sua missão
+### 4. Criar a pasta do curso
 
-- [ ] Crie uma pasta no seu computador pra guardar os arquivos do curso (ex.: `curso-python`).
-- [ ] Dentro dela, crie uma pasta chamada `modulo-01`.
-- [ ] Crie um arquivo de texto simples dentro dessa pasta, salve, feche.
-- [ ] Ache esse arquivo de novo navegando pelas pastas — sem usar a busca!
-- [ ] Consiga dizer o caminho completo até o arquivo que você criou.
-- [ ] Abra o terminal e use `cd` para chegar até a pasta `curso-python`, digite `pwd` pra
-      confirmar que chegou no lugar certo, e use `dir`/`ls` para ver as pastas que você criou.
-- [ ] Instale o VS Code pelo terminal (veja acima) e confirme com `code --version`.
-- [ ] Abra a pasta `curso-python` no VS Code usando o terminal (`cd` até chegar nela, depois
-      `code .`) e encontre, no explorador de arquivos da lateral, a mesma pasta de módulo que
-      você criou.
+No terminal, vá até onde a pasta vai ficar (ex.: a Área de Trabalho) e crie a estrutura:
 
-Essa pasta vai ser onde a gente vai trabalhar a partir do Módulo 1 — é lá que o `jogo.py` vai
-morar.
+```
+mkdir crescendo-como-jesus
+cd crescendo-como-jesus
+mkdir aula-01
+pwd
+```
+
+**O que deve aparecer:** os três primeiros comandos não respondem nada (normal); o `pwd` no fim
+mostra o caminho completo terminando em `crescendo-como-jesus`. Um `dir`/`ls` mostra a `aula-01`
+lá dentro.
+
+- `crescendo-como-jesus/` é a **pasta principal** do curso — é aqui que tudo vai acontecer.
+- `aula-01/` guarda os testes soltos da primeira aula. Cada aula terá a sua (`aula-02`, ...).
+- Use `aula-01` (com traço), **não** `modulo-01`.
+- O arquivo `jogo.py` vai ficar na **raiz** de `crescendo-como-jesus/`, mas ele só nasce no
+  Módulo 1.
+
+Abra essa pasta no VS Code: ainda dentro dela no terminal, digite `code .` → o VS Code abre com
+`CRESCENDO-COMO-JESUS` no topo do explorador da lateral e `aula-01` listada dentro.
+
+### 5. Criar o ambiente virtual (venv)
+
+O **venv** é uma "caixa" separada com o Python e os pacotes só do nosso projeto — assim o
+ambiente fica igual em qualquer computador. Essa caixa mora **dentro** da pasta do curso, na
+subpasta `.venv/`, e é usada tanto pelo `jogo.py` quanto por todas as pastas `aula-NN/`:
+
+```mermaid
+flowchart TB
+    PC["💻 Seu computador"]
+    PY["🐍 Python 3.12<br/>instalado uma vez pelo uv"]
+    PC --> PY
+
+    subgraph PROJ["📁 crescendo-como-jesus/ — a pasta do curso"]
+        direction TB
+        VENV["📦 .venv/ — o ambiente virtual<br/>Python 3.12 + pgzero + pygame, só do nosso jogo"]
+        JOGO["📄 jogo.py"]
+        AULAS["📁 aula-01/   📁 aula-02/   ..."]
+    end
+
+    PY -->|"o uv monta a caixa aqui dentro"| VENV
+    JOGO -->|usa| VENV
+    AULAS -->|usam| VENV
+```
+
+Com a pasta aberta no VS Code, abra o **terminal integrado** (`` Ctrl+` ``) e rode:
+
+```
+uv venv --python 3.12 .venv
+uv pip install pgzero
+uv pip freeze > requirements.txt
+```
+
+**O que deve aparecer:**
+
+- `uv venv ...` → `Creating virtual environment at: .venv`; a pasta `.venv` surge no explorador.
+- `uv pip install pgzero` → a lista dos pacotes (`pgzero`, `pygame`, `numpy`...) e `Installed N
+  packages`, sem linha vermelha.
+- `uv pip freeze > requirements.txt` → nada no terminal; o arquivo `requirements.txt` aparece no
+  explorador.
+
+Depois selecione o interpretador: `Ctrl+Shift+P` → **Python: Select Interpreter** → escolha o
+que tem `.venv` (costuma vir como "Recommended") → o canto inferior direito do VS Code passa a
+mostrar `3.12.x ('.venv')`.
+
+### 6. Testar se está tudo pronto
+
+Isto **não é** aula de Python — é só pra ver se tudo liga.
+
+- No explorador do VS Code, dentro de `aula-01/`, crie o arquivo `teste.py` com:
+  ```python
+  print("ambiente pronto para a aula")
+  ```
+- Clique no botão ▶ **Run Python File** (canto superior direito).
+- **O que deve aparecer:** no terminal, a linha exata `ambiente pronto para a aula`, sem erro.
+  Se apareceu isso, **está tudo pronto!** (Pode apagar o `teste.py` depois.)
+
+## Checklist final
+
+- [ ] `python --version` (ou `uv python list` com `3.12`), `uv --version` e `code --version`
+      respondem
+- [ ] extensão **Python** instalada no VS Code
+- [ ] pasta `crescendo-como-jesus/` criada, com `aula-01/` dentro
+- [ ] `.venv` criado na raiz de `crescendo-como-jesus/`, `pgzero` instalado, `requirements.txt`
+      gerado
+- [ ] interpretador `.venv` selecionado no VS Code
+- [ ] `teste.py` rodou e imprimiu a frase
+
+Quando tudo estiver marcado, seu computador está pronto para o Módulo 1 — é lá que o `jogo.py`
+começa.
 
 ## Palavras novas
 
@@ -123,22 +219,28 @@ morar.
 |---|---|
 | Sistema operacional (SO) | O programa principal que gerencia o computador |
 | Windows / Linux | Dois exemplos de sistema operacional |
-| Arquivo | Uma coisa guardada no computador |
-| Pasta | Uma "caixa" que organiza arquivos |
+| Arquivo / Pasta | Uma coisa guardada no computador / uma "caixa" que organiza arquivos |
 | Extensão | A parte depois do ponto no nome do arquivo (ex.: `.py`) |
-| Caminho | O endereço completo até um arquivo ou pasta |
-| Terminal / CLI | Jeito de navegar e usar o computador digitando comandos |
-| `cd` | Comando pra "andar" entre pastas no terminal |
-| IDE | Um programa que junta editor, execução e erros num só lugar |
-| VS Code | A IDE que vamos usar no curso |
+| Caminho (path) | O endereço completo até um arquivo ou pasta |
+| Terminal / CLI | Usar o computador digitando comandos |
+| `cd` / `mkdir` / `rmdir` | Andar entre pastas / criar pasta / remover pasta vazia |
+| `code .` | Abre o VS Code na pasta atual do terminal |
+| IDE / VS Code | Programa que junta editor, execução e erros / a IDE do curso |
+| Python 3.12 | A linguagem que vamos usar; versão fixa de propósito |
+| `uv` | Instala o Python, cria o venv e instala os pacotes |
+| Pacote / PyPI | Código pronto e gratuito / o repositório de onde ele vem |
+| `pgzero` (Pygame Zero) | O pacote que dá janela e desenho pro jogo |
+| Ambiente virtual (venv) | "Caixa" isolada com o Python e os pacotes do projeto |
+| `requirements.txt` | Lista das versões exatas dos pacotes, pra recriar o ambiente igual |
 
 ## Deu dúvida? Tenta isso primeiro
 
-- **Não sei onde salvei o arquivo:** procure na pasta que você escolheu na hora de salvar — não
-  no local padrão.
-- **Me perdi entre as pastas:** olhe a barra de endereço do gerenciador de arquivos — ela sempre
-  mostra onde você está.
-- **`rmdir` deu erro:** confira com `dir`/`ls` se a pasta está mesmo vazia — só dá pra remover
-  pasta vazia.
-- **`code .` não funciona:** feche e abra o terminal de novo depois de instalar o VS Code, e
-  confira com `pwd` se você está na pasta certa antes de rodar o comando.
+- **`uv` / `code` não reconhecido depois de instalar:** feche e abra o terminal de novo.
+- **`winget` não funciona:** baixe o VS Code em https://code.visualstudio.com.
+- **`uv python install 3.12` parece travado:** ele baixa o Python na primeira vez — aguarde.
+- **Me perdi entre as pastas:** use `pwd`, e a barra de endereço do gerenciador de arquivos.
+- **`rmdir` deu erro:** a pasta não está vazia (confira com `dir`/`ls`).
+- **VS Code não mostra o `.venv`:** confirme que a pasta `.venv` está **dentro** de
+  `crescendo-como-jesus/` e recarregue a janela (`Ctrl+Shift+P` → "Developer: Reload Window").
+- **`teste.py` deu erro:** repita o passo 5 (Select Interpreter → `.venv`) e confira o
+  interpretador no canto inferior direito do VS Code.
