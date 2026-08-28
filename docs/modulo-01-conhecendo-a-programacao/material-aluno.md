@@ -2,46 +2,68 @@
 
 ## O jogo que vamos construir
 
-Ao longo do curso, vamos criar um jogo em que o personagem cresce em "estatura espiritual" ao
-coletar bons hábitos (🙏 Oração, 📖 Bíblia, ⛪ Culto, ❤️ Obedecer aos pais, 🤝 Ajudar o próximo)
-— inspirado no versículo:
+Ao longo do curso vamos construir, um pedaço por aula, um **jogo de labirinto no estilo
+Pac-Man** com a ideia do versículo:
 
 > "E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."
 > (Lucas 2:52)
 
-Hoje vamos só começar: a **primeira tela** do jogo!
+No jogo, o personagem anda pelo "labirinto da vida":
+
+- coletando **bons hábitos** — 🙏 oração, 📖 Bíblia, ⛪ culto, ❤️ obedecer aos pais, 🤝 ajudar o
+  próximo —, que aumentam a **estatura**;
+- desviando das **tentações** — 😡 desobediência, 🤥 mentira, 😴 preguiça, 📱 distração —, que
+  fazem perder uma vida;
+- a **oração** é um poder: por alguns segundos as tentações fogem e podem ser vencidas;
+- são **4 fases**: Sabedoria → Estatura → Graça com Deus → Graça com os homens.
+
+O professor vai mostrar o **jogo pronto rodando** — é para onde a gente vai chegar. Hoje vamos
+fazer só o começo: a **primeira tela**.
 
 ## O que vamos aprender hoje
 
 - O que é um **programa** e um **algoritmo**
-- O que é um **pacote** — código pronto que a gente pode usar de graça
-- Como o computador executa nossas instruções, na ordem certinha
-- O que é uma **função** e por que a indentação (o recuo) importa tanto no Python
-- Vamos escrever e rodar nosso primeiro programa em Python, usando o **VS Code** — a IDE que já
-  conhecemos do Módulo 0!
+- Como o computador executa as instruções: **uma de cada vez, na ordem** em que foram escritas
+- O que é uma **variável**
+- O que é uma **função** e por que o **recuo** (indentação) importa tanto no Python
+- Escrever e rodar o nosso **primeiro programa** em Python, com o **Pygame Zero**
 
-## Ferramentas
+## O que você já tem pronto (do Módulo 0)
 
-**Python** + **VS Code** + **`uv`**. O VS Code é a IDE (o programa) onde vamos escrever e rodar
-nosso código; o `uv` é quem instala o Python certinho e prepara o ambiente do projeto.
+**Hoje não instala nada.** No Módulo 0 sua máquina já ficou pronta:
 
-## Passo a passo de hoje
+- Python 3.12 e o VS Code (com a extensão Python);
+- a pasta **`crescendo-como-jesus/`** com a subpasta `aula-01/`;
+- o ambiente virtual **`.venv/`** dentro dela, com o pacote **`pgzero`** instalado;
+- o interpretador `.venv` selecionado no VS Code.
 
-Hoje tem bastante coisa nova de ambiente antes de chegar no código — siga a ordem, um passo de
-cada vez, sem pular:
+**Confira uma coisa só:** no canto inferior direito do VS Code deve aparecer algo como
+`3.12.x ('.venv')`. Se não aparecer, aperte `Ctrl+Shift+P`, digite **Python: Select
+Interpreter** e escolha o que tem `.venv` (costuma vir marcado como "Recommended"). Esse é o
+"Python do projeto" — o que tem o `pgzero` que você instalou no Módulo 0.
 
-1. Abrir a pasta no VS Code
-2. Abrir o terminal integrado
-3. Instalar o Python
-4. Entender e criar o ambiente virtual (venv) — **a "caixa" do nosso projeto**
-5. Escrever nosso primeiro programa
+## Programa, algoritmo e a ordem das coisas
 
-## Passo 1 — Abrindo a pasta no VS Code
+- Um **programa** é uma **lista de instruções** que o computador segue.
+- Um **algoritmo** é a **sequência de passos** para resolver um problema — como uma **receita de
+  bolo**: cada passo na ordem certa.
+- O computador faz **uma instrução de cada vez, de cima para baixo**, na ordem em que você
+  escreveu. Ele **não adivinha** o que você quis dizer nem pula na frente. Numa receita, trocar
+  "leve ao forno" com "misture os ovos" estraga tudo — no código é igual.
 
-Você já sabe fazer isso desde o Módulo 0: abra a pasta de hoje pelo terminal (`cd` até ela e
-`code .`). Daqui pra frente, o assunto muda — vamos preparar o Python.
+## Abrindo a pasta do curso no VS Code
 
-Este é o mockup da janela do VS Code, com as três áreas que vamos usar hoje:
+Abra a pasta `crescendo-como-jesus/` (a que você criou no Módulo 0):
+
+- no terminal, **dentro dela**, digite `code .`  — ou
+- no VS Code, **File > Open Folder...** e escolha a pasta.
+
+No explorador (barra lateral) você vê `CRESCENDO-COMO-JESUS` no topo, com `aula-01/` e `.venv/`
+dentro.
+
+O arquivo que vamos criar hoje, o **`jogo.py`**, fica na **raiz** de `crescendo-como-jesus/` —
+**não** dentro de `aula-01/`. Ele é o arquivo que vai crescer o curso inteiro. A `aula-01/` é só
+para testes soltos, quando você quiser experimentar algo fora do jogo.
 
 ```mermaid
 flowchart TB
@@ -49,158 +71,45 @@ flowchart TB
         direction LR
         subgraph Sidebar["Explorador (barra lateral)"]
             direction TB
-            f1["📁 curso-python"]
-            f2["📁 modulo-01"]
-            f3["📄 jogo.py"]
+            f1["📁 crescendo-como-jesus — a pasta do curso"]
+            f2["📄 jogo.py — na raiz (você cria hoje)"]
+            f3["📁 aula-01 — testes soltos"]
+            f4["📦 .venv — pronto desde o Módulo 0"]
         end
         subgraph Main["Área principal"]
             direction TB
             editor["📝 Editor — jogo.py aberto aqui"]
-            terminal["⌨️ Terminal integrado<br/>(Ctrl+ˋ) — é aqui que vamos<br/>digitar uv, python..."]
+            terminal["⌨️ Terminal integrado (Ctrl+ˋ)<br/>já abre na pasta certa e no .venv"]
             editor --- terminal
         end
     end
 ```
 
-## Passo 2 — Abrindo o terminal integrado do VS Code
+## Como o Python roda um arquivo
 
-Até agora usamos o terminal "de fora" (do sistema operacional) só pra chegar na pasta certa e
-digitar `code .`. A partir de agora, todo comando (`uv`, `python`...) vai ser digitado **dentro**
-do VS Code, num terminal próprio dele:
+**Você é quem diz qual arquivo o Python vai rodar.** Ele pega esse arquivo e executa **do começo
+ao fim, linha por linha**, na ordem em que as linhas aparecem.
 
-- Abra pelo menu **Terminal > New Terminal**, ou pelo atalho `` Ctrl+` ``.
-- Esse terminal já abre **na pasta certa** — não precisa navegar com `cd` de novo.
-- É o mesmo terminal do Módulo 0 (mesmos comandos `cd`, `dir`/`ls`, `pwd`), só que agora mora
-  dentro da IDE.
+Dois jeitos de rodar, que fazem **exatamente a mesma coisa**:
 
-## Passo 3 — Instalando o Python
-
-### Antes de instalar qualquer coisa, confira o que já está no seu computador
-
-```
-python --version
-uv --version
-```
-
-Se algum comando der erro de "não encontrado", é só seguir os passos abaixo pra instalar.
-
-1. Instalar o `uv` (ferramenta que instala a versão certa do Python, cria o venv e instala os
-   pacotes, tudo com o mesmo comando):
-   - **Windows:** `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
-   - **Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
-   - Feche e abra o terminal, e confirme com `uv --version`.
-2. Instalar o Python 3.12: `uv python install 3.12` (confirme com `uv python list`).
-
-## Passo 4 — Entendendo e criando o ambiente virtual (venv)
-
-> ⚠️ **Este é o passo mais importante da aula de hoje.** Quase todo erro chato que vamos ver no
-> curso ("pgzero não encontrado", "screen is not defined"...) acontece porque o `.venv` não foi
-> criado direito ou o VS Code não está apontando pra ele. Entender essa parte agora evita dor de
-> cabeça em **todos** os módulos seguintes.
-
-Agora que o Python já está instalado, se dois projetos diferentes precisassem de versões
-diferentes do mesmo pacote, e tudo estivesse instalado junto no computador, um atrapalharia o
-outro. Por isso cada projeto tem sua própria **caixa de ferramentas separada**: um **ambiente
-virtual**, ou **venv**. É a cópia só dele do Python e dos pacotes que ele precisa.
-
-```mermaid
-flowchart LR
-    subgraph SemVenv["Sem venv: tudo junto"]
-        direction TB
-        py1["Python do computador"]
-        py1 --- j1["pacotes do nosso Jogo"]
-        py1 --- j2["pacotes de outro projeto"]
-    end
-
-    subgraph ComVenv["Com venv: cada projeto na sua caixa"]
-        direction TB
-        py2["Python do computador"]
-        py2 --> v1["venv do Jogo (.venv)<br/>pgzero, pygame"]
-        py2 --> v2["venv de outro projeto<br/>outros pacotes"]
-    end
-```
-
-Não precisa entender tudo hoje — o importante é saber que o `.venv` do nosso jogo é essa caixa,
-e é por causa dela que o ambiente fica sempre igual em qualquer computador. Vamos criar essa
-caixa agora:
-
-1. **Criar o venv do projeto:**
-   ```
-   uv venv --python 3.12 .venv
-   ```
-2. Instalar o pacote do jogo direto pelo terminal: `uv pip install pgzero`.
-3. Registrar as versões instaladas num arquivo `requirements.txt` — esse arquivo é quem garante
-   que o ambiente fica **sempre igual** em qualquer computador: `uv pip freeze > requirements.txt`.
-4. Selecionar o venv como interpretador: `Ctrl+Shift+P` → **"Python: Select Interpreter"** →
-   escolher o que aparece com `.venv` (geralmente já vem marcado como "Recommended"). Isso grava
-   a configuração automaticamente — não precisa editar nada à mão.
-
-Repare: você não escreveu o `requirements.txt` à mão — ele foi **gerado** a partir do que já
-estava instalado no `.venv`. Numa próxima aula, ou num computador novo, em vez de instalar pacote
-por pacote de novo, basta rodar `uv pip install -r requirements.txt` pra reinstalar exatamente as
-mesmas versões:
-
-```mermaid
-flowchart LR
-    A["uv pip install pgzero"] --> B[".venv do projeto<br/>(pgzero instalado)"]
-    B --> C["uv pip freeze > requirements.txt"]
-    C --> D["requirements.txt<br/>(lista de versões exatas)"]
-    D -.->|"num computador novo"| E["uv pip install -r requirements.txt<br/>(reinstala as mesmas versões)"]
-```
-
-> **`pyenv` é parecido:** troca entre versões do Python instaladas, mas só isso — o venv e os
-> pacotes ficariam por conta de `venv`/`pip` separados. O curso usa `uv` porque ele junta tudo.
-
-Se tiver dúvida, siga com calma o guia `docs/preparacao-ambiente/instalacao_vscode.md`.
-
-## Passo 5 — Nosso primeiro programa
-
-### Como o Python roda um arquivo
-
-O Python não tem um arquivo "oficial" pra começar sozinho — **você é quem diz pra ele qual
-arquivo rodar**, e ele executa esse arquivo do começo ao fim, linha por linha, na ordem em que
-elas aparecem (é a mesma ideia de sequência de execução que já vimos hoje). Poderia se chamar
-`jogo.py`, `teste.py`, `abc.py`... qualquer nome de arquivo `.py` funciona, contanto que seja
-esse o arquivo que você manda rodar.
-
-Hoje vamos usar dois jeitos de rodar, que fazem exatamente a mesma coisa:
-
-- **Botão "Run Python File"** (▶, no canto superior direito do VS Code): roda o arquivo que
-  está aberto no editor naquele momento.
-- **Pelo terminal**, digitando o comando, parte por parte:
+- **Botão ▶ "Run Python File"** (canto superior direito do VS Code): roda o arquivo que está
+  aberto no editor.
+- **Pelo terminal integrado** (`` Ctrl+` `` para abrir):
   ```
-  uv run jogo.py
+  python jogo.py
   ```
-  - `uv run` — pede pro `uv` rodar o comando a seguir usando o Python de dentro do venv do
-    projeto (por isso importa tanto qual venv está criado, como vimos no Passo 4) — o "tradutor"
-    que vai ler o código.
-  - `jogo.py` — o arquivo que queremos que ele leia e execute, começando pela primeira linha.
+  - `python` — o programa que **lê e executa** o código.
+  - `jogo.py` — o arquivo que ele vai ler, começando pela primeira linha.
 
-O botão só existe pra evitar digitar esse comando toda vez — por baixo dos panos, é a mesma
-coisa.
+O botão é só um atalho para não digitar isso toda vez.
 
-Lembra dos pacotes que acabamos de instalar no `.venv`? Agora vamos usá-los de verdade:
+## Construindo a primeira tela, passo a passo
 
-```mermaid
-flowchart TB
-    A[".venv do projeto<br/>(pgzero já instalado)"] --> B["VS Code com o interpretador<br/>apontando pro .venv"]
-    B --> C["jogo.py: import pgzrun"]
-    C --> D["pgzrun.go()<br/>abre a janela do jogo"]
-```
+Crie um arquivo novo e salve como **`jogo.py`** na **raiz** de `crescendo-como-jesus/`. Vamos
+escrever o código aos poucos e **rodar depois de cada passo** — assim dá para ver o efeito de
+cada pedaço antes de seguir.
 
-O `import pgzrun`, que vamos escrever na primeira linha do código, é literalmente buscando o
-pacote que você acabou de instalar. Se der o erro "pgzero não encontrado" ou "screen is not
-defined", é porque alguma dessas caixinhas do diagrama não aconteceu direito — geralmente o
-interpretador errado selecionado no VS Code.
-
-### Construindo o `jogo.py`, passo a passo
-
-Vamos escrever o código aos poucos, testando (`Run Python File`) depois de cada passo — assim dá
-pra ver o efeito de cada pedaço antes de seguir pro próximo. Crie o arquivo `jogo.py` na pasta
-deste módulo.
-
-**1. O esqueleto mínimo.** Toda vez que formos criar o jogo, o arquivo começa com `import
-pgzrun` e termina com `pgzrun.go()` — é entre essas duas linhas que a mágica acontece:
+### Passo 1 — o esqueleto mínimo
 
 ```python
 import pgzrun
@@ -208,11 +117,20 @@ import pgzrun
 pgzrun.go()
 ```
 
-Rode. Deve abrir uma janelinha preta, do tamanho padrão — já é um jogo Pygame Zero de verdade,
-só que ainda vazio.
+- `import pgzrun` — **traz** para o seu programa o pacote **Pygame Zero** (o `pgzero` que você
+  instalou no Módulo 0). É ele que dá `screen`, `draw()` e o resto do jogo. Vai sempre na
+  **primeira** linha.
+- `pgzrun.go()` — **liga o motor do jogo**: abre a janela e fica repetindo "desenha a tela,
+  escuta o teclado, desenha de novo...". Vai sempre na **última** linha.
 
-**2. Tamanho e título da janela.** Adicione essas três linhas **entre** o `import` e o
-`pgzrun.go()`:
+**Rode.** Deve abrir uma **janelinha preta**, do tamanho padrão — já é um jogo Pygame Zero de
+verdade, só que vazio. Feche a janela para continuar.
+
+> Se aparecer o erro `screen is not defined`, é porque falta uma dessas duas linhas.
+
+### Passo 2 — tamanho e título da janela
+
+Adicione estas três linhas **entre** o `import` e o `pgzrun.go()`:
 
 ```python
 WIDTH = 800
@@ -220,11 +138,17 @@ HEIGHT = 600
 TITLE = "Crescendo como Jesus"
 ```
 
-Rode de novo — repare que a janela já nasce do tamanho certo, e o `TITLE` aparece na barra dela.
+- Isto é uma **variável**: um **nome que guarda um valor**. `WIDTH = 800` quer dizer "de agora
+  em diante, `WIDTH` vale 800".
+- `WIDTH` (largura) e `HEIGHT` (altura) são o tamanho da janela **em pixels** — os pontinhos que
+  formam a tela.
+- `TITLE` é um **texto** (fica entre aspas) e aparece na **barra** da janela.
+- O Pygame Zero reconhece **esses três nomes sozinho** — por isso eles precisam ser escritos
+  assim mesmo, em letras maiúsculas.
 
-**3. Pintando o fundo.** Toda vez que a tela precisa ser desenhada, o Pygame Zero chama sozinho
-uma função especial chamada `draw()` — você não chama ela, só escreve o que tem dentro. Adicione,
-antes do `pgzrun.go()`:
+**Rode de novo.** A janela nasce do tamanho `800 x 600` e com o título na barra.
+
+### Passo 3 — pintar o fundo
 
 ```python
 COR_DE_FUNDO = "skyblue"
@@ -234,28 +158,31 @@ def draw():
     screen.fill(COR_DE_FUNDO)
 ```
 
-Antes de rodar, repare em duas coisas novas nessa linha `def draw():`:
+Antes de rodar, repare em duas coisas novas:
 
-- **Função:** é um pedaço de código com nome, guardado pra ser executado quando alguém (ou, nesse
-  caso, o próprio Pygame Zero) chamar ele. `def` é a palavra que cria uma função; o nome dela
-  (`draw`) vem logo depois; e os `()` e `:` no final são obrigatórios — é assim que o Python
-  reconhece "aqui começa uma função".
-- **Indentação (o recuo):** repare que a linha `screen.fill(...)` não começa colada na margem —
-  ela está recuada (um "tab" pra dentro). No Python, esse recuo **não é estética, é sintaxe**: é
-  ele que diz "essa linha pertence à função `draw`". Toda linha do código de dentro da função
-  precisa ter o mesmo recuo; se faltar ou ficar torto, dá um erro chamado `IndentationError`. O
-  VS Code já ajuda: ao apertar Enter depois de uma linha terminada em `:`, ele recua a próxima
-  linha sozinho.
+- **Função:** é um pedaço de código com **nome**, guardado para ser executado quando alguém
+  chama. `def` cria a função, o nome (`draw`) vem logo depois, e os `()` e `:` no fim são
+  obrigatórios. A função `draw()` é **especial**: **o próprio Pygame Zero chama ela sozinho**,
+  várias vezes por segundo, sempre que precisa redesenhar a tela. Você só escreve **o que**
+  desenhar dentro dela.
+- **Indentação (o recuo):** a linha `screen.fill(...)` **não começa colada na margem** — está
+  recuada (um "tab" para dentro). No Python, esse recuo **não é enfeite, é regra**: é ele que
+  diz "esta linha faz parte da função `draw`". Se faltar ou ficar torto, dá um erro chamado
+  `IndentationError`. O VS Code ajuda: depois de uma linha que termina em `:`, ele recua a
+  próxima sozinho quando você aperta Enter.
 
-Rode de novo — a janela aparece pintada da cor escolhida. `COR_DE_FUNDO` é só uma **variável com
-um texto dentro** (entre aspas); troque `"skyblue"` por outro nome de cor que o Pygame Zero
-reconheça (ex.: `"darkgreen"`, `"black"`, `"white"`...) e rode de novo pra ver o efeito. A lista
-completa de nomes aceitos está na
-[documentação do Pygame Zero](https://pygame-zero.readthedocs.io/en/stable/builtins.html#colors)
-— se preferir, também dá pra usar um valor RGB, como `(255, 0, 0)` pra vermelho.
+`screen.fill(COR_DE_FUNDO)` **pinta a tela inteira** com a cor. `COR_DE_FUNDO` é só uma variável
+com um texto dentro.
 
-**4. A mensagem de boas-vindas.** Dentro de `draw()`, depois do `screen.fill`, use
-`screen.draw.text(...)` pra desenhar um texto na tela:
+**Rode de novo.** A janela aparece pintada. Troque `"skyblue"` por outro nome de cor
+(`"darkgreen"`, `"black"`, `"white"`...) e rode outra vez para ver a diferença. A lista completa
+de nomes está na
+[documentação do Pygame Zero](https://pygame-zero.readthedocs.io/en/stable/builtins.html#colors);
+também dá para usar um valor RGB, como `(255, 0, 0)` para vermelho.
+
+### Passo 4 — a mensagem de boas-vindas
+
+Dentro de `draw()`, **depois** do `screen.fill`, use `screen.draw.text(...)`:
 
 ```python
 COR_DO_TEXTO = "white"
@@ -271,13 +198,20 @@ def draw():
     )
 ```
 
-Rode de novo. Repare nos parâmetros de `screen.draw.text`: o texto entre aspas, `center=(x, y)`
-(o ponto onde o texto fica centralizado — `WIDTH // 2` e `HEIGHT // 2` são exatamente o meio da
-tela), `fontsize=` (tamanho da letra) e `color=` (cor do texto, a mesma ideia de variável do
-passo 3).
+Cada parte de `screen.draw.text(...)`:
 
-**5. Seu nome como criador.** Mais uma chamada de `screen.draw.text`, um pouco mais abaixo na
-tela — repare no `+ 60` pra não desenhar em cima do texto anterior:
+- `"Bem-vindo(a) ao " + TITLE + "!"` — o **texto** que vai na tela. O `+` **junta textos**: o
+  pedaço fixo `"Bem-vindo(a) ao "`, mais o conteúdo da variável `TITLE`, mais `"!"`.
+- `center=(WIDTH // 2, HEIGHT // 2)` — o ponto onde o texto fica **centralizado**. O `//` é
+  **divisão inteira**: `WIDTH // 2` é a metade da largura, ou seja, o **meio da tela**.
+- `fontsize=40` — o **tamanho** da letra.
+- `color=COR_DO_TEXTO` — a **cor** do texto (mesma ideia de variável do passo 3).
+
+**Rode de novo.** A mensagem aparece no centro da tela.
+
+### Passo 5 — o seu nome como criador
+
+Mais uma chamada de `screen.draw.text`, um pouco **mais abaixo** na tela — repare no `+ 60`:
 
 ```python
 NOME_DO_CRIADOR = "Escreva seu nome aqui"
@@ -299,11 +233,14 @@ def draw():
     )
 ```
 
-Rode uma última vez e troque `"Escreva seu nome aqui"` pelo seu nome de verdade.
+- O `+ 60` no `center` empurra este texto **60 pixels para baixo**, para não ficar em cima do
+  texto anterior.
 
-Pronto — sua tela já tem tudo da missão de hoje! Compare com
-[`exemplo.py`](exemplo.py) deste módulo, que já vem com um passo a mais (o versículo de Lucas
-2:52 na tela) — é exatamente o desafio extra logo abaixo.
+**Rode uma última vez** e troque `"Escreva seu nome aqui"` pelo seu nome de verdade.
+
+Pronto — sua tela já tem tudo da missão de hoje! Compare com o [`exemplo.py`](exemplo.py) deste
+módulo: ele vem com **um passo a mais** (o versículo de Lucas 2:52 na tela), que é exatamente o
+desafio extra logo abaixo.
 
 ## Sua missão
 
@@ -313,6 +250,9 @@ Crie uma tela com:
 - [ ] uma mensagem de boas-vindas na tela;
 - [ ] uma cor de fundo escolhida por você;
 - [ ] seu nome como criador, escrito na tela.
+
+Construa **do zero**, seguindo os passos acima — não copie o `exemplo.py` pronto; ele é só para
+comparar no fim ou para destravar se você empacar.
 
 ## Desafios
 
@@ -325,28 +265,34 @@ Crie uma tela com:
 |---|---|
 | Programa | Uma lista de instruções que o computador segue |
 | Algoritmo | A sequência de passos para resolver um problema |
-| Python | A linguagem que usamos pra escrever os programas |
-| IDE | Um programa que junta editor, execução e erros num só lugar |
-| VS Code | A IDE que usamos no curso |
-| Função | Um pedaço de código com nome, guardado pra ser executado quando alguém chama ele (criada com `def`) |
-| Indentação (recuo) | O espaço no começo da linha que diz o que "pertence" a uma função — no Python, isso é regra, não estética |
-| Pacote | Código pronto, feito por outra pessoa, que usamos de graça |
-| `pgzero` (Pygame Zero) | O pacote que usamos para criar o jogo |
-| venv | A "caixinha" com o Python e os pacotes do projeto |
-| `uv` | Ferramenta que instala o Python, cria o venv e instala os pacotes |
-| `pyenv` | Ferramenta parecida, mas que só troca a versão do Python |
-| `requirements.txt` | Lista com as versões exatas dos pacotes instalados, gerada com `uv pip freeze` |
+| Sequência de execução | O computador faz uma instrução de cada vez, de cima para baixo, na ordem |
+| Python | A linguagem que usamos para escrever os programas |
+| VS Code | A IDE (o programa) onde escrevemos e rodamos o código |
 | Executar (Run) | Mandar o computador seguir as instruções do programa |
-| Terminal integrado | O terminal que mora dentro do VS Code (`` Ctrl+` ``), já aberto na pasta do projeto |
+| `import` | Trazer para o nosso programa um código pronto de fora (um pacote) |
+| `pgzero` (Pygame Zero) | O pacote que dá `screen`, `draw()` e o resto do jogo — instalado no Módulo 0 |
+| Variável | Um nome que guarda um valor (`WIDTH = 800`) |
+| `WIDTH` / `HEIGHT` / `TITLE` | Nomes que o Pygame Zero reconhece: largura, altura e título da janela |
+| Função | Um pedaço de código com nome, executado quando alguém chama (criada com `def`) |
+| `draw()` | Função especial que o Pygame Zero chama sozinho para desenhar a tela |
+| Indentação (recuo) | O espaço no começo da linha que diz o que "pertence" a uma função — no Python é regra, não enfeite |
+| `screen.fill(cor)` | Pinta a tela inteira de uma cor |
+| `screen.draw.text(...)` | Desenha um texto na tela (posição, tamanho e cor) |
+| `//` | Divisão inteira — `WIDTH // 2` é a metade da largura (o meio da tela) |
 
 ## Deu erro? Tenta isso primeiro
 
-- **"pgzero não encontrado":** confira se o interpretador selecionado no VS Code é o do `.venv`.
-- **"screen is not defined":** confira se seu arquivo começa com `import pgzrun` e termina com
-  `pgzrun.go()`.
-- **Erro apontando uma linha:** leia a mensagem — ela sempre mostra em qual linha está o problema.
-- **`IndentationError` (erro de indentação):** alguma linha dentro de `draw()` não está recuada
-  igual às outras — confira se todas têm o mesmo espaço antes do código.
-- **`uv`/`python` não reconhecido logo após instalar:** feche e abra o terminal de novo.
+- **`screen is not defined`:** confira se o arquivo **começa** com `import pgzrun` e **termina**
+  com `pgzrun.go()`.
+- **`ModuleNotFoundError: No module named 'pgzero'`:** o interpretador certo não está
+  selecionado — `Ctrl+Shift+P` → **Python: Select Interpreter** → o que tem `.venv`. (Você não
+  precisa instalar nada; isso já foi feito no Módulo 0.)
+- **`IndentationError`:** alguma linha dentro de `draw()` não está recuada igual às outras —
+  confira se todas têm o mesmo espaço antes do código.
+- **Erro apontando uma linha:** leia a mensagem — ela sempre mostra **em qual linha** está o
+  problema.
+- **Cor não funciona:** confira o nome na lista de cores do Pygame Zero, ou use um valor RGB
+  como `(255, 0, 0)`.
 
-Ao final, salve seu arquivo como `jogo.py` — vamos usá-lo em todos os módulos!
+Ao final, **salve** o `jogo.py` (na raiz de `crescendo-como-jesus/`) — vamos usá-lo em todos os
+módulos!

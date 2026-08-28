@@ -1,8 +1,10 @@
 # Módulo 1 - Primeira janela do jogo
-# No VS Code, com o venv do projeto selecionado como interpretador, basta
-# clicar em "Run Python File" (por causa do "import pgzrun" no topo e do
-# "pgzrun.go()" no final do arquivo), ou rodar pelo terminal:
-# uv run jogo.py
+# A máquina já está pronta desde o Módulo 0 (Python 3.12, VS Code, .venv
+# com pgzero, interpretador .venv selecionado). Este arquivo fica na raiz
+# de crescendo-como-jesus/.
+# Para rodar: botão "Run Python File" no VS Code (funciona por causa do
+# "import pgzrun" no topo e do "pgzrun.go()" no final), ou no terminal
+# integrado: python jogo.py
 
 import pgzrun
 
