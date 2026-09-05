@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Crescendo como Jesus - Material do aluno - Modulos 0, 1 e 2</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+</script>
+<style>
+  @page { size: A4; margin: 18mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 11pt; line-height: 1.5; color: #1a1a1a; margin: 0;
+  }
+  .module { padding-top: 4px; }
+  .pagebreak { page-break-before: always; }
+  h1 {
+    font-size: 20pt; color: #1b4d3e; border-bottom: 3px solid #1b4d3e;
+    padding-bottom: 6px; margin: 0 0 14px;
+  }
+  h2 {
+    font-size: 14pt; color: #1b4d3e; margin: 20px 0 8px;
+    border-bottom: 1px solid #cfe0d8; padding-bottom: 3px;
+  }
+  h3 { font-size: 12pt; color: #2a2a2a; margin: 14px 0 6px; }
+  h4 { font-size: 11pt; color: #444; margin: 10px 0 4px; }
+  p { margin: 6px 0; }
+  ul, ol { margin: 6px 0 6px 0; padding-left: 22px; }
+  li { margin: 3px 0; }
+  code {
+    font-family: "Consolas", "Courier New", monospace; font-size: 9.5pt;
+    background: #eef2f0; padding: 1px 4px; border-radius: 3px;
+  }
+  pre {
+    background: #f6f8f7; border: 1px solid #d7e2dc; border-left: 4px solid #1b4d3e;
+    border-radius: 4px; padding: 10px 12px; overflow-x: auto;
+    font-size: 9.5pt; line-height: 1.4; page-break-inside: avoid;
+  }
+  pre code { background: none; padding: 0; }
+  pre.mermaid {
+    background: #fff; border: 1px solid #d7e2dc; border-left: 1px solid #d7e2dc;
+    text-align: center;
+  }
+  table {
+    border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+  th, td { border: 1px solid #c3d3cc; padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: #e6efeb; }
+  blockquote {
+    margin: 8px 0; padding: 6px 12px; background: #fff8e6;
+    border-left: 4px solid #e0b400; color: #4a3f10;
+  }
+  a { color: #1b4d3e; word-break: break-word; }
+  h2, h3, h4 { page-break-after: avoid; }
+</style>
+</head>
+<body>
+<section class="module"><h1 id="modulo-0-preparando-o-computador-material-do-aluno">Módulo 0 — Preparando o computador (material do aluno)</h1>
+<h2 id="o-que-vamos-fazer-hoje">O que vamos fazer hoje</h2>
+<p>Ainda <strong>não</strong> vamos programar. Hoje a gente deixa o computador <strong>pronto para escrever código</strong> —
+instala as ferramentas, organiza as pastas e monta o ambiente do projeto. No fim, dá pra
+começar o Módulo 1 sem parar pra instalar nada.</p>
+<p>Você vai entender:</p>
+<ul>
+<li>o que é um <strong>sistema operacional</strong>; <strong>Windows</strong> e <strong>Linux</strong></li>
+<li>o que são <strong>arquivos</strong>, <strong>pastas</strong>, <strong>caminho</strong> e <strong>extensão</strong></li>
+<li>como usar o <strong>terminal</strong> para navegar e criar pastas</li>
+<li>as ferramentas do curso: <strong>Python 3.12</strong> (a linguagem), <strong><code>uv</code></strong>, <strong>VS Code</strong> e o pacote <strong><code>pgzero</code></strong></li>
+<li>o que é um <strong>ambiente virtual (venv)</strong></li>
+</ul>
+<h2 id="sistema-operacional-so">Sistema operacional (SO)</h2>
+<p>É o programa principal que gerencia o computador — abre outros programas, guarda seus arquivos,
+controla o teclado e o mouse. Quando você liga o computador, é o SO que aparece.</p>
+<p><strong>Windows</strong> e <strong>Linux</strong> são dois exemplos de SO. O curso funciona igual nos dois — só muda a
+aparência das janelas e alguns comandos de instalação. Só precisa saber <strong>qual SO o seu
+computador usa</strong>.</p>
+<p>Nenhum aplicativo fala direto com o computador — ele sempre passa pelo SO:</p>
+<pre class="mermaid">flowchart TB
+    HW["Computador (teclado, mouse, tela, disco...)"]
+    SO["Sistema Operacional"]
+    APPS["Aplicativos (navegador, jogos, VS Code...)"]
+
+    HW <--> SO
+    SO <--> APPS</pre>
+<h2 id="arquivos-pastas-caminho-e-extensao">Arquivos, pastas, caminho e extensão</h2>
+<ul>
+<li><strong>Arquivo</strong>: uma coisa guardada no computador (um texto, uma foto, um programa).</li>
+<li><strong>Pasta</strong>: uma "caixa" que guarda arquivos, pra organizar.</li>
+<li><strong>Caminho (path)</strong>: o "endereço" de um arquivo ou pasta — o caminho que você percorre, pasta
+  por pasta, até chegar nele. Igual o endereço de uma casa.</li>
+<li><strong>Extensão</strong>: a partezinha depois do ponto no nome do arquivo (<code>.png</code>, <code>.py</code>) — diz que tipo
+  de arquivo é. Os arquivos de Python terminam em <code>.py</code>.</li>
+</ul>
+<h2 id="terminal-cli-usando-o-computador-por-comandos">Terminal (CLI): usando o computador por comandos</h2>
+<p>Além de clicar nos ícones, dá pra usar o computador <strong>digitando comandos</strong>. Isso se chama
+<strong>terminal</strong> (ou CLI). Hoje a gente instala quase tudo por aqui.</p>
+<p><strong>Como abrir:</strong></p>
+<ul>
+<li><strong>Windows:</strong> menu Iniciar, digite "PowerShell" e aperte Enter.</li>
+<li><strong>Linux:</strong> aperte <code>Ctrl+Alt+T</code>, ou procure "Terminal" no menu.</li>
+</ul>
+<p><strong>Comandos básicos:</strong></p>
+<table>
+<thead>
+<tr>
+<th>O que eu quero fazer</th>
+<th>Comando</th>
+<th>O que deve aparecer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ver em qual pasta eu estou</td>
+<td><code>pwd</code></td>
+<td>o caminho completo da pasta atual</td>
+</tr>
+<tr>
+<td>Ver o que tem dentro da pasta atual</td>
+<td><code>dir</code> (Windows) ou <code>ls</code> (Linux)</td>
+<td>a lista de arquivos e pastas dali</td>
+</tr>
+<tr>
+<td>Entrar numa pasta</td>
+<td><code>cd nome-da-pasta</code></td>
+<td>nada; confira com <code>pwd</code></td>
+</tr>
+<tr>
+<td>Voltar uma pasta</td>
+<td><code>cd ..</code></td>
+<td>nada; confira com <code>pwd</code></td>
+</tr>
+<tr>
+<td>Criar uma pasta nova</td>
+<td><code>mkdir nome-da-pasta</code></td>
+<td>nada; a pasta aparece no <code>dir</code>/<code>ls</code></td>
+</tr>
+<tr>
+<td>Remover uma pasta vazia</td>
+<td><code>rmdir nome-da-pasta</code></td>
+<td>nada; a pasta some do <code>dir</code>/<code>ls</code></td>
+</tr>
+</tbody>
+</table>
+<p>No terminal, <strong>"deu certo" quase sempre é "não apareceu nada"</strong> — a gente confere o efeito com
+<code>pwd</code> ou <code>dir</code>/<code>ls</code>. Se aparecer uma linha de erro, leia o que ela diz.</p>
+<h2 id="as-ferramentas-do-curso">As ferramentas do curso</h2>
+<table>
+<thead>
+<tr>
+<th>Ferramenta</th>
+<th>Para que serve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Python 3.12</strong></td>
+<td>A linguagem do curso — é ela que a gente vem aprender. A versão é <strong>3.12</strong> de propósito (garante o <code>pygame</code> pronto).</td>
+</tr>
+<tr>
+<td><strong><code>uv</code></strong></td>
+<td>O instalador do curso: instala o Python, cria o ambiente virtual e instala os pacotes, tudo com os mesmos comandos. Como é ele que traz o Python, é a <strong>primeira</strong> coisa a rodar.</td>
+</tr>
+<tr>
+<td><strong>VS Code</strong> + extensão <strong>Python</strong></td>
+<td>A <strong>IDE</strong>: junta editor, terminal e mensagens de erro num lugar só. O VS Code <strong>não</strong> é uma linguagem — é onde a gente escreve e roda o código.</td>
+</tr>
+<tr>
+<td><strong><code>pgzero</code></strong> (Pygame Zero)</td>
+<td>Um <strong>pacote</strong> pronto, baixado de graça do <strong>PyPI</strong>, que dá os recursos de janela e desenho do jogo. Instalado <strong>dentro</strong> do ambiente virtual.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="passo-a-passo-siga-na-ordem">Passo a passo (siga na ordem)</h2>
+<h3 id="1-ver-o-que-ja-esta-instalado">1. Ver o que já está instalado</h3>
+<p>No terminal:</p>
+<pre><code>python --version
+uv --version
+code --version
+</code></pre>
+<p><strong>O que deve aparecer:</strong> para o que já está instalado, uma linha com a versão (ex.:
+<code>Python 3.12.4</code>). Para o que falta, um erro tipo <code>'python' não é reconhecido</code> /
+<code>command not found</code> — normal, é só instalar abaixo.</p>
+<h3 id="2-instalar-o-python-312-com-o-uv">2. Instalar o Python 3.12 (com o <code>uv</code>)</h3>
+<p>O curso é de Python — mas quem instala o Python pra gente é o <code>uv</code>, então ele vem primeiro.</p>
+<ul>
+<li>Instalar o <code>uv</code>:</li>
+<li><strong>Windows:</strong> <code>powershell -c "irm https://astral.sh/uv/install.ps1 | iex"</code></li>
+<li><strong>Linux:</strong> <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></li>
+<li>Deve terminar com uma mensagem de sucesso do instalador.</li>
+<li><strong>Feche e abra o terminal de novo</strong> e confirme: <code>uv --version</code> → deve imprimir algo como
+  <code>uv 0.4.20</code>.</li>
+<li>Instalar o Python 3.12: <code>uv python install 3.12</code> → baixa (barra de progresso) e termina com
+  <code>Installed Python 3.12.x</code>, sem erro.</li>
+<li>Confirmar: <code>uv python list</code> → deve ter uma linha com <code>3.12</code> e um caminho ao lado.</li>
+</ul>
+<h3 id="3-instalar-o-vs-code-e-a-extensao-python">3. Instalar o VS Code e a extensão Python</h3>
+<ul>
+<li>Instalar o VS Code:</li>
+<li><strong>Windows:</strong> <code>winget install -e --id Microsoft.VisualStudioCode</code></li>
+<li><strong>Linux:</strong> <code>sudo snap install code --classic</code></li>
+<li>Deve mostrar o progresso e terminar com sucesso.</li>
+<li><strong>Feche e abra o terminal de novo</strong> e confirme: <code>code --version</code> → responde com três linhas.</li>
+<li>Abra o VS Code, clique no ícone de extensões (<code>Ctrl+Shift+X</code>), busque <strong>Python</strong> (da
+  Microsoft) e clique em <strong>Install</strong> → o botão passa a mostrar "Uninstall".</li>
+</ul>
+<blockquote>
+<p>Se o <code>winget</code>/<code>snap</code> não funcionar, baixe o VS Code em https://code.visualstudio.com.</p>
+</blockquote>
+<h3 id="4-criar-a-pasta-do-curso">4. Criar a pasta do curso</h3>
+<p>No terminal, vá até onde a pasta vai ficar (ex.: a Área de Trabalho) e crie a estrutura:</p>
+<pre><code>mkdir crescendo-como-jesus
+cd crescendo-como-jesus
+mkdir aula-01
+pwd
+</code></pre>
+<p><strong>O que deve aparecer:</strong> os três primeiros comandos não respondem nada (normal); o <code>pwd</code> no fim
+mostra o caminho completo terminando em <code>crescendo-como-jesus</code>. Um <code>dir</code>/<code>ls</code> mostra a <code>aula-01</code>
+lá dentro.</p>
+<ul>
+<li><code>crescendo-como-jesus/</code> é a <strong>pasta principal</strong> do curso — é aqui que tudo vai acontecer.</li>
+<li><code>aula-01/</code> guarda os testes soltos da primeira aula. Cada aula terá a sua (<code>aula-02</code>, ...).</li>
+<li>Use <code>aula-01</code> (com traço), <strong>não</strong> <code>modulo-01</code>.</li>
+<li>O arquivo <code>jogo.py</code> vai ficar na <strong>raiz</strong> de <code>crescendo-como-jesus/</code>, mas ele só nasce no
+  Módulo 1.</li>
+</ul>
+<p>Abra essa pasta no VS Code: ainda dentro dela no terminal, digite <code>code .</code> → o VS Code abre com
+<code>CRESCENDO-COMO-JESUS</code> no topo do explorador da lateral e <code>aula-01</code> listada dentro.</p>
+<h3 id="5-criar-o-ambiente-virtual-venv">5. Criar o ambiente virtual (venv)</h3>
+<p>O <strong>venv</strong> é uma "caixa" separada com o Python e os pacotes só do nosso projeto — assim o
+ambiente fica igual em qualquer computador. Essa caixa mora <strong>dentro</strong> da pasta do curso, na
+subpasta <code>.venv/</code>, e é usada tanto pelo <code>jogo.py</code> quanto por todas as pastas <code>aula-NN/</code>:</p>
+<pre class="mermaid">flowchart TB
+    PC["💻 Seu computador"]
+    PY["🐍 Python 3.12<br/>instalado uma vez pelo uv"]
+    PC --> PY
+
+    subgraph PROJ["📁 crescendo-como-jesus/ — a pasta do curso"]
+        direction TB
+        VENV["📦 .venv/ — o ambiente virtual<br/>Python 3.12 + pgzero + pygame, só do nosso jogo"]
+        JOGO["📄 jogo.py"]
+        AULAS["📁 aula-01/   📁 aula-02/   ..."]
+    end
+
+    PY -->|"o uv monta a caixa aqui dentro"| VENV
+    JOGO -->|usa| VENV
+    AULAS -->|usam| VENV</pre>
+<p>Com a pasta aberta no VS Code, abra o <strong>terminal integrado</strong> (<code>Ctrl+`</code>) e rode:</p>
+<pre><code>uv venv --python 3.12 .venv
+uv pip install pgzero
+uv pip freeze &gt; requirements.txt
+</code></pre>
+<p><strong>O que deve aparecer:</strong></p>
+<ul>
+<li><code>uv venv ...</code> → <code>Creating virtual environment at: .venv</code>; a pasta <code>.venv</code> surge no explorador.</li>
+<li><code>uv pip install pgzero</code> → a lista dos pacotes (<code>pgzero</code>, <code>pygame</code>, <code>numpy</code>...) e <code>Installed N
+  packages</code>, sem linha vermelha.</li>
+<li><code>uv pip freeze &gt; requirements.txt</code> → nada no terminal; o arquivo <code>requirements.txt</code> aparece no
+  explorador.</li>
+</ul>
+<p>Depois selecione o interpretador: <code>Ctrl+Shift+P</code> → <strong>Python: Select Interpreter</strong> → escolha o
+que tem <code>.venv</code> (costuma vir como "Recommended") → o canto inferior direito do VS Code passa a
+mostrar <code>3.12.x ('.venv')</code>.</p>
+<h3 id="6-testar-se-esta-tudo-pronto">6. Testar se está tudo pronto</h3>
+<p>Isto <strong>não é</strong> aula de Python — é só pra ver se tudo liga.</p>
+<ul>
+<li>No explorador do VS Code, dentro de <code>aula-01/</code>, crie o arquivo <code>teste.py</code> com:
+  <code>python
+  print("ambiente pronto para a aula")</code></li>
+<li>Clique no botão ▶ <strong>Run Python File</strong> (canto superior direito).</li>
+<li><strong>O que deve aparecer:</strong> no terminal, a linha exata <code>ambiente pronto para a aula</code>, sem erro.
+  Se apareceu isso, <strong>está tudo pronto!</strong> (Pode apagar o <code>teste.py</code> depois.)</li>
+</ul>
+<h2 id="checklist-final">Checklist final</h2>
+<ul>
+<li>[ ] <code>python --version</code> (ou <code>uv python list</code> com <code>3.12</code>), <code>uv --version</code> e <code>code --version</code>
+      respondem</li>
+<li>[ ] extensão <strong>Python</strong> instalada no VS Code</li>
+<li>[ ] pasta <code>crescendo-como-jesus/</code> criada, com <code>aula-01/</code> dentro</li>
+<li>[ ] <code>.venv</code> criado na raiz de <code>crescendo-como-jesus/</code>, <code>pgzero</code> instalado, <code>requirements.txt</code>
+      gerado</li>
+<li>[ ] interpretador <code>.venv</code> selecionado no VS Code</li>
+<li>[ ] <code>teste.py</code> rodou e imprimiu a frase</li>
+</ul>
+<p>Quando tudo estiver marcado, seu computador está pronto para o Módulo 1 — é lá que o <code>jogo.py</code>
+começa.</p>
+<h2 id="palavras-novas">Palavras novas</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sistema operacional (SO)</td>
+<td>O programa principal que gerencia o computador</td>
+</tr>
+<tr>
+<td>Windows / Linux</td>
+<td>Dois exemplos de sistema operacional</td>
+</tr>
+<tr>
+<td>Arquivo / Pasta</td>
+<td>Uma coisa guardada no computador / uma "caixa" que organiza arquivos</td>
+</tr>
+<tr>
+<td>Extensão</td>
+<td>A parte depois do ponto no nome do arquivo (ex.: <code>.py</code>)</td>
+</tr>
+<tr>
+<td>Caminho (path)</td>
+<td>O endereço completo até um arquivo ou pasta</td>
+</tr>
+<tr>
+<td>Terminal / CLI</td>
+<td>Usar o computador digitando comandos</td>
+</tr>
+<tr>
+<td><code>cd</code> / <code>mkdir</code> / <code>rmdir</code></td>
+<td>Andar entre pastas / criar pasta / remover pasta vazia</td>
+</tr>
+<tr>
+<td><code>code .</code></td>
+<td>Abre o VS Code na pasta atual do terminal</td>
+</tr>
+<tr>
+<td>IDE / VS Code</td>
+<td>Programa que junta editor, execução e erros / a IDE do curso</td>
+</tr>
+<tr>
+<td>Python 3.12</td>
+<td>A linguagem que vamos usar; versão fixa de propósito</td>
+</tr>
+<tr>
+<td><code>uv</code></td>
+<td>Instala o Python, cria o venv e instala os pacotes</td>
+</tr>
+<tr>
+<td>Pacote / PyPI</td>
+<td>Código pronto e gratuito / o repositório de onde ele vem</td>
+</tr>
+<tr>
+<td><code>pgzero</code> (Pygame Zero)</td>
+<td>O pacote que dá janela e desenho pro jogo</td>
+</tr>
+<tr>
+<td>Ambiente virtual (venv)</td>
+<td>"Caixa" isolada com o Python e os pacotes do projeto</td>
+</tr>
+<tr>
+<td><code>requirements.txt</code></td>
+<td>Lista das versões exatas dos pacotes, pra recriar o ambiente igual</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deu-duvida-tenta-isso-primeiro">Deu dúvida? Tenta isso primeiro</h2>
+<ul>
+<li><strong><code>uv</code> / <code>code</code> não reconhecido depois de instalar:</strong> feche e abra o terminal de novo.</li>
+<li><strong><code>winget</code> não funciona:</strong> baixe o VS Code em https://code.visualstudio.com.</li>
+<li><strong><code>uv python install 3.12</code> parece travado:</strong> ele baixa o Python na primeira vez — aguarde.</li>
+<li><strong>Me perdi entre as pastas:</strong> use <code>pwd</code>, e a barra de endereço do gerenciador de arquivos.</li>
+<li><strong><code>rmdir</code> deu erro:</strong> a pasta não está vazia (confira com <code>dir</code>/<code>ls</code>).</li>
+<li><strong>VS Code não mostra o <code>.venv</code>:</strong> confirme que a pasta <code>.venv</code> está <strong>dentro</strong> de
+  <code>crescendo-como-jesus/</code> e recarregue a janela (<code>Ctrl+Shift+P</code> → "Developer: Reload Window").</li>
+<li><strong><code>teste.py</code> deu erro:</strong> repita o passo 5 (Select Interpreter → <code>.venv</code>) e confira o
+  interpretador no canto inferior direito do VS Code.</li>
+</ul></section>
+<section class="module pagebreak"><h1 id="modulo-1-conhecendo-a-programacao-material-do-aluno">Módulo 1 — Conhecendo a programação (material do aluno)</h1>
+<h2 id="o-jogo-que-vamos-construir">O jogo que vamos construir</h2>
+<p>Ao longo do curso vamos construir, um pedaço por aula, um <strong>jogo de labirinto no estilo
+Pac-Man</strong> com a ideia do versículo:</p>
+<blockquote>
+<p>"E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."
+(Lucas 2:52)</p>
+</blockquote>
+<p>No jogo, o personagem anda pelo "labirinto da vida":</p>
+<ul>
+<li>coletando <strong>bons hábitos</strong> — 🙏 oração, 📖 Bíblia, ⛪ culto, ❤️ obedecer aos pais, 🤝 ajudar o
+  próximo —, que aumentam a <strong>estatura</strong>;</li>
+<li>desviando das <strong>tentações</strong> — 😡 desobediência, 🤥 mentira, 😴 preguiça, 📱 distração —, que
+  fazem perder uma vida;</li>
+<li>a <strong>oração</strong> é um poder: por alguns segundos as tentações fogem e podem ser vencidas;</li>
+<li>são <strong>4 fases</strong>: Sabedoria → Estatura → Graça com Deus → Graça com os homens.</li>
+</ul>
+<p>O professor vai mostrar o <strong>jogo pronto rodando</strong> — é para onde a gente vai chegar. Hoje vamos
+fazer só o começo: a <strong>primeira tela</strong>.</p>
+<h2 id="o-que-vamos-aprender-hoje">O que vamos aprender hoje</h2>
+<ul>
+<li>O que é um <strong>programa</strong> e um <strong>algoritmo</strong></li>
+<li>Como o computador executa as instruções: <strong>uma de cada vez, na ordem</strong> em que foram escritas</li>
+<li>O que é uma <strong>biblioteca</strong> e de onde vem o código do <strong>Pygame Zero</strong></li>
+<li>O que é uma <strong>variável</strong></li>
+<li>O que é uma <strong>função</strong> e por que o <strong>recuo</strong> (indentação) importa tanto no Python</li>
+<li>Escrever e rodar o nosso <strong>primeiro programa</strong> em Python, com o <strong>Pygame Zero</strong></li>
+</ul>
+<h2 id="o-que-voce-ja-tem-pronto-do-modulo-0">O que você já tem pronto (do Módulo 0)</h2>
+<p><strong>Hoje não instala nada.</strong> No Módulo 0 sua máquina já ficou pronta:</p>
+<ul>
+<li>Python 3.12 e o VS Code (com a extensão Python);</li>
+<li>a pasta <strong><code>crescendo-como-jesus/</code></strong> com a subpasta <code>aula-01/</code>;</li>
+<li>o ambiente virtual <strong><code>.venv/</code></strong> dentro dela, com o pacote <strong><code>pgzero</code></strong> instalado;</li>
+<li>o interpretador <code>.venv</code> selecionado no VS Code.</li>
+</ul>
+<p><strong>Confira uma coisa só:</strong> no canto inferior direito do VS Code deve aparecer algo como
+<code>3.12.x ('.venv')</code>. Se não aparecer, aperte <code>Ctrl+Shift+P</code>, digite <strong>Python: Select
+Interpreter</strong> e escolha o que tem <code>.venv</code> (costuma vir marcado como "Recommended"). Esse é o
+"Python do projeto" — o que tem o <code>pgzero</code> que você instalou no Módulo 0.</p>
+<h2 id="programa-algoritmo-e-a-ordem-das-coisas">Programa, algoritmo e a ordem das coisas</h2>
+<ul>
+<li>Um <strong>programa</strong> é uma <strong>lista de instruções</strong> que o computador segue.</li>
+<li>Um <strong>algoritmo</strong> é a <strong>sequência de passos</strong> para resolver um problema — como uma <strong>receita de
+  bolo</strong>: cada passo na ordem certa.</li>
+<li>O computador faz <strong>uma instrução de cada vez, de cima para baixo</strong>, na ordem em que você
+  escreveu. Ele <strong>não adivinha</strong> o que você quis dizer nem pula na frente. Numa receita, trocar
+  "leve ao forno" com "misture os ovos" estraga tudo — no código é igual.</li>
+</ul>
+<h2 id="abrindo-a-pasta-do-curso-no-vs-code">Abrindo a pasta do curso no VS Code</h2>
+<p>Abra a pasta <code>crescendo-como-jesus/</code> (a que você criou no Módulo 0):</p>
+<ul>
+<li>no terminal, <strong>dentro dela</strong>, digite <code>code .</code>  — ou</li>
+<li>no VS Code, <strong>File &gt; Open Folder...</strong> e escolha a pasta.</li>
+</ul>
+<p>No explorador (barra lateral) você vê <code>CRESCENDO-COMO-JESUS</code> no topo, com <code>aula-01/</code> e <code>.venv/</code>
+dentro.</p>
+<p>O arquivo que vamos criar hoje, o <strong><code>jogo.py</code></strong>, fica na <strong>raiz</strong> de <code>crescendo-como-jesus/</code> —
+<strong>não</strong> dentro de <code>aula-01/</code>. Ele é o arquivo que vai crescer o curso inteiro. A <code>aula-01/</code> é só
+para testes soltos, quando você quiser experimentar algo fora do jogo.</p>
+<pre class="mermaid">flowchart TB
+    subgraph VSCode["Janela do VS Code"]
+        direction LR
+        subgraph Sidebar["Explorador (barra lateral)"]
+            direction TB
+            f1["📁 crescendo-como-jesus — a pasta do curso"]
+            f2["📄 jogo.py — na raiz (você cria hoje)"]
+            f3["📁 aula-01 — testes soltos"]
+            f4["📦 .venv — pronto desde o Módulo 0"]
+        end
+        subgraph Main["Área principal"]
+            direction TB
+            editor["📝 Editor — jogo.py aberto aqui"]
+            terminal["⌨️ Terminal integrado (Ctrl+ˋ)<br/>já abre na pasta certa e no .venv"]
+            editor --- terminal
+        end
+    end</pre>
+<h2 id="como-o-python-roda-um-arquivo">Como o Python roda um arquivo</h2>
+<p><strong>Você é quem diz qual arquivo o Python vai rodar.</strong> Ele pega esse arquivo e executa <strong>do começo
+ao fim, linha por linha</strong>, na ordem em que as linhas aparecem.</p>
+<p>Dois jeitos de rodar, que fazem <strong>exatamente a mesma coisa</strong>:</p>
+<ul>
+<li><strong>Botão ▶ "Run Python File"</strong> (canto superior direito do VS Code): roda o arquivo que está
+  aberto no editor.</li>
+<li><strong>Pelo terminal integrado</strong> (<code>Ctrl+`</code> para abrir):
+  <code>python jogo.py</code></li>
+<li><code>python</code> — o programa que <strong>lê e executa</strong> o código.</li>
+<li><code>jogo.py</code> — o arquivo que ele vai ler, começando pela primeira linha.</li>
+</ul>
+<p>O botão é só um atalho para não digitar isso toda vez.</p>
+<h2 id="construindo-a-primeira-tela-passo-a-passo">Construindo a primeira tela, passo a passo</h2>
+<p>Crie um arquivo novo e salve como <strong><code>jogo.py</code></strong> na <strong>raiz</strong> de <code>crescendo-como-jesus/</code>. Vamos
+escrever o código aos poucos e <strong>rodar depois de cada passo</strong> — assim dá para ver o efeito de
+cada pedaço antes de seguir.</p>
+<h3 id="passo-1-o-esqueleto-minimo">Passo 1 — o esqueleto mínimo</h3>
+<pre><code class="language-python">import pgzrun
+
+pgzrun.go()
+</code></pre>
+<ul>
+<li><code>import pgzrun</code> — <strong>traz</strong> para o seu programa um código pronto que veio <strong>de fora</strong>. É ele que
+  dá <code>screen</code>, <code>draw()</code> e o resto do jogo. Vai sempre na <strong>primeira</strong> linha.</li>
+<li><code>pgzrun.go()</code> — <strong>liga o motor do jogo</strong>: abre a janela e fica repetindo "desenha a tela,
+  escuta o teclado, desenha de novo...". Vai sempre na <strong>última</strong> linha.</li>
+</ul>
+<h4 id="de-onde-vem-o-pgzrun">De onde vem o <code>pgzrun</code>?</h4>
+<p>Você não escreveu esse código, e ele não estava na sua máquina antes do curso. Ele vem de uma
+<strong>biblioteca</strong> (também chamada <strong>pacote</strong>): um monte de código pronto que outras pessoas
+escreveram e deixaram disponível para todo mundo usar — assim você não precisa fazer tudo do zero.</p>
+<ul>
+<li>A biblioteca que usamos se chama <strong>Pygame Zero</strong>. No <strong>Módulo 0</strong>, ela foi baixada da internet
+  e guardada <strong>dentro do <code>.venv/</code></strong> do seu projeto.</li>
+<li>Repare numa coisa: você instalou o <strong><code>pgzero</code></strong>, mas escreve <strong><code>import pgzrun</code></strong>. O pacote
+  inteiro é o <code>pgzero</code>; o <code>pgzrun</code> é uma <strong>peça de dentro dele</strong> — a "chave de ligar" que abre a
+  janela do jogo.</li>
+<li>Quando o Python lê <code>import pgzrun</code>, ele vai <strong>procurar</strong> essa peça nas bibliotecas do <code>.venv</code>.
+  Se acha, o seu programa ganha o <code>screen</code>, o <code>draw()</code>, o <code>screen.fill()</code> e o resto. Se não acha
+  (interpretador errado), aparece <code>ModuleNotFoundError: No module named 'pgzero'</code>.</li>
+</ul>
+<pre class="mermaid">flowchart TB
+    M0["🧰 Módulo 0: você instalou a<br/>biblioteca Pygame Zero (pgzero)"]
+    M0 --> VENV["📦 .venv/ do projeto<br/>guarda o pgzero aqui dentro"]
+    CODE["📄 No jogo.py você escreve:<br/><b>import pgzrun</b>"]
+    CODE --> PROC["🔎 O Python procura essa peça<br/>nas bibliotecas do .venv"]
+    VENV --> PROC
+    PROC --> OK["✅ Achou! agora o programa tem<br/>screen, draw(), screen.fill()..."]
+    PROC --> FAIL["❌ Não achou (interpretador .venv<br/>não selecionado) → ModuleNotFoundError"]</pre>
+<p><strong>Rode.</strong> Deve abrir uma <strong>janelinha preta</strong>, do tamanho padrão — já é um jogo Pygame Zero de
+verdade, só que vazio. Feche a janela para continuar.</p>
+<blockquote>
+<p>Se aparecer o erro <code>screen is not defined</code>, é porque falta uma dessas duas linhas (<code>import
+pgzrun</code> ou <code>pgzrun.go()</code>). Se aparecer <code>ModuleNotFoundError</code>, é o interpretador <code>.venv</code> que não
+está selecionado.</p>
+</blockquote>
+<h3 id="passo-2-tamanho-e-titulo-da-janela">Passo 2 — tamanho e título da janela</h3>
+<p>Adicione estas três linhas <strong>entre</strong> o <code>import</code> e o <code>pgzrun.go()</code>:</p>
+<pre><code class="language-python">WIDTH = 800
+HEIGHT = 600
+TITLE = &quot;Crescendo como Jesus&quot;
+</code></pre>
+<ul>
+<li>Isto é uma <strong>variável</strong>: um <strong>nome que guarda um valor</strong>. <code>WIDTH = 800</code> quer dizer "de agora
+  em diante, <code>WIDTH</code> vale 800".</li>
+<li><code>WIDTH</code> (largura) e <code>HEIGHT</code> (altura) são o tamanho da janela <strong>em pixels</strong> — os pontinhos que
+  formam a tela.</li>
+<li><code>TITLE</code> é um <strong>texto</strong> (fica entre aspas) e aparece na <strong>barra</strong> da janela.</li>
+<li>O Pygame Zero reconhece <strong>esses três nomes sozinho</strong> — por isso eles precisam ser escritos
+  assim mesmo, em letras maiúsculas.</li>
+</ul>
+<p><strong>Rode de novo.</strong> A janela nasce do tamanho <code>800 x 600</code> e com o título na barra.</p>
+<h3 id="passo-3-pintar-o-fundo">Passo 3 — pintar o fundo</h3>
+<pre><code class="language-python">COR_DE_FUNDO = &quot;skyblue&quot;
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+</code></pre>
+<p>Antes de rodar, repare em duas coisas novas:</p>
+<ul>
+<li><strong>Função:</strong> é um pedaço de código com <strong>nome</strong>, guardado para ser executado quando alguém
+  chama. <code>def</code> cria a função, o nome (<code>draw</code>) vem logo depois, e os <code>()</code> e <code>:</code> no fim são
+  obrigatórios. A função <code>draw()</code> é <strong>especial</strong>: <strong>o próprio Pygame Zero chama ela sozinho</strong>,
+  várias vezes por segundo, sempre que precisa redesenhar a tela. Você só escreve <strong>o que</strong>
+  desenhar dentro dela.</li>
+<li><strong>Indentação (o recuo):</strong> a linha <code>screen.fill(...)</code> <strong>não começa colada na margem</strong> — está
+  recuada (um "tab" para dentro). No Python, esse recuo <strong>não é enfeite, é regra</strong>: é ele que
+  diz "esta linha faz parte da função <code>draw</code>". Se faltar ou ficar torto, dá um erro chamado
+  <code>IndentationError</code>. O VS Code ajuda: depois de uma linha que termina em <code>:</code>, ele recua a
+  próxima sozinho quando você aperta Enter.</li>
+</ul>
+<p><code>screen.fill(COR_DE_FUNDO)</code> <strong>pinta a tela inteira</strong> com a cor. <code>COR_DE_FUNDO</code> é só uma variável
+com um texto dentro.</p>
+<p><strong>Rode de novo.</strong> A janela aparece pintada. Troque <code>"skyblue"</code> por outro nome de cor
+(<code>"darkgreen"</code>, <code>"black"</code>, <code>"white"</code>...) e rode outra vez para ver a diferença. A lista completa
+de nomes está na
+<a href="https://pygame-zero.readthedocs.io/en/stable/builtins.html#colors">documentação do Pygame Zero</a>;
+também dá para usar um valor RGB, como <code>(255, 0, 0)</code> para vermelho.</p>
+<h3 id="passo-4-a-mensagem-de-boas-vindas">Passo 4 — a mensagem de boas-vindas</h3>
+<p>Dentro de <code>draw()</code>, <strong>depois</strong> do <code>screen.fill</code>, use <code>screen.draw.text(...)</code>:</p>
+<pre><code class="language-python">COR_DO_TEXTO = &quot;white&quot;
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        &quot;Bem-vindo(a) ao &quot; + TITLE + &quot;!&quot;,
+        center=(WIDTH // 2, HEIGHT // 2),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )
+</code></pre>
+<p>Cada parte de <code>screen.draw.text(...)</code>:</p>
+<ul>
+<li><code>"Bem-vindo(a) ao " + TITLE + "!"</code> — o <strong>texto</strong> que vai na tela. O <code>+</code> <strong>junta textos</strong>: o
+  pedaço fixo <code>"Bem-vindo(a) ao "</code>, mais o conteúdo da variável <code>TITLE</code>, mais <code>"!"</code>.</li>
+<li><code>center=(WIDTH // 2, HEIGHT // 2)</code> — o ponto onde o texto fica <strong>centralizado</strong>. O <code>//</code> é
+  <strong>divisão inteira</strong>: <code>WIDTH // 2</code> é a metade da largura, ou seja, o <strong>meio da tela</strong>.</li>
+<li><code>fontsize=40</code> — o <strong>tamanho</strong> da letra.</li>
+<li><code>color=COR_DO_TEXTO</code> — a <strong>cor</strong> do texto (mesma ideia de variável do passo 3).</li>
+</ul>
+<p><strong>Rode de novo.</strong> A mensagem aparece no centro da tela.</p>
+<h3 id="passo-5-o-seu-nome-como-pecador">Passo 5 — o seu nome como pecador</h3>
+<p>Mais uma chamada de <code>screen.draw.text</code>, um pouco <strong>mais abaixo</strong> na tela — repare no <code>+ 60</code>:</p>
+<pre><code class="language-python">NOME_DO_PECADOR = &quot;Escreva seu nome aqui&quot;
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        &quot;Bem-vindo(a) ao &quot; + TITLE + &quot;!&quot;,
+        center=(WIDTH // 2, HEIGHT // 2),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        &quot;Pecador: &quot; + NOME_DO_PECADOR,
+        center=(WIDTH // 2, HEIGHT // 2 + 60),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+</code></pre>
+<ul>
+<li>O <code>+ 60</code> no <code>center</code> empurra este texto <strong>60 pixels para baixo</strong>, para não ficar em cima do
+  texto anterior.</li>
+</ul>
+<p><strong>Rode uma última vez</strong> e troque <code>"Escreva seu nome aqui"</code> pelo seu nome de verdade.</p>
+<p>Pronto — sua tela já tem tudo da missão de hoje! Compare com o <a href="exemplo.py"><code>exemplo.py</code></a> deste
+módulo: ele vem com <strong>um passo a mais</strong> (o versículo de Lucas 2:52 na tela), que é exatamente o
+desafio extra logo abaixo.</p>
+<h2 id="sua-missao">Sua missão</h2>
+<p>Crie uma tela com:</p>
+<ul>
+<li>[ ] título do jogo (aparece na barra da janela);</li>
+<li>[ ] uma mensagem de boas-vindas na tela;</li>
+<li>[ ] uma cor de fundo escolhida por você;</li>
+<li>[ ] seu nome como pecador, escrito na tela.</li>
+</ul>
+<p>Construa <strong>do zero</strong>, seguindo os passos acima — não copie o <code>exemplo.py</code> pronto; ele é só para
+comparar no fim ou para destravar se você empacar.</p>
+<h2 id="desafios">Desafios</h2>
+<ul>
+<li><strong>Desafio extra:</strong> adicione uma segunda mensagem na tela — que tal o versículo de Lucas 2:52?</li>
+<li><strong>Desafio criativo:</strong> escolha cores que combinem com o jogo que você imagina criar.</li>
+</ul>
+<h2 id="palavras-novas">Palavras novas</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Programa</td>
+<td>Uma lista de instruções que o computador segue</td>
+</tr>
+<tr>
+<td>Algoritmo</td>
+<td>A sequência de passos para resolver um problema</td>
+</tr>
+<tr>
+<td>Sequência de execução</td>
+<td>O computador faz uma instrução de cada vez, de cima para baixo, na ordem</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>A linguagem que usamos para escrever os programas</td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>A IDE (o programa) onde escrevemos e rodamos o código</td>
+</tr>
+<tr>
+<td>Executar (Run)</td>
+<td>Mandar o computador seguir as instruções do programa</td>
+</tr>
+<tr>
+<td><code>import</code></td>
+<td>Trazer para o nosso programa um código pronto de fora (uma biblioteca)</td>
+</tr>
+<tr>
+<td>Biblioteca / pacote</td>
+<td>Um monte de código pronto que outras pessoas escreveram para todo mundo usar</td>
+</tr>
+<tr>
+<td><code>pgzero</code> (Pygame Zero)</td>
+<td>A biblioteca que dá <code>screen</code>, <code>draw()</code> e o resto do jogo — instalada no <code>.venv</code> no Módulo 0</td>
+</tr>
+<tr>
+<td><code>pgzrun</code></td>
+<td>A peça de dentro do <code>pgzero</code> que liga o jogo (<code>import pgzrun</code> no topo, <code>pgzrun.go()</code> no fim)</td>
+</tr>
+<tr>
+<td>Variável</td>
+<td>Um nome que guarda um valor (<code>WIDTH = 800</code>)</td>
+</tr>
+<tr>
+<td><code>WIDTH</code> / <code>HEIGHT</code> / <code>TITLE</code></td>
+<td>Nomes que o Pygame Zero reconhece: largura, altura e título da janela</td>
+</tr>
+<tr>
+<td>Função</td>
+<td>Um pedaço de código com nome, executado quando alguém chama (criada com <code>def</code>)</td>
+</tr>
+<tr>
+<td><code>draw()</code></td>
+<td>Função especial que o Pygame Zero chama sozinho para desenhar a tela</td>
+</tr>
+<tr>
+<td>Indentação (recuo)</td>
+<td>O espaço no começo da linha que diz o que "pertence" a uma função — no Python é regra, não enfeite</td>
+</tr>
+<tr>
+<td><code>screen.fill(cor)</code></td>
+<td>Pinta a tela inteira de uma cor</td>
+</tr>
+<tr>
+<td><code>screen.draw.text(...)</code></td>
+<td>Desenha um texto na tela (posição, tamanho e cor)</td>
+</tr>
+<tr>
+<td><code>//</code></td>
+<td>Divisão inteira — <code>WIDTH // 2</code> é a metade da largura (o meio da tela)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deu-erro-tenta-isso-primeiro">Deu erro? Tenta isso primeiro</h2>
+<ul>
+<li><strong><code>screen is not defined</code>:</strong> confira se o arquivo <strong>começa</strong> com <code>import pgzrun</code> e <strong>termina</strong>
+  com <code>pgzrun.go()</code>.</li>
+<li><strong><code>ModuleNotFoundError: No module named 'pgzero'</code>:</strong> o interpretador certo não está
+  selecionado — <code>Ctrl+Shift+P</code> → <strong>Python: Select Interpreter</strong> → o que tem <code>.venv</code>. (Você não
+  precisa instalar nada; isso já foi feito no Módulo 0.)</li>
+<li><strong><code>IndentationError</code>:</strong> alguma linha dentro de <code>draw()</code> não está recuada igual às outras —
+  confira se todas têm o mesmo espaço antes do código.</li>
+<li><strong>Erro apontando uma linha:</strong> leia a mensagem — ela sempre mostra <strong>em qual linha</strong> está o
+  problema.</li>
+<li><strong>Cor não funciona:</strong> confira o nome na lista de cores do Pygame Zero, ou use um valor RGB
+  como <code>(255, 0, 0)</code>.</li>
+</ul>
+<p>Ao final, <strong>salve</strong> o <code>jogo.py</code> (na raiz de <code>crescendo-como-jesus/</code>) — vamos usá-lo em todos os
+módulos!</p></section>
+<section class="module pagebreak"><h1 id="modulo-2-o-personagem-e-a-primeira-decisao-material-do-aluno">Módulo 2 — O personagem e a primeira decisão (material do aluno)</h1>
+<h2 id="a-ideia-de-hoje">A ideia de hoje</h2>
+<p>No Módulo 1 seu <code>jogo.py</code> ganhou uma tela de boas-vindas. Hoje ela vai virar a <strong>primeira cena de
+verdade</strong> do jogo: um personagem aparece na tela, uma pergunta sobre um hábito cristão é feita
+(ex.: "Você orou hoje?"), e o jogador responde clicando em <strong>Sim</strong> ou <strong>Não</strong>. O personagem
+<strong>reage</strong>: cresce e muda de cor no "Sim", fica do mesmo jeito (ou menor) no "Não" — a primeira
+"decisão" programada do jogo.</p>
+<h2 id="o-que-vamos-aprender-hoje">O que vamos aprender hoje</h2>
+<ul>
+<li><strong>Coordenadas</strong>: como dizer onde algo fica na tela — um par de números <code>(x, y)</code></li>
+<li>Desenhar formas: um <strong>círculo</strong> (o personagem) e <strong>retângulos</strong> (os botões)</li>
+<li><strong>Variáveis lógicas</strong> (<code>True</code> / <code>False</code>): guardar se algo já aconteceu ou não</li>
+<li><strong><code>if</code> / <code>elif</code></strong>: fazer o programa decidir o que fazer, comparando com <code>==</code></li>
+<li><strong>Evento de clique</strong>: uma função especial que o Pygame Zero chama sozinho quando você clica na
+  tela</li>
+<li><strong><code>global</code></strong>: como uma função consegue mudar uma variável que existe fora dela</li>
+</ul>
+<h2 id="o-que-voce-ja-tem-pronto-do-modulo-1">O que você já tem pronto (do Módulo 1)</h2>
+<p>Abra de novo o <code>jogo.py</code> que você criou no Módulo 1, na raiz de <code>crescendo-como-jesus/</code>. Ele já
+tem:</p>
+<pre><code class="language-python">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = &quot;Crescendo como Jesus&quot;
+
+COR_DE_FUNDO = &quot;skyblue&quot;
+COR_DO_TEXTO = &quot;white&quot;
+NOME_DO_PECADOR = &quot;...&quot;
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(...)
+    screen.draw.text(...)
+
+
+pgzrun.go()
+</code></pre>
+<p>Hoje vamos <strong>trocar o conteúdo de dentro de <code>draw()</code></strong> pela cena do personagem — o <code>import</code>, o
+<code>WIDTH</code>/<code>HEIGHT</code>/<code>TITLE</code> e o <code>pgzrun.go()</code> continuam exatamente iguais, no começo e no fim do
+arquivo. A mensagem de boas-vindas e o versículo saem de cena, mas o seu <strong>nome de pecador</strong>
+continua na tela — só muda de lugar, para um cantinho discreto.</p>
+<h2 id="construindo-o-personagem-e-a-decisao-passo-a-passo">Construindo o personagem e a decisão, passo a passo</h2>
+<p>Vamos escrever aos poucos e <strong>rodar depois de cada passo</strong>, do mesmo jeito do Módulo 1.</p>
+<h3 id="passo-1-coordenadas-e-o-personagem-parado">Passo 1 — coordenadas e o personagem parado</h3>
+<p><strong>Antes</strong> da função <code>draw()</code> (fora dela), crie as variáveis do personagem:</p>
+<pre><code class="language-python"># Posição e tamanho do personagem (um círculo, por enquanto)
+personagem_x = WIDTH // 2
+personagem_y = HEIGHT // 2 - 60
+personagem_raio = 40
+personagem_cor = &quot;gold&quot;
+</code></pre>
+<p>Troque o conteúdo de <code>draw()</code> para desenhar o círculo no lugar do texto de boas-vindas — mas
+<strong>mantenha</strong> o nome do pecador, só que agora <strong>num cantinho</strong> da tela em vez do centro:</p>
+<pre><code class="language-python">def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        &quot;Pecador: &quot; + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )
+</code></pre>
+<ul>
+<li><strong>Coordenada</strong>: todo lugar na tela é um par de números <code>(x, y)</code>. <code>x</code> cresce <strong>para a direita</strong>,
+  <code>y</code> cresce <strong>para baixo</strong> (o <code>(0, 0)</code> é o canto <strong>superior esquerdo</strong> da janela — diferente do
+  caderno de matemática, onde <code>y</code> cresce para cima!).</li>
+<li><code>WIDTH // 2</code> e <code>HEIGHT // 2</code> são o <strong>meio da tela</strong> (já usado no Módulo 1); o <code>- 60</code> sobe o
+  personagem um pouco, para deixar espaço pra pergunta em cima.</li>
+<li><code>screen.draw.filled_circle((x, y), raio, cor)</code> desenha um <strong>círculo preenchido</strong>: centro em
+  <code>(x, y)</code>, tamanho <code>raio</code>, na cor indicada.</li>
+<li><code>topleft=(10, HEIGHT - 30)</code> é outro jeito de posicionar texto: em vez de <code>center</code> (que
+  centraliza), <code>topleft</code> ancora o <strong>canto superior esquerdo</strong> do texto naquele ponto — aqui, 10
+  pixels da borda esquerda e perto do rodapé (<code>HEIGHT - 30</code>).</li>
+</ul>
+<p><strong>Rode.</strong> No canto inferior esquerdo aparece "Pecador: [seu nome]", pequeno. No meio da tela,
+um pouco acima do centro, aparece uma <strong>bola dourada</strong>, sobre o fundo azul-claro.</p>
+<h3 id="passo-2-a-pergunta-na-tela">Passo 2 — a pergunta na tela</h3>
+<p>Junto das outras variáveis, no topo do arquivo:</p>
+<pre><code class="language-python">PERGUNTA = &quot;Você orou hoje?&quot;
+</code></pre>
+<p>Dentro de <code>draw()</code>, <strong>antes</strong> do círculo, desenhe o texto da pergunta:</p>
+<pre><code class="language-python">def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        PERGUNTA,
+        center=(WIDTH // 2, HEIGHT // 2 - 160),
+        fontsize=32,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )
+</code></pre>
+<p><code>screen.draw.text(...)</code> já apareceu no Módulo 1 — só muda a posição (<code>HEIGHT // 2 - 160</code>, bem
+acima do personagem).</p>
+<p><strong>Rode.</strong> Agora a pergunta <strong>"Você orou hoje?"</strong> aparece em cima da bola dourada.</p>
+<h3 id="passo-3-os-botoes-sim-e-nao">Passo 3 — os botões Sim e Não</h3>
+<p>Junto das outras variáveis, no topo:</p>
+<pre><code class="language-python"># Área (retângulo) de cada botão: (x, y, largura, altura)
+botao_sim = Rect((WIDTH // 2 - 160, HEIGHT // 2 + 120), (120, 50))
+botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
+</code></pre>
+<ul>
+<li><code>Rect((x, y), (largura, altura))</code> é um <strong>retângulo</strong>: <code>(x, y)</code> é o canto <strong>superior esquerdo</strong>,
+  e <code>(largura, altura)</code> é o tamanho. O Pygame Zero já sabe o que é <code>Rect</code> — não precisa de
+  <code>import</code> extra.</li>
+<li>Cada botão é só uma <strong>área invisível</strong> por enquanto — o próximo passo desenha ela.</li>
+</ul>
+<p>Dentro de <code>draw()</code>, depois do personagem, desenhe os dois botões:</p>
+<pre><code class="language-python">    screen.draw.filled_rect(botao_sim, &quot;green&quot;)
+    screen.draw.text(&quot;Sim&quot;, center=botao_sim.center, fontsize=28, color=&quot;white&quot;)
+
+    screen.draw.filled_rect(botao_nao, &quot;red&quot;)
+    screen.draw.text(&quot;Não&quot;, center=botao_nao.center, fontsize=28, color=&quot;white&quot;)
+</code></pre>
+<ul>
+<li><code>screen.draw.filled_rect(retangulo, cor)</code> pinta o retângulo.</li>
+<li><code>botao_sim.center</code> é um <strong>atalho do próprio <code>Rect</code></strong>: ele calcula sozinho o ponto central do
+  retângulo — não precisamos fazer conta.</li>
+</ul>
+<p><strong>Rode.</strong> Aparecem um botão <strong>verde "Sim"</strong> e um botão <strong>vermelho "Não"</strong>, abaixo do personagem.
+Clicar ainda não faz nada — isso é o próximo passo.</p>
+<h3 id="passo-4-detectando-o-clique">Passo 4 — detectando o clique</h3>
+<p>Depois de <code>draw()</code> (fora dela), crie uma nova função:</p>
+<pre><code class="language-python">def on_mouse_down(pos):
+    if botao_sim.collidepoint(pos):
+        print(&quot;clicou no Sim&quot;)
+    elif botao_nao.collidepoint(pos):
+        print(&quot;clicou no Não&quot;)
+</code></pre>
+<ul>
+<li><code>on_mouse_down(pos)</code> é uma <strong>função especial</strong>, igual <code>draw()</code>: o Pygame Zero <strong>chama ela
+  sozinho</strong> toda vez que você clica na janela, e entrega em <code>pos</code> a coordenada <code>(x, y)</code> de onde
+  foi o clique.</li>
+<li><code>retangulo.collidepoint(pos)</code> responde <code>True</code> ou <code>False</code>: "esse ponto está <strong>dentro</strong> deste
+  retângulo?".</li>
+<li><code>if</code> / <code>elif</code> compara: <strong>se</strong> o clique caiu dentro de <code>botao_sim</code>, faz uma coisa; <strong>senão, se</strong>
+  caiu dentro de <code>botao_nao</code>, faz outra. Repare no <code>==</code> que não aparece aqui — <code>collidepoint</code> já
+  devolve <code>True</code>/<code>False</code> pronto, então o <code>if</code> testa ele direto.</li>
+</ul>
+<p><strong>Rode e clique nos dois botões.</strong> Nada muda <strong>na tela</strong>, mas abra o <strong>terminal integrado</strong>
+(<code>Ctrl+`</code>): a cada clique dentro de um botão aparece a mensagem <code>clicou no Sim</code> ou <code>clicou no
+Não</code>. Clicar <strong>fora</strong> dos dois botões não imprime nada. Feche a janela para continuar.</p>
+<h3 id="passo-5-guardando-a-resposta-e-fazendo-o-personagem-reagir">Passo 5 — guardando a resposta e fazendo o personagem reagir</h3>
+<p>Troque os <code>print(...)</code> do passo anterior por código que <strong>muda o personagem de verdade</strong>. Junto
+das outras variáveis, no topo do arquivo:</p>
+<pre><code class="language-python"># Estado da resposta: começa sem nenhuma resposta ainda
+respondeu = False
+resposta_foi_sim = False
+</code></pre>
+<ul>
+<li><code>True</code> / <code>False</code> são os dois únicos valores <strong>lógicos</strong> do Python — aqui guardam "o jogador já
+  respondeu?" e "a resposta foi Sim?".</li>
+</ul>
+<p>Agora reescreva <code>on_mouse_down</code>:</p>
+<pre><code class="language-python">def on_mouse_down(pos):
+    global respondeu, resposta_foi_sim, personagem_raio, personagem_cor
+
+    if botao_sim.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = True
+        personagem_raio = 60
+        personagem_cor = &quot;yellow&quot;
+    elif botao_nao.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = False
+        personagem_raio = 30
+        personagem_cor = &quot;gray&quot;
+</code></pre>
+<ul>
+<li><strong>Por que o <code>global</code>?</strong> Uma função, por padrão, <strong>não pode mudar</strong> uma variável de fora dela —
+  só ler. A linha <code>global respondeu, resposta_foi_sim, personagem_raio, personagem_cor</code> avisa o
+  Python: "estas variáveis não são novas, são as que já existem lá em cima — quero <strong>mudar elas
+  de verdade</strong>". Sem o <code>global</code>, o Python cria uma cópia local que some assim que a função
+  termina, e a tela nunca muda.</li>
+<li>No "Sim": <code>personagem_raio</code> fica maior (60) e a cor muda para <code>"yellow"</code>.</li>
+<li>No "Não": <code>personagem_raio</code> fica menor (30) e a cor muda para <code>"gray"</code>.</li>
+</ul>
+<p><strong>Rode e clique no "Sim".</strong> O personagem <strong>cresce e fica amarelo</strong>. Feche, rode de novo e clique
+no <strong>"Não"</strong>: o personagem <strong>encolhe e fica cinza</strong>.</p>
+<h3 id="passo-6-a-mensagem-de-acordo-com-a-resposta">Passo 6 — a mensagem de acordo com a resposta</h3>
+<p>Por último, dentro de <code>draw()</code>, depois do personagem e dos botões, mostre uma mensagem só depois
+que o jogador responder:</p>
+<pre><code class="language-python">    if respondeu:
+        if resposta_foi_sim:
+            mensagem = &quot;Muito bem! Continue assim!&quot;
+        else:
+            mensagem = &quot;Que tal fazer isso hoje?&quot;
+
+        screen.draw.text(
+            mensagem,
+            center=(WIDTH // 2, HEIGHT // 2 + 220),
+            fontsize=26,
+            color=COR_DO_TEXTO,
+        )
+</code></pre>
+<ul>
+<li>O primeiro <code>if respondeu:</code> só entra <strong>depois</strong> que algum botão foi clicado — antes disso,
+  <code>respondeu</code> é <code>False</code> e nada é desenhado ali.</li>
+<li>O <code>if</code>/<code>else</code> de dentro escolhe <strong>qual texto</strong> mostrar, guardando o resultado numa variável
+  <code>mensagem</code> antes de desenhar.</li>
+</ul>
+<p><strong>Rode.</strong> Antes de clicar, só aparecem a pergunta, o personagem e os botões. Clique no <strong>"Sim"</strong>:
+o personagem cresce, fica amarelo, e aparece <strong>"Muito bem! Continue assim!"</strong> embaixo. Feche, rode
+de novo e clique no <strong>"Não"</strong>: o personagem encolhe, fica cinza, e aparece <strong>"Que tal fazer isso
+hoje?"</strong>.</p>
+<pre class="mermaid">flowchart TB
+    A["🖱️ Clique na janela<br/>Pygame Zero chama on_mouse_down(pos)"]
+    A --> B{"pos está dentro<br/>de botao_sim?"}
+    B -- sim --> C["respondeu = True<br/>resposta_foi_sim = True<br/>personagem cresce e fica amarelo"]
+    B -- não --> D{"pos está dentro<br/>de botao_nao?"}
+    D -- sim --> E["respondeu = True<br/>resposta_foi_sim = False<br/>personagem encolhe e fica cinza"]
+    D -- não --> F["nada acontece<br/>(clicou fora dos botões)"]</pre>
+<p>Pronto — compare com o <a href="exemplo.py"><code>exemplo.py</code></a> deste módulo: é o mesmo código que você acabou
+de construir.</p>
+<h2 id="sua-missao">Sua missão</h2>
+<ul>
+<li>[ ] Escolha a cor e o tamanho inicial do seu personagem;</li>
+<li>[ ] Escolha uma pergunta sobre um hábito cristão (ex.: "Você obedeceu aos seus pais hoje?",
+      "Você leu a Bíblia hoje?");</li>
+<li>[ ] Programe a reação: <strong>cresce e muda de cor</strong> no "Sim", <strong>fica do mesmo tamanho ou menor</strong> no
+      "Não";</li>
+<li>[ ] Mostre uma mensagem diferente para cada resposta.</li>
+</ul>
+<p>Construa <strong>do zero</strong>, seguindo os passos acima — não copie o <code>exemplo.py</code> pronto; ele é só para
+comparar no fim ou para destravar se você empacar.</p>
+<h2 id="desafios">Desafios</h2>
+<ul>
+<li><strong>Desafio extra:</strong> adicione uma segunda pergunta que aparece depois da primeira ser respondida.</li>
+<li><strong>Desafio criativo:</strong> personalize as cores, o formato do personagem e as mensagens.</li>
+</ul>
+<h2 id="palavras-novas">Palavras novas</h2>
+<table>
+<thead>
+<tr>
+<th>Termo</th>
+<th>O que significa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coordenada</td>
+<td>Um endereço na tela: um valor <code>x</code> (horizontal) e um valor <code>y</code> (vertical), a partir do canto superior esquerdo</td>
+</tr>
+<tr>
+<td><code>topleft=(x, y)</code></td>
+<td>Outro jeito de posicionar texto: ancora pelo canto superior esquerdo, em vez de centralizar como <code>center</code></td>
+</tr>
+<tr>
+<td><code>screen.draw.filled_circle(...)</code></td>
+<td>Desenha um círculo preenchido: centro, raio e cor</td>
+</tr>
+<tr>
+<td><code>Rect((x, y), (largura, altura))</code></td>
+<td>Um retângulo: canto superior esquerdo + tamanho</td>
+</tr>
+<tr>
+<td><code>screen.draw.filled_rect(...)</code></td>
+<td>Pinta um <code>Rect</code> inteiro de uma cor</td>
+</tr>
+<tr>
+<td><code>retangulo.center</code></td>
+<td>Atalho do <code>Rect</code> que já calcula o ponto central dele</td>
+</tr>
+<tr>
+<td><code>True</code> / <code>False</code></td>
+<td>Verdadeiro ou falso — os dois únicos valores possíveis de uma variável lógica</td>
+</tr>
+<tr>
+<td><code>if</code> / <code>elif</code> / <code>else</code></td>
+<td>"Se" isso for verdade, faça uma coisa; "senão, se" outra coisa for verdade, faça outra; "senão", faça a última</td>
+</tr>
+<tr>
+<td><code>==</code></td>
+<td>Compara dois valores (é diferente de <code>=</code>, que guarda um valor numa variável)</td>
+</tr>
+<tr>
+<td>Evento</td>
+<td>Algo que acontece durante o jogo, como um clique na tela</td>
+</tr>
+<tr>
+<td><code>on_mouse_down(pos)</code></td>
+<td>Função especial que o Pygame Zero chama sozinho a cada clique, entregando a posição <code>pos</code> do clique</td>
+</tr>
+<tr>
+<td><code>retangulo.collidepoint(pos)</code></td>
+<td>Responde <code>True</code>/<code>False</code>: esse ponto está dentro do retângulo?</td>
+</tr>
+<tr>
+<td><code>global</code></td>
+<td>Dentro de uma função, avisa que uma variável não é nova — é a de fora, e queremos mudar ela de verdade</td>
+</tr>
+</tbody>
+</table>
+<h2 id="deu-erro-tenta-isso-primeiro">Deu erro? Tenta isso primeiro</h2>
+<ul>
+<li><strong>Esqueceu os dois pontos (<code>:</code>) depois do <code>if</code>/<code>elif</code>/<code>else</code>:</strong> confira se colocou <code>:</code> no final
+  da linha.</li>
+<li><strong>O clique não faz nada:</strong> confira se a função se chama <strong>exatamente</strong> <code>on_mouse_down</code> (com
+  esse nome, sem erro de digitação) e se recebe <code>pos</code> entre os parênteses.</li>
+<li><strong><code>UnboundLocalError</code> ou a tela não muda depois do clique:</strong> falta o <code>global</code> no começo de
+  <code>on_mouse_down</code>, listando as variáveis que a função precisa mudar.</li>
+<li><strong>Usou <code>=</code> em vez de <code>==</code>:</strong> <code>=</code> guarda um valor; <code>==</code> compara dois valores — são diferentes!</li>
+<li><strong>Botão no lugar errado:</strong> confira os números do <code>Rect</code> — o primeiro par é a posição, o segundo
+  é o tamanho.</li>
+</ul>
+<p>Ao final, <strong>salve</strong> o <code>jogo.py</code> (na raiz de <code>crescendo-como-jesus/</code>).</p></section>
+</body>
+</html>
