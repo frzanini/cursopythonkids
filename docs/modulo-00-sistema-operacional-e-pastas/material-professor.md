@@ -170,7 +170,10 @@ peça:
 ### 8. Instalar o Python 3.12 (com o `uv`) (15 min)
 
 1. Instalar o **`uv`** (se o passo 7 não mostrou versão):
-   - **Windows (PowerShell):** `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+   - **Windows (PowerShell):**
+     `powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+     (o `-ExecutionPolicy Bypass` vale só para este comando; sem ele o Windows costuma bloquear
+     com um erro de "execução de scripts desabilitada")
    - **Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
    - **O que deve aparecer:** o instalador mostra o progresso e termina com uma mensagem de
      sucesso (algo como `everything's installed!` / o caminho onde instalou). **Feche e abra o
@@ -186,6 +189,16 @@ peça:
    **O que deve aparecer:** na primeira vez ele baixa (uma barra de progresso) e termina com algo
    como `Installed Python 3.12.x`, sem erro. Conferir com `uv python list` — deve haver uma linha
    com `3.12` e um caminho ao lado (sinal de que está instalada).
+
+   > **Muita informação na tela?** `uv python list` mostra também versões que **não** estão
+   > instaladas (só disponíveis para instalar) — a lista pode ficar longa. Para ver **só** as que
+   > já estão na máquina, usar `uv python list --only-installed`.
+
+   > **Atenção:** quem confirma a instalação é sempre o `uv python list`, nunca o
+   > `python --version` solto no terminal — o Python instalado pelo `uv` não vira o `python`
+   > global do Windows, então `python --version` pode continuar dando erro de "comando não
+   > reconhecido" mesmo com o 3.12 já instalado. Isso é esperado e só muda depois de criar/ativar
+   > o venv (passo 11).
 3. Explicar **por que 3.12 e não a mais nova**: o `pygame` (usado pelo Pygame Zero) só publica
    instalação pronta (*wheel*) para algumas versões do Python. Uma versão nova demais pode não
    ter *wheel* e travar a instalação — a 3.12 evita esse problema. Não precisa decorar o motivo,
@@ -213,6 +226,17 @@ peça:
    - o **explorador de arquivos** na lateral, que mostra as pastas e arquivos do projeto.
    - Analogia: "é como uma oficina completa — a bancada (editor), as ferramentas (extensões) e o
      lugar de testar (terminal), tudo junto num só programa."
+4. No terminal integrado recém-aberto (PowerShell, no Windows), avisar que **mais na frente**
+   (ao ativar o `.venv`, passo 11) pode aparecer um erro de "execução de scripts desabilitada" —
+   é a mesma Execution Policy do passo 8, mas agora bloqueando o próprio terminal do VS Code em
+   vez de um comando isolado. Resolver já, de uma vez, liberando a execução **só para o usuário
+   atual**:
+   ```
+   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+   ```
+   **O que deve aparecer:** pode pedir confirmação (`S`/`Y`); sem mensagem de erro depois.
+   Diferente do `-ExecutionPolicy Bypass` do passo 8 (vale só para aquele comando), este muda a
+   configuração **de forma permanente** — só precisa rodar uma vez, e não em todo terminal novo.
 
 > **Sem `winget`/`snap` disponível?** Baixar o instalador manualmente em
 > https://code.visualstudio.com — o resultado final é o mesmo, só muda o jeito de instalar.
@@ -336,7 +360,11 @@ flowchart TB
    ```python
    print("ambiente pronto para a aula")
    ```
-2. Clicar no botão ▶ **Run Python File** (canto superior direito) ou `Ctrl+F5`.
+2. Clicar no botão ▶ **Run Python File** (canto superior direito) ou `Ctrl+F5` — ou, no terminal
+   integrado, com o venv ativo, digitar:
+   ```
+   python aula-01/teste.py
+   ```
 3. **O que deve aparecer:** no terminal integrado, a linha exata `ambiente pronto para a aula`
    (e mais nada de erro). Se aparecer isso, **está tudo pronto**. Se der erro, é quase sempre
    interpretador errado (passo 11.4) ou `.venv` fora da pasta aberta — ver "Erros comuns".
@@ -411,8 +439,22 @@ de programação foi ensinado ainda — isso começa no Módulo 1.
   o PATH só atualiza numa janela nova.
 - **`winget` não existe (Windows desatualizado):** instalar o "App Installer" pela Microsoft
   Store, ou baixar o VS Code manualmente em https://code.visualstudio.com.
+- **`winget` dá erro de acesso negado/política bloqueada (comum em computador de empresa):** não
+  é falta de atualização — é a TI bloqueando instalação de programas. Não adianta repetir nem
+  rodar como administrador; ir direto para o instalador manual em
+  https://code.visualstudio.com.
+- **`irm ... | iex` (instalar o `uv`) dá erro de "execução de scripts desabilitada":** é a
+  Execution Policy do Windows bloqueando o script. Usar o comando com `-ExecutionPolicy Bypass`
+  (passo 8.1) em vez de mudar a política do sistema inteiro.
+- **Qualquer outro comando no terminal integrado do VS Code dá erro de "execução de scripts
+  desabilitada" (comum ao ativar o `.venv`, passo 11):** rodar
+  `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` (passo 9.4) uma vez —
+  libera o terminal do VS Code de forma permanente para o usuário atual.
 - **`uv python install 3.12` parece travado:** ele baixa o Python na primeira vez — aguardar; da
   próxima é instantâneo (cache).
+- **Aluno roda `python --version` depois de instalar com `uv` e continua dando erro:** é
+  esperado — o `uv` não registra o Python como o `python` global do Windows. Confirmar sempre com
+  `uv python list`, não com `python --version` (que só funciona depois de ativar o venv).
 - **Aluno não sabe onde criou a pasta:** usar `pwd` no terminal e a barra de caminho do
   gerenciador de arquivos como "mapa" — sempre mostram onde ele está.
 - **Confundir `cd` com `dir`/`ls`:** `cd` **anda** entre pastas; `dir`/`ls` só **mostra** o que

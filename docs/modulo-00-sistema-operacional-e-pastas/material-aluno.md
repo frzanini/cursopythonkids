@@ -98,7 +98,9 @@ code --version
 O curso é de Python — mas quem instala o Python pra gente é o `uv`, então ele vem primeiro.
 
 - Instalar o `uv`:
-  - **Windows:** `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"`
+  - **Windows:** `powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+    (o `-ExecutionPolicy Bypass` vale só pra esse comando; sem ele o Windows costuma bloquear com
+    um erro de "execução de scripts desabilitada")
   - **Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
   - Deve terminar com uma mensagem de sucesso do instalador.
 - **Feche e abra o terminal de novo** e confirme: `uv --version` → deve imprimir algo como
@@ -106,6 +108,13 @@ O curso é de Python — mas quem instala o Python pra gente é o `uv`, então e
 - Instalar o Python 3.12: `uv python install 3.12` → baixa (barra de progresso) e termina com
   `Installed Python 3.12.x`, sem erro.
 - Confirmar: `uv python list` → deve ter uma linha com `3.12` e um caminho ao lado.
+  > Não confirme com `python --version` — o Python do `uv` não vira o `python` global do
+  > Windows, então esse comando pode continuar dando erro mesmo com o 3.12 instalado. Isso é
+  > normal; quem confirma é sempre o `uv python list`.
+  >
+  > Se a lista vier muito grande (o `uv python list` mostra até versões que dá pra instalar, mas
+  > ainda não estão na máquina), use `uv python list --only-installed` para ver só as que já
+  > estão instaladas.
 
 ### 3. Instalar o VS Code e a extensão Python
 
@@ -116,8 +125,20 @@ O curso é de Python — mas quem instala o Python pra gente é o `uv`, então e
 - **Feche e abra o terminal de novo** e confirme: `code --version` → responde com três linhas.
 - Abra o VS Code, clique no ícone de extensões (`Ctrl+Shift+X`), busque **Python** (da
   Microsoft) e clique em **Install** → o botão passa a mostrar "Uninstall".
+- Abra o terminal integrado (`` Ctrl+` ``) — no Windows, ele abre um **PowerShell**. Se aparecer
+  um erro de **"execução de scripts desabilitada"** ao rodar qualquer comando por aqui (vai
+  acontecer mais na frente, ao ativar o `.venv`), libere a execução de scripts **só para o seu
+  usuário** com:
+  ```
+  Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+  ```
+  **O que deve aparecer:** ele pode perguntar para confirmar (responda `S`/`Y`) e não aparece
+  nenhuma mensagem de erro depois. Diferente do `-ExecutionPolicy Bypass` do passo 2 (que vale só
+  para aquele comando), este `Set-ExecutionPolicy` muda a configuração do terminal **de forma
+  permanente**, então só precisa rodar uma vez.
 
-> Se o `winget`/`snap` não funcionar, baixe o VS Code em https://code.visualstudio.com.
+> Se o `winget`/`snap` não funcionar (incluindo erro de acesso negado/política bloqueada em
+> computador de empresa), baixe o VS Code manualmente em https://code.visualstudio.com.
 
 ### 4. Criar a pasta do curso
 
@@ -195,7 +216,11 @@ Isto **não é** aula de Python — é só pra ver se tudo liga.
   ```python
   print("ambiente pronto para a aula")
   ```
-- Clique no botão ▶ **Run Python File** (canto superior direito).
+- Clique no botão ▶ **Run Python File** (canto superior direito) — ou, no terminal integrado, com
+  o venv ativo, digite:
+  ```
+  python aula-01/teste.py
+  ```
 - **O que deve aparecer:** no terminal, a linha exata `ambiente pronto para a aula`, sem erro.
   Se apareceu isso, **está tudo pronto!** (Pode apagar o `teste.py` depois.)
 
@@ -236,8 +261,16 @@ começa.
 ## Deu dúvida? Tenta isso primeiro
 
 - **`uv` / `code` não reconhecido depois de instalar:** feche e abra o terminal de novo.
-- **`winget` não funciona:** baixe o VS Code em https://code.visualstudio.com.
+- **`winget` não funciona (inclusive erro de acesso negado):** baixe o VS Code em
+  https://code.visualstudio.com.
+- **Instalar o `uv` deu erro de "execução de scripts desabilitada":** use o comando com
+  `-ExecutionPolicy Bypass` (passo 2 acima).
+- **Qualquer outro comando no terminal do VS Code dá esse mesmo erro (comum ao ativar o
+  `.venv`, passo 5):** rode uma vez `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy
+  RemoteSigned` (passo 3 acima).
 - **`uv python install 3.12` parece travado:** ele baixa o Python na primeira vez — aguarde.
+- **`python --version` continua com erro depois de instalar com `uv`:** normal — o `uv` não
+  registra o Python como o `python` global. Confira com `uv python list`.
 - **Me perdi entre as pastas:** use `pwd`, e a barra de endereço do gerenciador de arquivos.
 - **`rmdir` deu erro:** a pasta não está vazia (confira com `dir`/`ls`).
 - **VS Code não mostra o `.venv`:** confirme que a pasta `.venv` está **dentro** de
