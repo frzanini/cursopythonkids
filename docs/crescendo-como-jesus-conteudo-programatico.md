@@ -90,7 +90,7 @@ O jogo final deve possuir: tela inicial (com o versículo), um **labirinto** com
 | 0 | [Preparando o computador](modulo-00-sistema-operacional-e-pastas/material-professor.md) | SO, Windows/Linux, arquivos, pastas, caminho, terminal; Python 3.12, `uv`, VS Code + extensão, pacote/PyPI, ambiente virtual; estrutura de pastas do aluno | *(preparação de ambiente — não constrói o jogo)* |
 | 1 | [Conhecendo a programação](modulo-01-conhecendo-a-programacao/material-professor.md) | jogo do curso, o que é programa e algoritmo, sequência de execução, primeira janela (`WIDTH`/`HEIGHT`, cor de fundo, título) | Primeira janela do jogo |
 | 2 | [O personagem e a primeira decisão](modulo-02-personagem-e-primeira-decisao/material-professor.md) | objetos, coordenadas, eixos X/Y, valores lógicos, `if`/`else`, eventos de clique | Personagem aparece e reage a uma decisão (sim/não) |
-| 3 | Movimentando o personagem | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
+| 3 | [Movimentando o personagem](modulo-03-movimentando-o-personagem/material-professor.md) | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
 | 4 | Os muros do labirinto | **listas**, laço `for`, ler o mapa de uma grade (lista de strings), operadores relacionais | Paredes desenhadas a partir do mapa; o jogador não atravessa parede nem sai da tela |
 | 5 | Os bons hábitos no mapa | reforço de listas e `for`; tirar um item da lista ao coletar | Bons hábitos espalhados pelo mapa; somem quando o jogador passa por cima |
 | 6 | A estatura (pontuação) | contadores, texto/HUD na tela | Placar de estatura sobe a cada hábito coletado |
@@ -128,4 +128,4 @@ entregável do curso**: será gerado de uma vez para todos os módulos no fim do
 conteúdo de todas as aulas estiver revisado (ver `docs/backlog/status.md` e issue #12). Não é
 feito módulo a módulo. A prioridade agora é revisar e escrever o conteúdo das aulas.
 
-> Status: módulos 0, 1 e 2 migrados para essa estrutura. Módulos 3–12 ainda não existem.
+> Status: módulos 0, 1, 2 e 3 já estão nessa estrutura. Módulos 4–12 ainda não existem.

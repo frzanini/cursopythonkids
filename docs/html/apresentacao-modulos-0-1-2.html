@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crescendo como Jesus — Apresentação (Módulos 0, 1 e 2)</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+  :root{
+    --verde:#1b4d3e; --verde-claro:#2e7d5b; --areia:#f4efe4;
+    --texto:#15211d; --suave:#cfe0d8; --codigo-bg:#0f241d; --codigo-fg:#e8f5ee;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    font-family:"Segoe UI","Helvetica Neue",Arial,sans-serif;
+    color:var(--texto); background:#0b1a15; overflow:hidden;
+  }
+
+  .deck{position:fixed;inset:0;}
+  .slide{
+    position:absolute;inset:0;display:none;
+    flex-direction:column;justify-content:center;
+    padding:6vh 8vw;background:var(--areia);
+    animation:fade .35s ease;
+  }
+  .slide.active{display:flex;}
+  @keyframes fade{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+  .slide.capa{
+    background:linear-gradient(160deg,var(--verde),var(--verde-claro));
+    color:#fff;text-align:center;align-items:center;
+  }
+  .slide.secao{
+    background:var(--verde);color:#fff;align-items:flex-start;justify-content:center;
+  }
+
+  .kicker{
+    font-size:1.1rem;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--verde-claro);font-weight:700;margin-bottom:1rem;
+  }
+  .secao .kicker,.capa .kicker{color:#bfe6d3;}
+
+  h1{font-size:clamp(2rem,5.2vw,3.6rem);line-height:1.1;margin:.2em 0;}
+  h2{font-size:clamp(1.6rem,4vw,2.6rem);line-height:1.15;margin:0 0 .6em;color:var(--verde);}
+  .secao h2{color:#fff;font-size:clamp(2rem,6vw,3.4rem);}
+  p{font-size:clamp(1.05rem,2.2vw,1.5rem);line-height:1.5;margin:.4em 0;max-width:60ch;}
+  ul{font-size:clamp(1.05rem,2.2vw,1.45rem);line-height:1.6;padding-left:1.3em;max-width:62ch;}
+  li{margin:.35em 0;}
+  strong{color:var(--verde);}
+  .secao strong,.capa strong,.slide.capa strong{color:#ffe8a8;}
+
+  code{
+    font-family:"Consolas","Courier New",monospace;
+    background:#e4ded0;padding:.08em .35em;border-radius:4px;font-size:.92em;
+  }
+  pre{
+    background:var(--codigo-bg);color:var(--codigo-fg);
+    border-radius:10px;padding:1.1em 1.3em;overflow:auto;
+    font-family:"Consolas","Courier New",monospace;
+    font-size:clamp(.85rem,1.7vw,1.15rem);line-height:1.45;
+    max-width:min(90vw,900px);box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  pre code{background:none;padding:0;color:inherit;font-size:1em;}
+
+  table{border-collapse:collapse;font-size:clamp(.9rem,1.9vw,1.2rem);max-width:90vw;}
+  th,td{border:1px solid #b9cdc4;padding:.5em .8em;text-align:left;vertical-align:top;}
+  th{background:#e6efeb;color:var(--verde);}
+
+  .mermaid{background:#fff;border-radius:10px;padding:1em;max-width:min(88vw,820px);}
+
+  .callout{
+    border-left:6px solid var(--verde-claro);background:#fff8e6;
+    padding:.7em 1.1em;border-radius:6px;font-size:clamp(1rem,2vw,1.3rem);
+    max-width:60ch;color:#4a3f10;
+  }
+
+  .barra{
+    position:fixed;left:0;right:0;bottom:0;height:6px;background:#d9d1bf;z-index:5;
+  }
+  .barra > span{display:block;height:100%;background:var(--verde-claro);width:0;transition:width .3s;}
+
+  .rodape{
+    position:fixed;bottom:16px;right:22px;font-size:.9rem;color:#5c6b64;z-index:5;
+    background:rgba(255,255,255,.6);padding:.2em .7em;border-radius:20px;
+  }
+  .capa .rodape,.secao .rodape{color:#dff0e8;background:rgba(0,0,0,.18);}
+
+  .nav{
+    position:fixed;bottom:14px;left:22px;z-index:5;display:flex;gap:8px;
+  }
+  .nav button{
+    border:none;background:rgba(255,255,255,.75);color:var(--verde);
+    font-size:1.1rem;width:38px;height:38px;border-radius:50%;cursor:pointer;
+    font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.15);
+  }
+  .nav button:hover{background:#fff;}
+
+  .hint{
+    position:fixed;top:14px;right:22px;z-index:5;font-size:.8rem;color:#5c6b64;
+  }
+  .capa .hint{color:#dff0e8;}
+
+  .cols{display:flex;gap:3vw;flex-wrap:wrap;align-items:flex-start;}
+  .cols > div{flex:1 1 320px;}
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <!-- CAPA -->
+  <section class="slide capa active">
+    <div class="kicker">Curso de Python para crianças</div>
+    <h1>Crescendo como Jesus</h1>
+    <p style="max-width:none;font-size:clamp(1.1rem,2.4vw,1.6rem)">Um jogo cristão, construído por você, uma aula de cada vez.</p>
+    <p style="max-width:none;opacity:.9"><strong>Módulos 0, 1 e 2</strong></p>
+    <p style="max-width:none;opacity:.85;font-style:italic">"E crescia Jesus em sabedoria, e em estatura, e em graça,<br>para com Deus e os homens." (Lucas 2:52)</p>
+  </section>
+
+  <!-- ===================== MÓDULO 0 ===================== -->
+  <section class="slide secao">
+    <div class="kicker">Módulo 0</div>
+    <h2>Preparando o computador</h2>
+    <p>Hoje ainda <strong>não</strong> programamos — deixamos a máquina pronta para escrever código.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Objetivos</div>
+    <h2>O que vamos entender hoje</h2>
+    <ul>
+      <li>O que é um <strong>sistema operacional</strong> — Windows e Linux</li>
+      <li><strong>Arquivos</strong>, <strong>pastas</strong>, <strong>caminho</strong> e <strong>extensão</strong></li>
+      <li>Usar o <strong>terminal</strong> para navegar e criar pastas</li>
+      <li>As ferramentas do curso: <strong>Python 3.12</strong>, <strong><code>uv</code></strong>, <strong>VS Code</strong> e o pacote <strong><code>pgzero</code></strong></li>
+      <li>O que é um <strong>ambiente virtual (venv)</strong></li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Sistema operacional</div>
+    <h2>Nenhum app fala direto com o computador</h2>
+    <p>O <strong>SO</strong> é o programa principal: abre outros programas, guarda arquivos, controla teclado e mouse. Tudo passa por ele.</p>
+    <pre class="mermaid">
+flowchart TB
+    HW["Computador (teclado, mouse, tela, disco...)"]
+    SO["Sistema Operacional"]
+    APPS["Aplicativos (navegador, jogos, VS Code...)"]
+    HW <--> SO
+    SO <--> APPS
+    </pre>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Organização</div>
+    <h2>Arquivo, pasta, caminho e extensão</h2>
+    <ul>
+      <li><strong>Arquivo</strong>: uma coisa guardada no computador (texto, foto, programa).</li>
+      <li><strong>Pasta</strong>: uma "caixa" que guarda arquivos, para organizar.</li>
+      <li><strong>Caminho (path)</strong>: o "endereço" de um arquivo — pasta por pasta até chegar nele.</li>
+      <li><strong>Extensão</strong>: a parte depois do ponto (<code>.png</code>, <code>.py</code>). Python termina em <code>.py</code>.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Terminal (CLI)</div>
+    <h2>Usar o computador digitando comandos</h2>
+    <table>
+      <tr><th>Quero…</th><th>Comando</th><th>O que aparece</th></tr>
+      <tr><td>Ver em que pasta estou</td><td><code>pwd</code></td><td>o caminho da pasta atual</td></tr>
+      <tr><td>Ver o conteúdo da pasta</td><td><code>dir</code> / <code>ls</code></td><td>a lista de arquivos e pastas</td></tr>
+      <tr><td>Entrar numa pasta</td><td><code>cd nome</code></td><td>nada; confira com <code>pwd</code></td></tr>
+      <tr><td>Voltar uma pasta</td><td><code>cd ..</code></td><td>nada; confira com <code>pwd</code></td></tr>
+      <tr><td>Criar uma pasta</td><td><code>mkdir nome</code></td><td>a pasta aparece no <code>dir</code>/<code>ls</code></td></tr>
+    </table>
+    <p class="callout">No terminal, "deu certo" quase sempre é <strong>"não apareceu nada"</strong>. Se aparecer erro, leia o que ele diz.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Ferramentas</div>
+    <h2>As 4 ferramentas do curso</h2>
+    <table>
+      <tr><th>Ferramenta</th><th>Para que serve</th></tr>
+      <tr><td><strong>Python 3.12</strong></td><td>A linguagem do curso. Versão fixa de propósito (garante o <code>pygame</code> pronto).</td></tr>
+      <tr><td><strong><code>uv</code></strong></td><td>Instala o Python, cria o venv e instala os pacotes. É a <strong>primeira</strong> coisa a rodar.</td></tr>
+      <tr><td><strong>VS Code</strong> + extensão Python</td><td>A IDE: editor, terminal e erros num lugar só.</td></tr>
+      <tr><td><strong><code>pgzero</code></strong> (Pygame Zero)</td><td>Pacote pronto do PyPI: dá janela e desenho ao jogo. Instalado <strong>dentro</strong> do venv.</td></tr>
+    </table>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Passo a passo</div>
+    <h2>A ordem da instalação</h2>
+    <ol style="font-size:clamp(1.05rem,2.2vw,1.45rem);line-height:1.7;max-width:60ch">
+      <li>Ver o que já está instalado (<code>python --version</code>, <code>uv --version</code>, <code>code --version</code>)</li>
+      <li>Instalar o <code>uv</code> e, com ele, o <strong>Python 3.12</strong></li>
+      <li>Instalar o <strong>VS Code</strong> + extensão Python</li>
+      <li>Criar a pasta <code>crescendo-como-jesus/</code> com <code>aula-01/</code> dentro</li>
+      <li>Criar o <strong>ambiente virtual</strong> e instalar o <code>pgzero</code></li>
+      <li>Testar com um <code>print("ambiente pronto para a aula")</code></li>
+    </ol>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Comandos do venv</div>
+    <h2>Criar o ambiente virtual</h2>
+<pre><code>uv venv --python 3.12 .venv
+uv pip install pgzero
+uv pip freeze &gt; requirements.txt</code></pre>
+    <p>Depois, no VS Code: <code>Ctrl+Shift+P</code> → <strong>Python: Select Interpreter</strong> → escolher o que tem <code>.venv</code>. O canto inferior direito passa a mostrar <code>3.12.x ('.venv')</code>.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · O venv</div>
+    <h2>Uma "caixa" só do nosso projeto</h2>
+    <pre class="mermaid">
+flowchart TB
+    PC["Seu computador"]
+    PY["Python 3.12 — instalado uma vez pelo uv"]
+    PC --> PY
+    subgraph PROJ["crescendo-como-jesus/ — a pasta do curso"]
+        VENV[".venv/ — Python 3.12 + pgzero + pygame"]
+        JOGO["jogo.py"]
+        AULAS["aula-01/  aula-02/  ..."]
+    end
+    PY -->|"o uv monta a caixa aqui"| VENV
+    JOGO -->|usa| VENV
+    AULAS -->|usam| VENV
+    </pre>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 0 · Checklist</div>
+    <h2>Antes de ir para o Módulo 1</h2>
+    <ul>
+      <li><code>python</code>/<code>uv</code>/<code>code --version</code> respondem, com <code>3.12</code></li>
+      <li>extensão <strong>Python</strong> instalada no VS Code</li>
+      <li>pasta <code>crescendo-como-jesus/</code> criada, com <code>aula-01/</code> dentro</li>
+      <li><code>.venv</code> criado, <code>pgzero</code> instalado, <code>requirements.txt</code> gerado</li>
+      <li>interpretador <code>.venv</code> selecionado no VS Code</li>
+      <li><code>teste.py</code> rodou e imprimiu a frase</li>
+    </ul>
+  </section>
+
+  <!-- ===================== MÓDULO 1 ===================== -->
+  <section class="slide secao">
+    <div class="kicker">Módulo 1</div>
+    <h2>Conhecendo a programação</h2>
+    <p>Hoje: o <strong>primeiro programa</strong> e a <strong>primeira tela</strong> do jogo.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · O jogo</div>
+    <h2>O que vamos construir no curso</h2>
+    <p>Um jogo de labirinto no estilo <strong>Pac-Man</strong> com a ideia de Lucas 2:52. O personagem anda pelo "labirinto da vida":</p>
+    <ul>
+      <li>coleta <strong>bons hábitos</strong> — 🙏 oração, 📖 Bíblia, ⛪ culto, ❤️ obedecer aos pais, 🤝 ajudar — que aumentam a estatura;</li>
+      <li>desvia das <strong>tentações</strong> — 😡 desobediência, 🤥 mentira, 😴 preguiça, 📱 distração;</li>
+      <li>a <strong>oração</strong> é um poder: as tentações fogem por alguns segundos;</li>
+      <li>são <strong>4 fases</strong>: Sabedoria → Estatura → Graça com Deus → Graça com os homens.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Objetivos</div>
+    <h2>O que vamos aprender hoje</h2>
+    <ul>
+      <li>O que é um <strong>programa</strong> e um <strong>algoritmo</strong></li>
+      <li>O computador executa <strong>uma instrução de cada vez, na ordem</strong></li>
+      <li>O que é uma <strong>biblioteca</strong> e de onde vem o <strong>Pygame Zero</strong></li>
+      <li>O que é uma <strong>variável</strong></li>
+      <li>O que é uma <strong>função</strong> e por que o <strong>recuo</strong> (indentação) importa</li>
+      <li>Escrever e rodar o <strong>primeiro programa</strong> com Pygame Zero</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Ideias</div>
+    <h2>Programa, algoritmo e a ordem</h2>
+    <ul>
+      <li>Um <strong>programa</strong> é uma <strong>lista de instruções</strong> que o computador segue.</li>
+      <li>Um <strong>algoritmo</strong> é a <strong>sequência de passos</strong> — como uma <strong>receita de bolo</strong>.</li>
+      <li>O computador faz <strong>uma instrução de cada vez, de cima para baixo</strong>. Ele não adivinha nem pula na frente.</li>
+    </ul>
+    <p class="callout">Numa receita, trocar "leve ao forno" com "misture os ovos" estraga tudo. No código é igual.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Passo 1</div>
+    <h2>O esqueleto mínimo</h2>
+<pre><code>import pgzrun
+
+pgzrun.go()</code></pre>
+    <ul>
+      <li><code>import pgzrun</code> — <strong>traz</strong> um código pronto de fora. Dá <code>screen</code>, <code>draw()</code> e o resto. Vai na <strong>primeira</strong> linha.</li>
+      <li><code>pgzrun.go()</code> — <strong>liga o motor do jogo</strong>: abre a janela e fica redesenhando. Vai na <strong>última</strong> linha.</li>
+    </ul>
+    <p><strong>Rode:</strong> abre uma janelinha preta — já é um jogo Pygame Zero de verdade, só que vazio.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · De onde vem o pgzrun</div>
+    <h2>Você instalou <code>pgzero</code>, mas escreve <code>import pgzrun</code></h2>
+    <pre class="mermaid">
+flowchart TB
+    M0["Módulo 0: você instalou a biblioteca Pygame Zero (pgzero)"]
+    M0 --> VENV[".venv/ do projeto guarda o pgzero aqui dentro"]
+    CODE["No jogo.py: import pgzrun"]
+    CODE --> PROC["O Python procura essa peça nas bibliotecas do .venv"]
+    VENV --> PROC
+    PROC --> OK["Achou! o programa ganha screen, draw(), screen.fill()..."]
+    PROC --> FAIL["Não achou (interpretador errado) -> ModuleNotFoundError"]
+    </pre>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Passo 2</div>
+    <h2>Tamanho e título da janela</h2>
+<pre><code>WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"</code></pre>
+    <ul>
+      <li><strong>Variável</strong>: um <strong>nome que guarda um valor</strong>. <code>WIDTH = 800</code> = "de agora em diante, <code>WIDTH</code> vale 800".</li>
+      <li><code>WIDTH</code> e <code>HEIGHT</code>: tamanho da janela <strong>em pixels</strong>. <code>TITLE</code>: texto da barra.</li>
+      <li>O Pygame Zero reconhece <strong>esses três nomes sozinho</strong> — em maiúsculas.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Passo 3</div>
+    <h2>Pintar o fundo — e a função <code>draw()</code></h2>
+<pre><code>COR_DE_FUNDO = "skyblue"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)</code></pre>
+    <ul>
+      <li><strong>Função</strong>: um pedaço de código com <strong>nome</strong>. <code>draw()</code> é especial — o <strong>Pygame Zero chama ela sozinho</strong>, várias vezes por segundo.</li>
+      <li><strong>Indentação</strong>: o recuo <strong>não é enfeite, é regra</strong>. Ele diz "esta linha faz parte da função". Faltou → <code>IndentationError</code>.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Passo 4</div>
+    <h2>A mensagem de boas-vindas</h2>
+<pre><code>def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        "Bem-vindo(a) ao " + TITLE + "!",
+        center=(WIDTH // 2, HEIGHT // 2),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )</code></pre>
+    <ul>
+      <li><code>+</code> <strong>junta textos</strong>. <code>center=(...)</code>: onde o texto fica centralizado.</li>
+      <li><code>//</code> é <strong>divisão inteira</strong> — <code>WIDTH // 2</code> é o meio da tela.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Passo 5</div>
+    <h2>O seu nome como pecador</h2>
+<pre><code>NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        center=(WIDTH // 2, HEIGHT // 2 + 60),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )</code></pre>
+    <p>O <code>+ 60</code> empurra este texto <strong>60 pixels para baixo</strong>, para não ficar em cima do anterior.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · exemplo.py</div>
+    <h2>O código completo do módulo</h2>
+<pre><code>import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+VERSICULO = '"Jesus crescia em sabedoria, estatura e graça..." (Lucas 2:52)'
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text("Bem-vindo(a) ao " + TITLE + "!",
+        center=(WIDTH // 2, HEIGHT // 2 - 60), fontsize=40, color=COR_DO_TEXTO)
+    screen.draw.text(VERSICULO,
+        center=(WIDTH // 2, HEIGHT // 2 - 10), fontsize=20, color=COR_DO_TEXTO)
+    screen.draw.text("Pecador: " + NOME_DO_PECADOR,
+        center=(WIDTH // 2, HEIGHT // 2 + 40), fontsize=24, color=COR_DO_TEXTO)
+
+
+pgzrun.go()</code></pre>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 1 · Sua missão</div>
+    <h2>Crie uma tela com…</h2>
+    <ul>
+      <li>título do jogo (na barra da janela);</li>
+      <li>uma mensagem de boas-vindas na tela;</li>
+      <li>uma cor de fundo escolhida por você;</li>
+      <li>seu nome como pecador, escrito na tela.</li>
+    </ul>
+    <p class="callout">Construa <strong>do zero</strong>, seguindo os passos — não copie o <code>exemplo.py</code>. Ele é só para comparar no fim.</p>
+  </section>
+
+  <!-- ===================== MÓDULO 2 ===================== -->
+  <section class="slide secao">
+    <div class="kicker">Módulo 2</div>
+    <h2>O personagem e a primeira decisão</h2>
+    <p>A tela de boas-vindas vira a <strong>primeira cena de verdade</strong> do jogo.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · A ideia</div>
+    <h2>Uma pergunta e uma resposta</h2>
+    <p>Um personagem aparece; uma pergunta sobre um hábito cristão é feita ("Você orou hoje?"); o jogador clica em <strong>Sim</strong> ou <strong>Não</strong>.</p>
+    <p>O personagem <strong>reage</strong>: cresce e muda de cor no "Sim", fica igual ou menor no "Não" — a primeira "decisão" programada do jogo.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Objetivos</div>
+    <h2>O que vamos aprender hoje</h2>
+    <ul>
+      <li><strong>Coordenadas</strong>: onde algo fica na tela — um par <code>(x, y)</code></li>
+      <li>Desenhar formas: um <strong>círculo</strong> e <strong>retângulos</strong></li>
+      <li><strong>Variáveis lógicas</strong> (<code>True</code> / <code>False</code>)</li>
+      <li><strong><code>if</code> / <code>elif</code></strong> para o programa decidir, comparando com <code>==</code></li>
+      <li><strong>Evento de clique</strong>: função que o Pygame Zero chama ao clicar</li>
+      <li><strong><code>global</code></strong>: mudar, dentro da função, uma variável de fora</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Passo 1</div>
+    <h2>Coordenadas e o personagem parado</h2>
+<pre><code>personagem_x = WIDTH // 2
+personagem_y = HEIGHT // 2 - 60
+personagem_raio = 40
+personagem_cor = "gold"
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )</code></pre>
+    <p><strong>Coordenada</strong>: <code>x</code> cresce para a direita, <code>y</code> cresce <strong>para baixo</strong>. O <code>(0, 0)</code> é o canto superior esquerdo — diferente do caderno de matemática!</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Passo 2</div>
+    <h2>A pergunta na tela</h2>
+<pre><code>PERGUNTA = "Você orou hoje?"
+
+    screen.draw.text(
+        PERGUNTA,
+        center=(WIDTH // 2, HEIGHT // 2 - 160),
+        fontsize=32,
+        color=COR_DO_TEXTO,
+    )</code></pre>
+    <p><code>screen.draw.text(...)</code> já apareceu no Módulo 1 — só muda a posição (bem acima do personagem).</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Passo 3</div>
+    <h2>Os botões Sim e Não</h2>
+<pre><code>botao_sim = Rect((WIDTH // 2 - 160, HEIGHT // 2 + 120), (120, 50))
+botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
+
+    screen.draw.filled_rect(botao_sim, "green")
+    screen.draw.text("Sim", center=botao_sim.center, fontsize=28, color="white")
+    screen.draw.filled_rect(botao_nao, "red")
+    screen.draw.text("Não", center=botao_nao.center, fontsize=28, color="white")</code></pre>
+    <ul>
+      <li><code>Rect((x, y), (largura, altura))</code>: canto superior esquerdo + tamanho.</li>
+      <li><code>botao_sim.center</code>: o <code>Rect</code> calcula o ponto central sozinho.</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Passo 4</div>
+    <h2>Detectando o clique</h2>
+<pre><code>def on_mouse_down(pos):
+    if botao_sim.collidepoint(pos):
+        print("clicou no Sim")
+    elif botao_nao.collidepoint(pos):
+        print("clicou no Não")</code></pre>
+    <ul>
+      <li><code>on_mouse_down(pos)</code>: função especial — o Pygame Zero chama sozinho a cada clique e entrega a coordenada <code>pos</code>.</li>
+      <li><code>retangulo.collidepoint(pos)</code> responde <code>True</code>/<code>False</code>: "o ponto está dentro?".</li>
+    </ul>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Passo 5</div>
+    <h2>Guardar a resposta e reagir — e o <code>global</code></h2>
+<pre><code>respondeu = False
+resposta_foi_sim = False
+
+def on_mouse_down(pos):
+    global respondeu, resposta_foi_sim, personagem_raio, personagem_cor
+    if botao_sim.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = True
+        personagem_raio = 60
+        personagem_cor = "yellow"
+    elif botao_nao.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = False
+        personagem_raio = 30
+        personagem_cor = "gray"</code></pre>
+    <p class="callout"><strong>Por que o <code>global</code>?</strong> Sem ele, a função só cria uma cópia local que some quando termina — e a tela nunca muda.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Passo 6</div>
+    <h2>A mensagem de acordo com a resposta</h2>
+<pre><code>    if respondeu:
+        if resposta_foi_sim:
+            mensagem = "Muito bem! Continue assim!"
+        else:
+            mensagem = "Que tal fazer isso hoje?"
+
+        screen.draw.text(
+            mensagem,
+            center=(WIDTH // 2, HEIGHT // 2 + 220),
+            fontsize=26,
+            color=COR_DO_TEXTO,
+        )</code></pre>
+    <p>O <code>if respondeu:</code> só entra <strong>depois</strong> que algum botão foi clicado.</p>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · O fluxo do clique</div>
+    <h2>O que acontece a cada clique</h2>
+    <pre class="mermaid">
+flowchart TB
+    A["Clique na janela -> on_mouse_down(pos)"]
+    A --> B{"pos dentro de botao_sim?"}
+    B -- sim --> C["respondeu = True; resposta_foi_sim = True; cresce e fica amarelo"]
+    B -- nao --> D{"pos dentro de botao_nao?"}
+    D -- sim --> E["respondeu = True; resposta_foi_sim = False; encolhe e fica cinza"]
+    D -- nao --> F["nada acontece (clicou fora)"]
+    </pre>
+  </section>
+
+  <section class="slide">
+    <div class="kicker">Módulo 2 · Sua missão</div>
+    <h2>Programe a sua decisão</h2>
+    <ul>
+      <li>Escolha a cor e o tamanho inicial do personagem;</li>
+      <li>Escolha uma pergunta sobre um hábito cristão ("Você leu a Bíblia hoje?");</li>
+      <li>Reação: <strong>cresce e muda de cor</strong> no "Sim", <strong>igual ou menor</strong> no "Não";</li>
+      <li>Mostre uma mensagem diferente para cada resposta.</li>
+    </ul>
+  </section>
+
+  <section class="slide capa">
+    <div class="kicker">Fim dos Módulos 0 – 2</div>
+    <h1>No fim, o seu vai ficar assim.</h1>
+    <p style="max-width:none;opacity:.9">Próximo: <strong>Módulo 3 — Movimentando o personagem</strong></p>
+  </section>
+
+</div>
+
+<div class="hint">← → navega · F tela cheia</div>
+<div class="rodape" id="rodape">1 / 1</div>
+<div class="nav">
+  <button id="prev" aria-label="Anterior">‹</button>
+  <button id="next" aria-label="Próximo">›</button>
+</div>
+<div class="barra"><span id="barra"></span></div>
+
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  let i = 0;
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => s.classList.toggle('active', k === i));
+    document.getElementById('rodape').textContent = (i + 1) + ' / ' + slides.length;
+    document.getElementById('barra').style.width = ((i + 1) / slides.length * 100) + '%';
+    location.hash = i + 1;
+  }
+  function next(){ show(i + 1); }
+  function prev(){ show(i - 1); }
+
+  document.getElementById('next').onclick = next;
+  document.getElementById('prev').onclick = prev;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(slides.length - 1);
+    else if (e.key.toLowerCase() === 'f') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+
+  let x0 = null;
+  document.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    if (Math.abs(dx) > 50) (dx < 0 ? next() : prev());
+    x0 = null;
+  }, {passive:true});
+
+  const start = parseInt(location.hash.replace('#', ''), 10);
+  show(Number.isFinite(start) && start > 0 ? start - 1 : 0);
+</script>
+
+</body>
+</html>

@@ -26,8 +26,10 @@ de ambiente virtual (venv) e instalação de pacotes — é o que vamos usar no 
 
 - **Windows (PowerShell):**
   ```
-  powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+  powershell -ExecutionPolicy Bypass -c "irm https://astral.sh/uv/install.ps1 | iex"
   ```
+  O `-ExecutionPolicy Bypass` é só para este comando (não muda nada na máquina) — sem ele, o
+  Windows costuma bloquear o script com um erro de "execução de scripts desabilitada".
 - **Linux:**
   ```
   curl -LsSf https://astral.sh/uv/install.sh | sh
@@ -59,6 +61,12 @@ Confirme que instalou:
 uv python list
 ```
 (deve aparecer uma linha com `3.12` marcada como instalada)
+
+> **Não confirme com `python --version`:** o Python instalado pelo `uv` fica gerenciado por ele,
+> não é registrado como o `python` global do Windows — rodar `python --version` pode continuar
+> dando erro de "comando não reconhecido" mesmo com o 3.12 instalado, e isso é normal. Quem
+> confirma a instalação é sempre o `uv python list`; o comando `python --version` só faz sentido
+> depois de ativar o venv (passo 4), onde `python` aponta para o Python de dentro dele.
 
 > Por que 3.12 e não a versão mais nova? O `pygame` (usado pelo Pygame Zero) só publica
 > instalação pronta (wheel) para algumas versões do Python. Uma versão nova demais pode não ter
@@ -145,6 +153,13 @@ versões de pacote.
 - **`winget` não é reconhecido (Windows):** só existe no Windows 10/11 atualizado; se faltar,
   instale o "App Installer" pela Microsoft Store ou baixe o instalador manualmente (ver nota
   acima).
+- **`winget` dá erro de acesso negado/política bloqueada (comum em computador de empresa):** não
+  é falta de atualização, é a política de TI bloqueando instalação de programas — não adianta
+  tentar de novo nem rodar como administrador. Baixe o instalador manualmente em
+  https://code.visualstudio.com (mesmo resultado final, sem passar pelo winget).
+- **`irm ... | iex` (instalar o `uv`) dá erro de "execução de scripts desabilitada neste
+  sistema":** é a Execution Policy do Windows. Use o comando com `-ExecutionPolicy Bypass` (ver
+  passo 1 acima) em vez de tentar mudar a política do sistema inteiro.
 - **`code`/`uv` não é reconhecido logo após instalar:** feche e abra o terminal de novo — o PATH
   só é atualizado numa janela nova.
 - **`uv python install 3.12` parece travado/demorado:** ele baixa o Python na primeira vez —
