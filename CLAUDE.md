@@ -79,7 +79,8 @@ Módulos 0 a 5 já estão no formato novo. Módulos 6–12 ainda não foram escr
 - regras por área: `.claude/rules/`
 - cadernos publicados (site): `cadernos/` — **só essa pasta** vai para o GitHub Pages
   (`.github/workflows/pages.yml`, a cada push na `main`), em https://frzanini.github.io/cursopythonkids/.
-  Caderno novo: pôr o `.html` lá e acrescentar um cartão em `cadernos/index.html`.
+  Caderno novo: pôr o `.html` lá e, no mapa de missões (`cadernos/index.html`), trocar o
+  `<div class="card">` da fase por `<a class="card" href="...#fase-N">` e tirar o `data-status="breve"`.
 - programa completo do curso: `docs/crescendo-como-jesus-conteudo-programatico.md`
 - preparação de ambiente: `docs/preparacao-ambiente/instalacao_vscode.md`
   (`instalacao_pydroid.md.obsoleto` é histórico, Pydroid foi descartado)

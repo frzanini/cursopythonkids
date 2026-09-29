@@ -131,9 +131,14 @@ li + li { margin-top: .35em; }
   border-radius: 999px; padding: 4px 12px 4px 6px; font-size: .88rem; font-weight: 600;
 }
 .nav a.lvl:hover { border-color: var(--wall); }
+.nav a.mapa {
+  text-decoration: none; color: var(--wall); font-weight: 600; font-size: .9rem;
+  border: 2px solid var(--wall); border-radius: 999px; padding: 3px 12px;
+}
+.nav a.mapa:hover { background: var(--wall); color: var(--surface); }
 .nav .dot {
   width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
-  display: grid; place-items: center; font-family: var(--f-pixel); font-size: .8rem; font-weight: 700;
+  display: grid; place-items: center; font-family: var(--f-display); font-size: .9rem; font-weight: 800;
 }
 :root .nav .dot { color: #3d2d00; }
 .nav .count { color: var(--ink-soft); font-variant-numeric: tabular-nums; font-weight: 400; }
@@ -188,7 +193,7 @@ section.block { display: flex; flex-direction: column; gap: 22px; }
   box-shadow: inset 0 -6px 0 rgba(0,0,0,.14);
 }
 .badge small { display: block; font-size: .72rem; letter-spacing: .1em; }
-.badge b { display: block; font-size: 2.4rem; margin-top: 2px; }
+.badge b { display: block; font-family: var(--f-display); font-weight: 800; font-size: 2.6rem; margin-top: 2px; }
 .phase-head p { color: var(--ink-soft); margin-top: 6px; font-size: 1.05rem; }
 .learn { display: flex; flex-wrap: wrap; gap: 8px; }
 .learn span {
@@ -214,7 +219,7 @@ section.block { display: flex; flex-direction: column; gap: 22px; }
 .step-num {
   flex: none; width: 40px; height: 40px; border-radius: 50%;
   background: var(--gold); color: #3d2d00; display: grid; place-items: center;
-  font-family: var(--f-pixel); font-weight: 700; font-size: 1.1rem;
+  font-family: var(--f-display); font-weight: 800; font-size: 1.2rem;
 }
 .side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
 
@@ -373,7 +378,7 @@ footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
 .guia button.next:disabled { background: var(--surface); color: var(--ink); }
 .guia .onde { text-align: center; padding: 4px 0; line-height: 1.2; }
 .guia .onde b {
-  display: block; font-family: var(--f-pixel); font-size: .95rem; color: var(--wall);
+  display: block; font-family: var(--f-display); font-weight: 800; font-size: 1rem; color: var(--wall);
   letter-spacing: .04em; text-transform: uppercase;
 }
 .guia .onde span { display: block; font-size: .78rem; color: var(--ink-soft); font-weight: 600; }
@@ -405,13 +410,14 @@ footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
   .badge b { font-size: 1.9rem; }
   .step, .panel, .mission { padding: 18px; }
   .err { grid-template-columns: 1fr; gap: 4px; }
-  .nav .brand { width: 100%; }
+  .nav .brand { flex: 1 1 60%; }
   pre { font-size: 13.5px; }
 }
 </style>
 
 <nav class="nav" aria-label="Fases do caderno">
   <div class="wrap">
+    <a class="mapa" href="index.html">← Mapa</a>
     <a class="brand" href="#inicio">Crescendo como Jesus</a>
     <a class="lvl" href="#fase-1" data-nav="f1"><span class="dot">1</span>Primeira janela <span class="count">0/4</span></a>
     <a class="lvl" href="#fase-2" data-nav="f2"><span class="dot">2</span>Personagem <span class="count">0/4</span></a>

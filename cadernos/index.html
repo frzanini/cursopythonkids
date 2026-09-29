@@ -2,61 +2,291 @@
 <html lang="pt-BR">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Crescendo como Jesus · Cadernos de missões</title>
+<title>Crescendo como Jesus · Mapa de missões</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=Pixelify+Sans:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=Pixelify+Sans:wght@500;700&display=swap">
 <style>
-/* Página inicial do site: lista os cadernos já publicados. Para publicar um caderno novo,
-   coloque o .html nesta pasta e acrescente um cartão na lista abaixo. */
+/* Mapa de missões: a página inicial do site. Uma trilha em forma de corredor de labirinto,
+   com uma parada por fase do curso. Para liberar uma fase nova, troque o <div class="card">
+   dela por um <a class="card" href="caderno...html#fase-N"> e tire o data-status="breve". */
 :root {
-  --ground: #eef6fb; --surface: #ffffff; --ink: #18264a; --ink-soft: #4b5b7e;
-  --line: #cbd9ea; --wall: #2446c9; --gold: #f2b705;
+  --ground: #eef6fb;
+  --surface: #ffffff;
+  --ink: #18264a;
+  --ink-soft: #4b5b7e;
+  --line: #cbd9ea;
+  --wall: #2446c9;
+  --gold: #f2b705;
+  --gold-soft: #fff4cc;
+  --leaf: #17835a;
+  --leaf-soft: #e1f5ea;
+  --locked: #8a96b3;
   --f-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
   --f-body: "Lexend", "Segoe UI", system-ui, sans-serif;
   --f-pixel: "Pixelify Sans", "Courier New", monospace;
 }
 @media (prefers-color-scheme: dark) {
-  :root { color-scheme: dark; --ground: #0d1530; --surface: #152042; --ink: #eaf0ff; --ink-soft: #a8b5d6; --line: #2a3a66; --wall: #6d8bff; --gold: #f7c533; }
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0d1530; --surface: #152042; --ink: #eaf0ff; --ink-soft: #a8b5d6; --line: #2a3a66;
+    --wall: #6d8bff; --gold: #f7c533; --gold-soft: #2d2811; --leaf: #52cf95; --leaf-soft: #10302a;
+    --locked: #6c7899;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0d1530; --surface: #152042; --ink: #eaf0ff; --ink-soft: #a8b5d6; --line: #2a3a66;
+  --wall: #6d8bff; --gold: #f7c533; --gold-soft: #2d2811; --leaf: #52cf95; --leaf-soft: #10302a;
+  --locked: #6c7899;
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--f-body); font-size: 18px; line-height: 1.6; }
-main { max-width: 760px; margin: 0 auto; padding: 56px 20px 72px; }
-.eyebrow { font-family: var(--f-pixel); color: var(--wall); letter-spacing: .06em; text-transform: uppercase; font-size: .95rem; }
-h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.4rem, 7vw, 3.6rem); line-height: 1.1; margin: 8px 0 0; }
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--f-body); font-size: 18px; line-height: 1.55; }
+main { max-width: 980px; margin: 0 auto; padding: 48px 20px 72px; }
+.pixel { font-family: var(--f-pixel); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 8px; }
+
+/* ---------- topo ---------- */
+.eyebrow { color: var(--wall); font-size: .95rem; }
+h1 { font-family: var(--f-display); font-weight: 800; font-size: clamp(2.4rem, 7vw, 3.8rem); line-height: 1.08; margin: 8px 0 0; text-wrap: balance; }
 h1 span { color: var(--gold); }
-blockquote { margin: 18px 0 0; padding-left: 16px; border-left: 4px solid var(--gold); color: var(--ink-soft); }
-blockquote cite { display: block; font-style: normal; font-size: .9rem; margin-top: 4px; }
-h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.7rem; margin: 44px 0 14px; }
-.lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
-.lista a {
-  display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: center;
-  padding: 18px 20px; border-radius: 14px; background: var(--surface);
-  border: 2px solid var(--line); color: var(--ink); text-decoration: none;
+.verse { margin: 18px 0 0; padding-left: 16px; border-left: 4px solid var(--gold); color: var(--ink-soft); max-width: 60ch; }
+.verse cite { display: block; font-style: normal; font-size: .9rem; margin-top: 4px; }
+.lead { margin: 18px 0 0; max-width: 62ch; }
+.placar { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.placar div { background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 10px 16px; min-width: 170px; }
+.placar b { display: block; font-family: var(--f-display); font-size: 1.7rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.placar small { color: var(--ink-soft); font-size: .88rem; }
+
+/* ---------- a trilha (corredor do labirinto) ---------- */
+.trilha { list-style: none; margin: 44px 0 0; padding: 0; position: relative; }
+.trilha::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 40px; transform: translateX(-50%);
+  border-inline: 6px solid var(--wall); border-radius: 8px;
+  background: radial-gradient(circle, var(--gold) 0 3.5px, transparent 4.5px) center top / 28px 28px repeat-y;
 }
-.lista a:hover { border-color: var(--wall); }
-.lista a:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
-.num {
-  min-width: 64px; height: 64px; padding: 0 10px; border-radius: 14px; background: var(--gold); color: #3d2d00;
-  display: grid; place-items: center; font-family: var(--f-pixel); font-weight: 700; font-size: 1.1rem;
+.parada { position: relative; display: grid; grid-template-columns: 1fr 76px 1fr; align-items: center; padding-block: 12px; }
+/* zigue-zague: cada parada sobe um pouco por baixo da anterior, do outro lado da trilha */
+.parada + .parada { margin-top: -64px; }
+.parada .no { grid-column: 2; grid-row: 1; justify-self: center; }
+.parada .card { grid-column: 1; grid-row: 1; margin-right: 18px; }
+.parada:nth-child(even) .card { grid-column: 3; margin-right: 0; margin-left: 18px; }
+
+.no {
+  position: relative; z-index: 1; width: 62px; height: 62px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--gold); color: #3d2d00;
+  border: 5px solid var(--ground); font-family: var(--f-display); font-weight: 800; font-size: 1.5rem;
 }
-.lista b { font-family: var(--f-display); font-size: 1.35rem; display: block; line-height: 1.2; }
-.lista small { color: var(--ink-soft); font-size: .95rem; }
-.breve { color: var(--ink-soft); margin-top: 18px; font-size: .95rem; }
+.no svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.no .check, .no .lock { display: none; }
+
+.card {
+  display: block; background: var(--surface); border: 2px solid var(--line); border-radius: 16px;
+  padding: 16px 18px; color: var(--ink); text-decoration: none;
+}
+a.card:hover { border-color: var(--wall); }
+.card .tag { font-family: var(--f-display); font-weight: 800; letter-spacing: .08em; font-size: .85rem; color: var(--wall); }
+.card h2 { font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; line-height: 1.2; margin: 2px 0 4px; }
+.card p { margin: 0; color: var(--ink-soft); font-size: .95rem; }
+.card .rodape { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 12px; }
+.chip { font-size: .8rem; font-weight: 600; border-radius: 999px; padding: 2px 10px; border: 2px solid var(--gold); background: var(--gold-soft); color: var(--ink); }
+.missoes { font-size: .85rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.abrir { margin-left: auto; font-weight: 600; font-size: .92rem; color: var(--wall); }
+
+/* concluída: todas as missões marcadas no caderno */
+.parada[data-status="feita"] .no { background: var(--leaf); color: #fff; }
+.parada[data-status="feita"] .no .num { display: none; }
+.parada[data-status="feita"] .no .check { display: block; }
+.parada[data-status="feita"] .card { border-color: var(--leaf); }
+.parada[data-status="feita"] .chip { border-color: var(--leaf); background: var(--leaf-soft); }
+
+/* em breve: ainda sem caderno */
+.parada[data-status="breve"] .no { background: var(--surface); color: var(--locked); border-color: var(--ground); box-shadow: inset 0 0 0 3px var(--locked); }
+.parada[data-status="breve"] .no .num { display: none; }
+.parada[data-status="breve"] .no .lock { display: block; }
+.parada[data-status="breve"] .card { border-style: dashed; background: transparent; }
+.parada[data-status="breve"] .card h2, .parada[data-status="breve"] .card .tag { color: var(--locked); }
+.parada[data-status="breve"] .chip { border-color: var(--locked); background: transparent; color: var(--ink-soft); }
+
+.fim { text-align: center; margin-top: 28px; color: var(--ink-soft); font-size: .95rem; }
+.fim b { color: var(--ink); }
+
+@media (max-width: 700px) {
+  main { padding-top: 32px; }
+  .trilha::before { left: 31px; transform: none; width: 34px; margin-left: -17px; }
+  .parada { grid-template-columns: 62px 1fr; column-gap: 14px; }
+  .parada + .parada { margin-top: 0; }
+  .parada .no { grid-column: 1; }
+  .parada .card, .parada:nth-child(even) .card { grid-column: 2; margin: 0; }
+  .abrir { margin-left: 0; }
+}
 </style>
 
 <main>
-  <div class="eyebrow">Curso de programação com Python</div>
+  <div class="eyebrow pixel">Mapa de missões</div>
   <h1>Crescendo como <span>Jesus</span></h1>
-  <blockquote>"E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."<cite>Lucas 2:52</cite></blockquote>
+  <blockquote class="verse">"E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."<cite>Lucas 2:52</cite></blockquote>
+  <p class="lead">Este é o caminho do curso. Cada parada é uma fase do seu jogo. Clique numa fase liberada para abrir o caderno de missões dela. As fases com cadeado ainda estão sendo preparadas.</p>
 
-  <h2>Cadernos de missões</h2>
-  <ul class="lista">
-    <li><a href="caderno-de-missoes-modulos-1-2-3.html">
-      <span class="num">1–3</span>
-      <span><b>Fases 1 a 3</b><small>Primeira janela, o personagem e a primeira decisão, movimentando o personagem.</small></span>
-    </a></li>
-  </ul>
-  <p class="breve">Novas fases aparecem aqui conforme ficarem prontas.</p>
+  <div class="placar" aria-live="polite">
+    <div><b id="p-liberadas">3 de 12</b><small>fases liberadas</small></div>
+    <div><b id="p-feitas">0</b><small>fases com a missão completa</small></div>
+  </div>
+
+  <ol class="trilha" aria-label="Fases do curso">
+    <li class="parada" data-status="livre">
+      <span class="no" aria-hidden="true"><span class="num">0</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <a class="card" href="caderno-de-missoes-modulos-1-2-3.html#antes">
+        <span class="tag pixel">Antes de começar</span>
+        <h2>Preparando o computador</h2>
+        <p>Python, VS Code e a pasta do curso prontos. Como rodar o programa e como ler um erro.</p>
+        <span class="rodape"><span class="chip">Disponível</span><span class="abrir">Abrir →</span></span>
+      </a>
+    </li>
+    <li class="parada" data-status="livre" data-fase="1" data-total="4">
+      <span class="no" aria-hidden="true"><span class="num">1</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <a class="card" href="caderno-de-missoes-modulos-1-2-3.html#fase-1">
+        <span class="tag pixel">Fase 1</span>
+        <h2>Conhecendo a programação</h2>
+        <p>A primeira janela do jogo: título, cor de fundo, boas-vindas e o seu nome.</p>
+        <span class="rodape"><span class="chip">Disponível</span><span class="missoes"></span><span class="abrir">Abrir →</span></span>
+      </a>
+    </li>
+    <li class="parada" data-status="livre" data-fase="2" data-total="4">
+      <span class="no" aria-hidden="true"><span class="num">2</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <a class="card" href="caderno-de-missoes-modulos-1-2-3.html#fase-2">
+        <span class="tag pixel">Fase 2</span>
+        <h2>O personagem e a primeira decisão</h2>
+        <p>O personagem aparece, o jogo faz uma pergunta e ele reage à sua resposta.</p>
+        <span class="rodape"><span class="chip">Disponível</span><span class="missoes"></span><span class="abrir">Abrir →</span></span>
+      </a>
+    </li>
+    <li class="parada" data-status="livre" data-fase="3" data-total="5">
+      <span class="no" aria-hidden="true"><span class="num">3</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <a class="card" href="caderno-de-missoes-modulos-1-2-3.html#fase-3">
+        <span class="tag pixel">Fase 3</span>
+        <h2>Movimentando o personagem</h2>
+        <p>O personagem anda nas quatro direções com as setas do teclado.</p>
+        <span class="rodape"><span class="chip">Disponível</span><span class="missoes"></span><span class="abrir">Abrir →</span></span>
+      </a>
+    </li>
+    <li class="parada" data-status="breve" data-fase="4">
+      <span class="no" aria-hidden="true"><span class="num">4</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 4</span>
+        <h2>Os muros do labirinto</h2>
+        <p>Um mapa feito de letras vira labirinto. O personagem não atravessa parede.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="5">
+      <span class="no" aria-hidden="true"><span class="num">5</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 5</span>
+        <h2>Os bons hábitos no mapa</h2>
+        <p>Bons hábitos espalhados pelos corredores, que somem quando você passa por cima.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="6">
+      <span class="no" aria-hidden="true"><span class="num">6</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 6</span>
+        <h2>A estatura</h2>
+        <p>Um placar que sobe a cada bom hábito coletado.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="7">
+      <span class="no" aria-hidden="true"><span class="num">7</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 7</span>
+        <h2>As tentações entram</h2>
+        <p>Uma tentação que anda sozinha pelo labirinto.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="8">
+      <span class="no" aria-hidden="true"><span class="num">8</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 8</span>
+        <h2>Encostar na tentação</h2>
+        <p>Vidas: encostou na tentação, perde uma. Sem vidas, fim de jogo.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="9">
+      <span class="no" aria-hidden="true"><span class="num">9</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 9</span>
+        <h2>A força da oração</h2>
+        <p>Com a oração, as tentações fogem e podem ser vencidas por alguns segundos.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="10">
+      <span class="no" aria-hidden="true"><span class="num">10</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 10</span>
+        <h2>Tentação mais esperta</h2>
+        <p>Várias tentações, e algumas vêm atrás de você.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="11">
+      <span class="no" aria-hidden="true"><span class="num">11</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 11</span>
+        <h2>Fases e vitória</h2>
+        <p>Sabedoria, estatura, graça com Deus e graça com os homens, até a tela de vitória.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+    <li class="parada" data-status="breve" data-fase="12">
+      <span class="no" aria-hidden="true"><span class="num">12</span><svg class="check" viewBox="0 0 24 24"><polyline points="5 12 10 17 19 7"/></svg><svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span>
+      <div class="card">
+        <span class="tag pixel">Fase 12</span>
+        <h2>O jogo com a sua cara</h2>
+        <p>Cores, labirinto e sons do seu jeito, e a apresentação final para a turma.</p>
+        <span class="rodape"><span class="chip">Em breve</span></span>
+      </div>
+    </li>
+  </ol>
+  <p class="fim">No fim do caminho, o <b>seu</b> jogo completo.</p>
 </main>
+
+<script>
+(function () {
+  "use strict";
+  // Os cadernos guardam as missões marcadas neste navegador, em chaves "ccj-missoes-...",
+  // com um item por checkbox ("f1-a": true). Aqui só lemos para mostrar o progresso.
+  var marcadas = {};
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var chave = localStorage.key(i);
+      if (chave.indexOf("ccj-missoes-") !== 0) continue;
+      var dados = JSON.parse(localStorage.getItem(chave) || "{}") || {};
+      Object.keys(dados).forEach(function (id) { if (dados[id]) marcadas[id] = true; });
+    }
+  } catch (e) { marcadas = {}; }
+
+  var paradas = document.querySelectorAll(".parada[data-fase]");
+  var liberadas = 0, feitas = 0;
+  paradas.forEach(function (p) {
+    if (p.getAttribute("data-status") === "breve") return;
+    liberadas++;
+    var fase = p.getAttribute("data-fase"), total = +p.getAttribute("data-total") || 0, n = 0;
+    Object.keys(marcadas).forEach(function (id) { if (id.indexOf("f" + fase + "-") === 0) n++; });
+    var campo = p.querySelector(".missoes");
+    if (campo && total) campo.textContent = n + " de " + total + " missões";
+    if (total && n >= total) {
+      p.setAttribute("data-status", "feita");
+      p.querySelector(".chip").textContent = "Missão completa";
+      feitas++;
+    }
+  });
+  document.getElementById("p-liberadas").textContent = liberadas + " de " + paradas.length;
+  document.getElementById("p-feitas").textContent = feitas;
+})();
+</script>
 </html>
