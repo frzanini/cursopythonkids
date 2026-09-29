@@ -10,7 +10,7 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   2026-08-27), mas só foi validada headless (sintaxe + conectividade do mapa + simulação de
   lógica). Falta rodar numa máquina com tela para ajustar velocidades, tamanho da janela,
   legibilidade e "sensação" do movimento. Sprites e sons continuam fora (item à parte).
-- **Módulos 3 a 12** ainda não foram escritos — só existem como linha na tabela de
+- **Módulos 6 a 12** ainda não foram escritos — só existem como linha na tabela de
   `docs/crescendo-como-jesus-conteudo-programatico.md` (título + conceitos-chave). **Prioridade
   atual do projeto: revisar e escrever o conteúdo das aulas** (`material-professor.md` +
   `material-aluno.md` + `exemplo.py`).
@@ -29,6 +29,20 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   `docs/crescendo-como-jesus-conteudo-programatico.md` e `/novo-modulo`.
 
 ## Feito
+
+- 2026-09-29 — **Módulos 4 e 5 escritos** (`docs/modulo-04-os-muros-do-labirinto/` e
+  `docs/modulo-05-os-bons-habitos-no-mapa/`: `material-professor.md`, `material-aluno.md`,
+  `exemplo.py`). Módulo 4: listas, índice, `len`, `for`/`range`, laço dentro de laço, operadores
+  relacionais; mapa 20×15 com `TILE = 40` (janela continua 800×600, primeira e última linha vazias
+  para os textos), paredes desenhadas do mapa, personagem passa a morar num quadradinho
+  (`personagem_coluna`/`personagem_linha`) e anda **um quadradinho por aperto** no `on_key_down` —
+  o `update()` do Módulo 3 sai (volta quando as tentações andarem sozinhas); túnel no corredor do
+  meio (`<`/`>=`), com o `IndexError` usado de propósito como momento de aprendizado. Módulo 5:
+  lista vazia + `append`, pares `(coluna, linha)`, `in`, `remove`, `len == 0`; os `.` do mapa viram
+  116 bons hábitos que somem ao coletar, com mensagem de parabéns no fim. Cada módulo começa com um
+  experimento em `aula-NN/` no terminal. Sem funções próprias (`def` só no Módulo 8) nem `and`/`or`
+  (condições compostas só no Módulo 9). Exemplos validados com `py_compile`, execução headless e
+  teste de lógica (parede, túnel, espaço, coleta dos 116).
 
 - 2026-08-28 — **Módulo 2 reescrito no padrão passo-a-passo do Módulo 1**
   (`docs/modulo-02-personagem-e-primeira-decisao/material-aluno.md` e `material-professor.md`).

@@ -103,6 +103,21 @@ leve, servindo de reforço) — a atividade do Módulo 4 pode continuar no encon
 | 11 | Fases e vitória | estados do jogo, condição de fim de fase | 4 fases temáticas com dificuldade crescente + vitória |
 | 12 | Personalização e apresentação final | revisão geral, criatividade | Trocar cores/itens/labirinto, som, identidade do aluno |
 
+### Como o personagem anda, módulo a módulo (decisão de 2026-09-29)
+
+O `jogo/jogo.py` anda **deslizando** entre quadradinhos (`update(dt)`, direção guardada pelas
+setas, classes). Isso usa conceitos que chegam tarde (`dt` e `and`/`or` no Módulo 9) ou que o
+curso nunca ensina (classes, `set`). Os `exemplo.py` chegam perto em três etapas:
+
+| Módulos | Movimento do jogador | Por que dá nesse ponto |
+|---|---|---|
+| 4–6 | **Um quadradinho por aperto** de seta, no `on_key_down`; o `update()` do Módulo 3 sai | Só precisa de lista e `!=`: "tem parede ali?" é olhar uma letra do `MAPA` |
+| 7–8 | **Anda sozinho** na direção escolhida, um quadradinho a cada N quadros (contador); a seta só troca a direção guardada e ela é aplicada quando o lado não é parede. O `update()` volta | Contador é do Módulo 6; a tentação do Módulo 7 usa **o mesmo** jeito de andar, com `random` |
+| 9+ (opcional) | **Desliza** suave entre os quadradinhos, como a referência | `dt`/tempo chega no Módulo 9 |
+
+Ponto fraco aceito: até o Módulo 7 o movimento pula de `TILE` em `TILE` e segurar a seta não
+repete o passo.
+
 ## Organização na máquina do aluno
 
 O aluno trabalha numa pasta própria (fora deste repo). Layout que o curso ensina:
