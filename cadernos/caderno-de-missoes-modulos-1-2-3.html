@@ -1,0 +1,2087 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crescendo como Jesus · Fases 1 a 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=JetBrains+Mono:wght@400;700&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+/* Layout: uma trilha de fases, como o mapa de um labirinto. Coluna de leitura larga,
+   e cada passo traz ao lado uma "janela do jogo" mostrando o que deve aparecer quando você rodar. */
+:root {
+  --ground: #eef6fb;
+  --surface: #ffffff;
+  --ink: #18264a;
+  --ink-soft: #4b5b7e;
+  --line: #cbd9ea;
+  --wall: #2446c9;
+  --gold: #f2b705;
+  --gold-ink: #5c4300;
+  --gold-soft: #fff4cc;
+  --leaf: #17835a;
+  --leaf-soft: #e1f5ea;
+  --coral: #cc3f33;
+  --coral-soft: #fde9e7;
+  --idea-soft: #e5ecff;
+  --code-bg: #131d3b;
+  --code-ink: #e6ecfb;
+  --code-dim: #8a98bf;
+  --code-new: rgba(242, 183, 5, .16);
+  --syn-kw: #ff8fb1;
+  --syn-str: #9be39b;
+  --syn-num: #ffc861;
+  --syn-pg: #7fd3ff;
+  --syn-const: #ffd96b;
+  --syn-fn: #c6a8ff;
+  --f-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --f-code: "JetBrains Mono", Consolas, "Courier New", monospace;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0d1530;
+    --surface: #152042;
+    --ink: #eaf0ff;
+    --ink-soft: #a8b5d6;
+    --line: #2a3a66;
+    --wall: #6d8bff;
+    --gold: #f7c533;
+    --gold-ink: #ffe28a;
+    --gold-soft: #2d2811;
+    --leaf: #52cf95;
+    --leaf-soft: #10302a;
+    --coral: #ff8474;
+    --coral-soft: #3a1b22;
+    --idea-soft: #1b2958;
+    --code-bg: #0a1126;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0d1530;
+  --surface: #152042;
+  --ink: #eaf0ff;
+  --ink-soft: #a8b5d6;
+  --line: #2a3a66;
+  --wall: #6d8bff;
+  --gold: #f7c533;
+  --gold-ink: #ffe28a;
+  --gold-soft: #2d2811;
+  --leaf: #52cf95;
+  --leaf-soft: #10302a;
+  --coral: #ff8474;
+  --coral-soft: #3a1b22;
+  --idea-soft: #1b2958;
+  --code-bg: #0a1126;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.65;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: -.01em; }
+h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; }
+h3 { font-size: 1.5rem; font-weight: 800; }
+h4 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--wall); }
+code {
+  font-family: var(--f-code); font-size: .86em;
+  background: var(--idea-soft); color: var(--ink);
+  padding: .08em .35em; border-radius: 6px;
+}
+kbd {
+  font-family: var(--f-code); font-size: .82em; font-weight: 700;
+  border: 1px solid var(--line); border-bottom-width: 3px;
+  background: var(--surface); color: var(--ink);
+  padding: .05em .45em; border-radius: 7px; white-space: nowrap;
+}
+ul, ol { margin: 0; padding-left: 1.3em; max-width: 66ch; }
+li + li { margin-top: .35em; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+.pixel { font-family: var(--f-pixel); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+.stack { display: flex; flex-direction: column; gap: 18px; }
+
+/* ---------- barra de navegação ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.nav .brand { font-family: var(--f-display); font-weight: 800; font-size: 1.1rem; margin-right: auto; color: var(--ink); text-decoration: none; }
+.nav a.lvl {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--ink);
+  border: 2px solid var(--line); background: var(--surface);
+  border-radius: 999px; padding: 4px 12px 4px 6px; font-size: .88rem; font-weight: 600;
+}
+.nav a.lvl:hover { border-color: var(--wall); }
+.nav .dot {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
+  display: grid; place-items: center; font-family: var(--f-pixel); font-size: .8rem; font-weight: 700;
+}
+:root .nav .dot { color: #3d2d00; }
+.nav .count { color: var(--ink-soft); font-variant-numeric: tabular-nums; font-weight: 400; }
+.nav a.lvl.done { border-color: var(--leaf); }
+.nav a.lvl.done .count { color: var(--leaf); font-weight: 600; }
+
+/* ---------- abertura ---------- */
+.hero { padding-block: 48px 28px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+.eyebrow { color: var(--wall); font-size: .95rem; }
+.hero h1 { margin-top: 10px; }
+.hero h1 .gold { color: var(--gold); -webkit-text-stroke: 0; }
+.verse {
+  margin: 20px 0 0; padding: 14px 18px; border-left: 5px solid var(--gold);
+  background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1.08rem; max-width: 60ch;
+}
+.verse cite { display: block; font-style: normal; color: var(--ink-soft); font-size: .9rem; margin-top: 4px; }
+.hero .lead { margin-top: 18px; font-size: 1.08rem; }
+.demo {
+  background: #0b1433; border-radius: 18px; padding: 12px; margin: 0;
+  box-shadow: 0 18px 40px -22px rgba(10, 20, 60, .6);
+}
+.demo canvas { display: block; width: 100%; height: auto; border-radius: 10px; }
+.demo figcaption { color: #cdd7f5; font-size: .9rem; padding: 10px 6px 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .85rem;
+  border-radius: 999px; padding: 3px 10px; border: 1px solid var(--line); background: var(--surface);
+}
+.chip.good { border-color: var(--leaf); }
+.chip.bad { border-color: var(--coral); }
+
+/* ---------- parede de labirinto (divisória) ---------- */
+.maze-wall {
+  height: 14px; margin-block: 44px; border: 3px solid var(--wall); border-radius: 999px;
+  position: relative; opacity: .8;
+}
+.maze-wall::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: -60px 0 0 -2px var(--gold), 60px 0 0 -2px var(--gold), -120px 0 0 -2px var(--gold), 120px 0 0 -2px var(--gold);
+}
+
+/* ---------- seções ---------- */
+section.block { display: flex; flex-direction: column; gap: 22px; }
+.phase-head { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+.badge {
+  width: 96px; height: 96px; border-radius: 50%; background: var(--gold);
+  display: grid; place-items: center; text-align: center; color: #3d2d00;
+  font-family: var(--f-pixel); font-weight: 700; line-height: 1;
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.14);
+}
+.badge small { display: block; font-size: .72rem; letter-spacing: .1em; }
+.badge b { display: block; font-size: 2.4rem; margin-top: 2px; }
+.phase-head p { color: var(--ink-soft); margin-top: 6px; font-size: 1.05rem; }
+.learn { display: flex; flex-wrap: wrap; gap: 8px; }
+.learn span {
+  font-size: .88rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 4px 10px;
+}
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
+}
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.two > * { min-width: 0; }
+
+/* passos */
+.step {
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 26px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px;
+}
+.step.solo { grid-template-columns: minmax(0, 1fr); }
+.step-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.step-title { display: flex; align-items: center; gap: 12px; }
+.step-num {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold); color: #3d2d00; display: grid; place-items: center;
+  font-family: var(--f-pixel); font-weight: 700; font-size: 1.1rem;
+}
+.side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
+
+/* avisos */
+.note { border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.note .tag { font-size: .8rem; }
+.note.run { background: var(--leaf-soft); }
+.note.run .tag { color: var(--leaf); }
+.note.idea { background: var(--idea-soft); }
+.note.idea .tag { color: var(--wall); }
+.note.oops { background: var(--coral-soft); }
+.note.oops .tag { color: var(--coral); }
+.note.gold { background: var(--gold-soft); }
+.note.gold .tag { color: var(--gold-ink); }
+
+/* código */
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-ink);
+  border-radius: 12px; padding: 14px 0; overflow-x: auto;
+  font-family: var(--f-code); font-size: 15px; line-height: 1.6;
+}
+pre .ln { display: block; padding-inline: 16px; min-height: 1.6em; white-space: pre; }
+pre .ln.new { background: var(--code-new); box-shadow: inset 4px 0 0 #f2b705; }
+pre .kw { color: var(--syn-kw); font-weight: 700; }
+pre .str { color: var(--syn-str); }
+pre .num { color: var(--syn-num); }
+pre .pg { color: var(--syn-pg); }
+pre .const { color: var(--syn-const); }
+pre .fn { color: var(--syn-fn); font-weight: 700; }
+pre .com { color: var(--code-dim); font-style: italic; }
+pre.term .ln::before { content: "> "; color: var(--syn-str); }
+pre.term .ln.out::before { content: ""; }
+pre.term .ln.out { color: var(--code-dim); }
+.code-label { font-size: .8rem; color: var(--ink-soft); margin-bottom: -6px; }
+.legend-new { font-size: .85rem; color: var(--ink-soft); }
+.legend-new i { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; background: var(--code-new); box-shadow: inset 3px 0 0 #f2b705; border-radius: 3px; }
+
+/* janela do jogo (simulação) */
+.mock { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #1d2433; }
+.mock-bar {
+  display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+  background: #e9edf5; color: #26304a; font-size: .78rem; font-family: "Segoe UI", system-ui, sans-serif;
+}
+.mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: #c3cad8; }
+.mock-bar i:first-child { margin-left: auto; order: 3; }
+.mock-bar .mock-title { order: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mock canvas { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.mock-cap { font-size: .82rem; color: var(--ink-soft); }
+.coord {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 8px; padding: 6px 10px;
+}
+
+/* laboratório / controles */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls label { font-size: .88rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: 4px; }
+select, input[type="text"] {
+  font: inherit; font-size: .95rem; padding: 6px 10px; border-radius: 10px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+}
+button {
+  font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
+  border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 6px 14px;
+}
+button:hover { border-color: var(--wall); }
+.pad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 44px); gap: 6px; }
+.pad button { padding: 0; font-size: 1.2rem; }
+.pad .u { grid-column: 2; grid-row: 1; }
+.pad .l { grid-column: 1; grid-row: 2; }
+.pad .d { grid-column: 2; grid-row: 2; }
+.pad .r { grid-column: 3; grid-row: 2; }
+.pad button.on { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.vars {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 10px 14px;
+  display: grid; grid-template-columns: auto auto; gap: 2px 14px; justify-content: start;
+}
+.vars .t { color: var(--syn-str); font-weight: 700; }
+.vars .f { color: var(--code-dim); }
+
+/* árvore de pastas */
+.tree { font-family: var(--f-code); font-size: .92rem; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 16px; line-height: 1.8; }
+.tree .hl { background: var(--gold-soft); color: var(--gold-ink); border-radius: 6px; padding: 0 6px; font-weight: 700; }
+.tree .dim { color: var(--ink-soft); font-family: var(--f-body); font-size: .85rem; }
+
+/* laço do jogo */
+.loop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.loop .box { border: 2px solid var(--wall); border-radius: 12px; padding: 10px 14px; background: var(--surface); }
+.loop .box b { font-family: var(--f-code); }
+.loop .arrow { font-family: var(--f-pixel); color: var(--wall); font-size: 1.1rem; }
+
+/* missão */
+.mission { border: 3px solid var(--gold); background: var(--surface); border-radius: var(--radius); padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+.mission ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mission li { margin: 0; }
+.mission label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.mission input { width: 22px; height: 22px; margin-top: 4px; accent-color: var(--leaf); flex: none; }
+.mission input:checked + span { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--leaf); }
+.meter { height: 12px; border-radius: 999px; background: var(--ground); border: 1px solid var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--leaf); transition: width .3s; }
+.mission .done-msg { color: var(--leaf); font-weight: 600; }
+
+/* desafios e segredos */
+details { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+details > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 10px; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "+"; font-family: var(--f-pixel); color: var(--wall); font-size: 1.2rem; width: 14px; }
+details[open] > summary::before { content: "−"; }
+details > .in { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.challenges { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.challenge { display: flex; flex-direction: column; gap: 12px; }
+.challenge .tag { font-size: .8rem; color: var(--wall); }
+
+/* quiz */
+.quiz { display: flex; flex-direction: column; gap: 16px; }
+.q { display: flex; flex-direction: column; gap: 8px; }
+.q p { font-weight: 600; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts button.right { background: var(--leaf-soft); border-color: var(--leaf); }
+.opts button.wrong { background: var(--coral-soft); border-color: var(--coral); }
+.why { font-size: .95rem; min-height: 1.5em; }
+.why.ok { color: var(--leaf); }
+.why.no { color: var(--coral); }
+
+/* glossário */
+.gloss { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.gloss div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: .95rem; }
+.gloss dt { font-weight: 600; }
+.gloss dd { margin: 4px 0 0; color: var(--ink-soft); }
+
+.errs { display: flex; flex-direction: column; gap: 10px; }
+.err { display: grid; grid-template-columns: minmax(0, 14rem) 1fr; gap: 16px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--coral); border-radius: 10px; font-size: .95rem; }
+.err b { font-family: var(--f-code); font-size: .85rem; overflow-wrap: anywhere; }
+
+footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
+
+/* ---------- guia lateral: passo anterior/próximo e fase anterior/próxima ---------- */
+.guia {
+  position: fixed; z-index: 20; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 76px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+  padding: 8px 6px; border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 2px solid var(--line); box-shadow: 0 6px 20px rgba(10, 20, 50, .14);
+  backdrop-filter: blur(8px);
+}
+.guia button {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: 6px 2px 4px; border-radius: 12px; font-size: .72rem; line-height: 1.15;
+}
+.guia button svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.guia button.passo { font-size: .8rem; }
+.guia button.next { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.guia button.next:hover { border-color: var(--wall); }
+.guia button:disabled { opacity: .35; cursor: default; border-color: var(--line); }
+.guia button.next:disabled { background: var(--surface); color: var(--ink); }
+.guia .onde { text-align: center; padding: 4px 0; line-height: 1.2; }
+.guia .onde b {
+  display: block; font-family: var(--f-pixel); font-size: .95rem; color: var(--wall);
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.guia .onde span { display: block; font-size: .78rem; color: var(--ink-soft); font-weight: 600; }
+@media (min-width: 721px) and (max-width: 1299px) {
+  .wrap { padding-right: 104px; }
+}
+@media (max-width: 720px) {
+  .guia {
+    top: auto; transform: none; left: 0; right: 0; bottom: 0; width: auto;
+    flex-direction: row; justify-content: center; gap: 6px;
+    border-radius: 16px 16px 0 0; border-width: 2px 0 0;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .guia button { flex: 1 1 0; max-width: 84px; }
+  .guia .onde { flex: 1 1 0; max-width: 92px; align-self: center; }
+  footer { padding-bottom: 110px; }
+}
+
+@media (max-width: 980px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-width: 460px; }
+}
+@media (max-width: 700px) {
+  body { font-size: 17px; }
+  .two, .challenges { grid-template-columns: 1fr; }
+  .phase-head { grid-template-columns: 1fr; }
+  .badge { width: 76px; height: 76px; }
+  .badge b { font-size: 1.9rem; }
+  .step, .panel, .mission { padding: 18px; }
+  .err { grid-template-columns: 1fr; gap: 4px; }
+  .nav .brand { width: 100%; }
+  pre { font-size: 13.5px; }
+}
+</style>
+
+<nav class="nav" aria-label="Fases do caderno">
+  <div class="wrap">
+    <a class="brand" href="#inicio">Crescendo como Jesus</a>
+    <a class="lvl" href="#fase-1" data-nav="f1"><span class="dot">1</span>Primeira janela <span class="count">0/4</span></a>
+    <a class="lvl" href="#fase-2" data-nav="f2"><span class="dot">2</span>Personagem <span class="count">0/4</span></a>
+    <a class="lvl" href="#fase-3" data-nav="f3"><span class="dot">3</span>Movimento <span class="count">0/5</span></a>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow pixel">Caderno de missões · Fases 1 a 3</div>
+      <h1>Crescendo como <span class="gold">Jesus</span></h1>
+      <blockquote class="verse">
+        "E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."
+        <cite>Lucas 2:52</cite>
+      </blockquote>
+      <p class="lead">Você vai programar o seu próprio jogo em Python, um pedaço de cada vez. Este caderno tem tudo o que você precisa para fazer as três primeiras fases sozinho ou sozinha: o que digitar, o que deve aparecer na tela e o que fazer quando algo dá errado.</p>
+      <div class="legend" aria-label="Itens do jogo">
+        <span class="chip good">🙏 Oração</span><span class="chip good">📖 Bíblia</span><span class="chip good">⛪ Culto</span><span class="chip good">❤️ Obedecer aos pais</span><span class="chip good">🤝 Ajudar o próximo</span>
+        <span class="chip bad">😡 Desobediência</span><span class="chip bad">🤥 Mentira</span><span class="chip bad">😴 Preguiça</span><span class="chip bad">📱 Distração</span>
+      </div>
+    </div>
+    <figure class="demo">
+      <canvas id="hero-maze" width="480" height="288" aria-label="Animação do jogo: uma bolinha dourada anda pelo labirinto pegando bons hábitos enquanto uma tentação passeia no meio"></canvas>
+      <figcaption>É aqui que você vai chegar: um labirinto onde você coleta bons hábitos, que aumentam sua <b>estatura</b>, e foge das tentações. Hoje começamos pela primeira tela.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ANTES DE COMEÇAR ================= -->
+<section class="block" id="antes">
+  <h2>Antes de começar</h2>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Seu computador já está pronto?</h3>
+      <p>Estas coisas foram feitas no Módulo 0. Se alguma estiver faltando, peça ajuda a um adulto antes de seguir.</p>
+      <ul>
+        <li>Python 3.12 e o VS Code (com a extensão Python) instalados.</li>
+        <li>A pasta <code>crescendo-como-jesus</code>, com a subpasta <code>aula-01</code> e o ambiente <code>.venv</code> dentro.</li>
+        <li>O <code>pgzero</code> (Pygame Zero) instalado dentro do <code>.venv</code>.</li>
+      </ul>
+      <div class="note idea">
+        <span class="tag pixel">Confira</span>
+        <p>No canto inferior direito do VS Code deve aparecer algo como <code>3.12.x ('.venv')</code>. Se não aparecer: aperte <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>, digite <b>Python: Select Interpreter</b> e escolha a opção que tem <code>.venv</code> (costuma vir marcada como "Recommended").</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Como usar este caderno</h3>
+      <ol>
+        <li><b>Leia</b> o passo inteiro antes de digitar.</li>
+        <li><b>Digite</b> o código você mesmo. Copiar e colar parece mais rápido, mas é digitando que a gente aprende (e descobre os erros).</li>
+        <li><b>Rode</b> o programa depois de cada passo.</li>
+        <li><b>Compare</b> com a janelinha ao lado do passo. Ela mostra o que deve aparecer.</li>
+      </ol>
+      <p class="legend-new"><i></i> As linhas marcadas assim no código são as <b>novas</b> daquele passo. As outras você já tem.</p>
+      <p>No fim de cada fase há uma <b>missão</b> para marcar, um <b>quiz</b> rápido e <b>desafios</b> para quem quer ir além.</p>
+    </div>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Como rodar o seu programa</h3>
+      <p>Tem dois jeitos, e os dois fazem a mesma coisa:</p>
+      <ul>
+        <li>Clicar no botão <b>▶ Run Python File</b>, no canto superior direito do VS Code.</li>
+        <li>Abrir o terminal (menu <b>Terminal &gt; New Terminal</b>) e digitar:</li>
+      </ul>
+      <pre class="term"><span class="ln">python jogo.py</span></pre>
+      <div class="note run">
+        <span class="tag pixel">Se deu certo</span>
+        <p>Abre uma janela com o seu jogo. Enquanto ela estiver aberta, o terminal fica "ocupado". Para parar, feche a janela do jogo no X.</p>
+      </div>
+      <p>Antes de rodar, salve com <kbd>Ctrl</kbd>+<kbd>S</kbd>. Uma bolinha branca no nome da aba quer dizer "arquivo não salvo".</p>
+    </div>
+
+    <div class="panel">
+      <h3>Como ler uma mensagem de erro</h3>
+      <p>Errar faz parte de programar. Todo programador erra várias vezes por dia. Quando algo dá errado, o Python escreve uma mensagem no terminal, mais ou menos assim:</p>
+      <pre class="term"><span class="ln out">Traceback (most recent call last):</span><span class="ln out">  File "jogo.py", line 12, in draw</span><span class="ln out">    screen.fil(COR_DE_FUNDO)</span><span class="ln out">AttributeError: ... has no attribute 'fil'</span></pre>
+      <ul>
+        <li>Olhe a <b>última linha</b>: ela diz o tipo de erro.</li>
+        <li>Procure <code>line</code> seguido de um número: é a <b>linha</b> do seu código onde está o problema.</li>
+        <li>Vá até essa linha e compare, letra por letra, com o código do caderno.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 1 ================= -->
+<section class="block" id="fase-1">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>1</b></div></div>
+    <div>
+      <h2>Conhecendo a programação</h2>
+      <p>Hoje o seu jogo ganha a primeira tela: uma janela com título, cor de fundo, uma mensagem de boas-vindas e o seu nome.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>programa e algoritmo</span><span>ordem das instruções</span><span>biblioteca e <code>import</code></span><span>variável</span><span>função e recuo</span><span><code>screen.fill</code></span><span><code>screen.draw.text</code></span>
+  </div>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Programa, algoritmo e a ordem das coisas</h3>
+      <p>Um <b>programa</b> é uma lista de instruções que o computador segue.</p>
+      <p>Um <b>algoritmo</b> é a sequência de passos para resolver um problema, como uma <b>receita de bolo</b>: cada passo na ordem certa.</p>
+      <p>O computador faz <b>uma instrução de cada vez, de cima para baixo</b>. Ele não adivinha o que você quis dizer e não pula na frente. Numa receita, trocar "leve ao forno" com "misture os ovos" estraga o bolo. No código é igual.</p>
+    </div>
+    <div class="panel">
+      <h3>Onde fica o arquivo do jogo</h3>
+      <p>Abra a pasta do curso no VS Code: menu <b>File &gt; Open Folder...</b> e escolha <code>crescendo-como-jesus</code>. Ou, no terminal, dentro dela:</p>
+      <pre class="term"><span class="ln">code .</span></pre>
+      <div class="note run"><span class="tag pixel">Se deu certo</span><p>O VS Code abre com <b>CRESCENDO-COMO-JESUS</b> no topo da barra lateral.</p></div>
+      <p>Crie um arquivo novo e salve como <code>jogo.py</code> <b>na raiz</b> da pasta, e não dentro de <code>aula-01</code>. Esse arquivo vai crescer durante o curso inteiro.</p>
+      <div class="tree" aria-label="Estrutura de pastas">
+        📁 crescendo-como-jesus<br>
+        &nbsp;&nbsp;&nbsp;📄 <span class="hl">jogo.py</span> <span class="dim">← você cria hoje</span><br>
+        &nbsp;&nbsp;&nbsp;📁 aula-01 <span class="dim">← para testes soltos</span><br>
+        &nbsp;&nbsp;&nbsp;📦 .venv <span class="dim">← pronto desde o Módulo 0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>O esqueleto do jogo</h3></div>
+      <p>Digite estas duas linhas no <code>jogo.py</code>:</p>
+      <pre class="py">import pgzrun
+
+pgzrun.go()</pre>
+      <ul>
+        <li><code>import pgzrun</code> <b>traz</b> para o seu programa um código pronto que veio de fora. É ele que dá <code>screen</code>, <code>draw()</code> e o resto do jogo. Fica sempre na <b>primeira</b> linha.</li>
+        <li><code>pgzrun.go()</code> <b>liga o motor do jogo</b>: abre a janela e fica repetindo "desenha a tela, escuta o teclado, desenha de novo". Fica sempre na <b>última</b> linha.</li>
+      </ul>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · biblioteca</span>
+        <p>Você não escreveu o <code>pgzrun</code>. Ele vem de uma <b>biblioteca</b> (ou <b>pacote</b>): um monte de código pronto que outras pessoas escreveram para todo mundo usar. A nossa se chama <b>Pygame Zero</b> e foi guardada dentro do <code>.venv</code> no Módulo 0.</p>
+        <p>Repare: você instalou o <code>pgzero</code>, mas escreve <code>import pgzrun</code>. O pacote inteiro é o <code>pgzero</code>. O <code>pgzrun</code> é uma peça de dentro dele, a "chave de ligar" do jogo.</p>
+      </div>
+      <div class="note run">
+        <span class="tag pixel">Rode!</span>
+        <p>Abre uma <b>janela preta</b>. Já é um jogo de verdade, só que vazio. Feche a janela para continuar.</p>
+      </div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f1s1"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">O que deve aparecer: uma janela toda preta.</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>Tamanho e título da janela</h3></div>
+      <p>Coloque três linhas novas <b>entre</b> o <code>import</code> e o <code>pgzrun.go()</code>:</p>
+      <pre class="py" data-new="3-5">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+pgzrun.go()</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · variável</span>
+        <p>Uma <b>variável</b> é um nome que guarda um valor. <code>WIDTH = 800</code> quer dizer "de agora em diante, <code>WIDTH</code> vale 800".</p>
+      </div>
+      <ul>
+        <li><code>WIDTH</code> (largura) e <code>HEIGHT</code> (altura) são o tamanho da janela em <b>pixels</b>, os pontinhos que formam a tela.</li>
+        <li><code>TITLE</code> é um <b>texto</b>, por isso fica entre aspas. Ele aparece na barra de cima da janela.</li>
+        <li>O Pygame Zero reconhece esses três nomes sozinho. Por isso eles precisam ser escritos assim mesmo, em letras MAIÚSCULAS.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A janela aparece com <b>800 × 600</b> pixels e "Crescendo como Jesus" escrito na barra.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f1s2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">Ainda preta, mas agora com o título na barra.</p>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>Pintar o fundo</h3></div>
+      <p>Agora vamos criar a sua primeira <b>função</b>. Adicione as linhas marcadas:</p>
+      <pre class="py" data-new="7,10-11">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+
+pgzrun.go()</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · função</span>
+        <p>Uma <b>função</b> é um pedaço de código com nome, guardado para rodar quando alguém chamar. <code>def</code> cria a função, depois vem o nome (<code>draw</code>), e os <code>()</code> e os <code>:</code> no fim são obrigatórios.</p>
+        <p>A <code>draw()</code> é especial: <b>o Pygame Zero chama ela sozinho</b>, várias vezes por segundo, sempre que precisa redesenhar a tela. Você só escreve <b>o que</b> desenhar.</p>
+      </div>
+      <div class="note gold">
+        <span class="tag pixel">Atenção ao recuo</span>
+        <p>A linha <code>screen.fill(...)</code> começa um pouco para dentro. Esse espaço se chama <b>indentação</b>, e no Python ele é <b>regra</b>: é ele que diz "esta linha faz parte da função <code>draw</code>". Se faltar, dá <code>IndentationError</code>. Depois de uma linha que termina em <code>:</code>, o VS Code recua a próxima sozinho quando você aperta <kbd>Enter</kbd>.</p>
+      </div>
+      <p><code>screen.fill(COR_DE_FUNDO)</code> pinta a tela inteira com a cor guardada na variável.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A janela aparece pintada de <b>azul-céu</b>. Depois troque <code>"skyblue"</code> por <code>"darkgreen"</code>, <code>"purple"</code> ou <code>"orange"</code> e rode de novo. Também dá para usar números de cor, como <code>(255, 0, 0)</code> para vermelho.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f1s3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">A tela inteira em azul-céu.</p>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>A mensagem de boas-vindas</h3></div>
+      <p>Crie a variável <code>COR_DO_TEXTO</code> e, dentro de <code>draw()</code>, <b>depois</b> do <code>screen.fill</code>, desenhe um texto:</p>
+      <pre class="py" data-new="8,13-18">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        "Bem-vindo(a) ao " + TITLE + "!",
+        center=(WIDTH // 2, HEIGHT // 2),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )
+
+
+pgzrun.go()</pre>
+      <ul>
+        <li><code>"Bem-vindo(a) ao " + TITLE + "!"</code> é o texto. O <code>+</code> <b>junta textos</b>: o pedaço fixo, mais o que está guardado em <code>TITLE</code>, mais <code>"!"</code>.</li>
+        <li><code>center=(WIDTH // 2, HEIGHT // 2)</code> é o ponto onde o texto fica <b>centralizado</b>. O <code>//</code> é a <b>divisão inteira</b>: <code>800 // 2</code> dá <code>400</code>, o meio da largura.</li>
+        <li><code>fontsize=40</code> é o tamanho da letra, e <code>color=COR_DO_TEXTO</code> é a cor.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A mensagem <b>"Bem-vindo(a) ao Crescendo como Jesus!"</b> aparece em branco, no meio da tela.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f1s4"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">O texto fica bem no centro: x = 400, y = 300.</p>
+    </div>
+  </article>
+
+  <!-- passo 5 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">5</span><h3>O seu nome como pecador</h3></div>
+      <p>Mais uma variável e mais um texto, um pouco mais abaixo:</p>
+      <pre class="py" data-new="9,20-25">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        "Bem-vindo(a) ao " + TITLE + "!",
+        center=(WIDTH // 2, HEIGHT // 2),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        center=(WIDTH // 2, HEIGHT // 2 + 60),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+
+pgzrun.go()</pre>
+      <p>O <code>+ 60</code> no <code>center</code> empurra o texto <b>60 pixels para baixo</b>, para ele não ficar em cima da mensagem de boas-vindas.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparece "Pecador: Escreva seu nome aqui" embaixo da mensagem. Agora troque <code>"Escreva seu nome aqui"</code> pelo <b>seu nome</b> e rode de novo.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f1lab"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <div class="controls">
+        <label for="lab-name">Seu nome<input type="text" id="lab-name" maxlength="24" placeholder="Escreva seu nome aqui"></label>
+        <label for="lab-bg">COR_DE_FUNDO<select id="lab-bg">
+          <option value="skyblue">"skyblue"</option><option value="darkgreen">"darkgreen"</option><option value="navy">"navy"</option><option value="purple">"purple"</option><option value="orange">"orange"</option><option value="black">"black"</option>
+        </select></label>
+        <label for="lab-fg">COR_DO_TEXTO<select id="lab-fg">
+          <option value="white">"white"</option><option value="yellow">"yellow"</option><option value="black">"black"</option>
+        </select></label>
+      </div>
+      <p class="mock-cap">Experimente aqui e depois faça igual no seu <code>jogo.py</code>.</p>
+    </div>
+  </article>
+
+  <div class="mission" data-mission="f1">
+    <h3>Sua missão da Fase 1</h3>
+    <p>Marque cada item quando ele estiver funcionando no seu jogo:</p>
+    <ul>
+      <li><label><input type="checkbox" id="f1-a"><span>O título do jogo aparece na barra da janela.</span></label></li>
+      <li><label><input type="checkbox" id="f1-b"><span>Uma mensagem de boas-vindas aparece na tela.</span></label></li>
+      <li><label><input type="checkbox" id="f1-c"><span>O fundo tem uma cor escolhida por você.</span></label></li>
+      <li><label><input type="checkbox" id="f1-d"><span>O seu nome aparece na tela.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 1 completa! Salve o <code>jogo.py</code>: ele continua na próxima fase.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="b" data-ok="Isso! Uma de cada vez, na ordem em que você escreveu." data-no="Não é isso. O computador segue a ordem: uma instrução de cada vez, de cima para baixo.">
+        <p>1. Como o computador segue as instruções de um programa?</p>
+        <div class="opts"><button data-opt="a">Escolhe a mais fácil primeiro</button><button data-opt="b">Uma de cada vez, de cima para baixo</button><button data-opt="c">Todas ao mesmo tempo</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="c" data-ok="Certo! Ela liga o motor do jogo, então vem por último." data-no="Quase. O import vai na primeira linha; o pgzrun.go() vai na última.">
+        <p>2. Onde fica a linha <code>pgzrun.go()</code>?</p>
+        <div class="opts"><button data-opt="a">Na primeira linha</button><button data-opt="b">Dentro da função draw()</button><button data-opt="c">Na última linha</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Exato! No Python o recuo é regra, não enfeite." data-no="Não. O recuo diz ao Python que a linha pertence à função draw().">
+        <p>3. Por que <code>screen.fill(COR_DE_FUNDO)</code> começa com um espaço (recuo)?</p>
+        <div class="opts"><button data-opt="a">Para mostrar que faz parte da função draw()</button><button data-opt="b">Só para ficar bonito</button><button data-opt="c">Porque a linha é comprida</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>O versículo na tela</h4>
+      <p>Coloque uma terceira linha de texto com o versículo de Lucas 2:52. Você vai precisar mudar os números do <code>center</code> para as três linhas não ficarem umas em cima das outras.</p>
+      <details><summary>Ver uma dica</summary><div class="in"><p>Crie <code>VERSICULO = "Jesus crescia em sabedoria, estatura e graça. (Lucas 2:52)"</code>. Suba a mensagem de boas-vindas com <code>HEIGHT // 2 - 60</code>, ponha o versículo em <code>HEIGHT // 2 - 10</code> com <code>fontsize=20</code>, e o nome em <code>HEIGHT // 2 + 40</code>.</p></div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">VERSICULO = "Jesus crescia em sabedoria, estatura e graça. (Lucas 2:52)"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        "Bem-vindo(a) ao " + TITLE + "!",
+        center=(WIDTH // 2, HEIGHT // 2 - 60),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        VERSICULO,
+        center=(WIDTH // 2, HEIGHT // 2 - 10),
+        fontsize=20,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        center=(WIDTH // 2, HEIGHT // 2 + 40),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>As cores do seu jogo</h4>
+      <p>Escolha uma cor de fundo e uma cor de texto que combinem com o jogo que você imagina. Algumas cores que funcionam: <code>"navy"</code>, <code>"purple"</code>, <code>"darkgreen"</code>, <code>"orange"</code>, <code>"gold"</code>, <code>"pink"</code>.</p>
+      <p>Cuidado para o texto não sumir: texto branco em fundo amarelo quase não dá para ler.</p>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 1 (só para conferir no final)</summary>
+    <div class="in"><p>Use para comparar com o seu, ou para destravar se empacar. O seu pode ter cores e nome diferentes.</p>
+    <pre class="py">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+    screen.draw.text(
+        "Bem-vindo(a) ao " + TITLE + "!",
+        center=(WIDTH // 2, HEIGHT // 2),
+        fontsize=40,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        center=(WIDTH // 2, HEIGHT // 2 + 60),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Programa</dt><dd>Uma lista de instruções que o computador segue.</dd></div>
+    <div><dt>Algoritmo</dt><dd>A sequência de passos para resolver um problema, como uma receita.</dd></div>
+    <div><dt>Biblioteca / pacote</dt><dd>Código pronto que outras pessoas escreveram para todo mundo usar.</dd></div>
+    <div><dt><code>import</code></dt><dd>Traz uma biblioteca para dentro do seu programa.</dd></div>
+    <div><dt>Variável</dt><dd>Um nome que guarda um valor, como <code>WIDTH = 800</code>.</dd></div>
+    <div><dt><code>WIDTH</code> / <code>HEIGHT</code> / <code>TITLE</code></dt><dd>Largura, altura e título da janela. O Pygame Zero reconhece esses nomes.</dd></div>
+    <div><dt>Função</dt><dd>Um pedaço de código com nome, criado com <code>def</code>.</dd></div>
+    <div><dt><code>draw()</code></dt><dd>Função que o Pygame Zero chama sozinho para desenhar a tela.</dd></div>
+    <div><dt>Indentação (recuo)</dt><dd>O espaço no começo da linha que mostra o que pertence à função.</dd></div>
+    <div><dt><code>screen.fill(cor)</code></dt><dd>Pinta a tela inteira de uma cor.</dd></div>
+    <div><dt><code>screen.draw.text(...)</code></dt><dd>Escreve um texto na tela, com posição, tamanho e cor.</dd></div>
+    <div><dt><code>//</code></dt><dd>Divisão inteira. <code>800 // 2</code> dá <code>400</code>.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>screen is not defined</b><span>Confira se o arquivo <b>começa</b> com <code>import pgzrun</code> e <b>termina</b> com <code>pgzrun.go()</code>.</span></div>
+    <div class="err"><b>ModuleNotFoundError: No module named 'pgzero'</b><span>O VS Code não está usando o Python do projeto. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Python: Select Interpreter</b> → escolha o que tem <code>.venv</code>. Não precisa instalar nada.</span></div>
+    <div class="err"><b>IndentationError</b><span>Alguma linha dentro de <code>draw()</code> está sem recuo ou com recuo diferente das outras. Deixe todas alinhadas.</span></div>
+    <div class="err"><b>SyntaxError</b><span>Falta alguma coisa: aspas, parênteses, vírgula ou os <code>:</code> depois de <code>def draw()</code>. Olhe a linha que a mensagem aponta e a linha de cima.</span></div>
+    <div class="err"><b>A cor não funciona</b><span>Confira se o nome está escrito certo e entre aspas, ou use números como <code>(255, 0, 0)</code>.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 2 ================= -->
+<section class="block" id="fase-2">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>2</b></div></div>
+    <div>
+      <h2>O personagem e a primeira decisão</h2>
+      <p>A tela de boas-vindas vira a primeira cena do jogo: um personagem aparece, o jogo faz uma pergunta sobre um hábito cristão, e o personagem reage à sua resposta.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>coordenadas <code>(x, y)</code></span><span>círculo e retângulo</span><span><code>True</code> / <code>False</code></span><span><code>if</code> / <code>elif</code> / <code>else</code></span><span>evento de clique</span><span><code>global</code></span>
+  </div>
+
+  <div class="panel">
+    <h3>De onde você parte</h3>
+    <p>Abra o <code>jogo.py</code> da Fase 1. Hoje o <code>import</code>, o <code>WIDTH</code>/<code>HEIGHT</code>/<code>TITLE</code>, as cores e o <code>pgzrun.go()</code> continuam iguais. O que muda é <b>o que está dentro de <code>draw()</code></b>: a mensagem de boas-vindas sai, e o seu nome vai para um cantinho da tela.</p>
+  </div>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>Coordenadas e o personagem</h3></div>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · coordenadas</span>
+        <p>Todo lugar da tela tem um endereço: um par de números <code>(x, y)</code>. O <code>x</code> cresce para a <b>direita</b>. O <code>y</code> cresce para <b>baixo</b>. O <code>(0, 0)</code> é o canto <b>superior esquerdo</b>. É diferente do caderno de matemática, onde o <code>y</code> cresce para cima!</p>
+        <p>Passe o mouse (ou toque) na janelinha ao lado para ver as coordenadas.</p>
+      </div>
+      <p>Crie as variáveis do personagem <b>antes</b> de <code>draw()</code>, e troque o que está dentro de <code>draw()</code>. O seu arquivo inteiro fica assim:</p>
+      <pre class="py" data-new="11-15,21-26,28-30">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Posição e tamanho do personagem (um círculo, por enquanto)
+personagem_x = WIDTH // 2
+personagem_y = HEIGHT // 2 - 60
+personagem_raio = 40
+personagem_cor = "gold"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )
+
+
+pgzrun.go()</pre>
+      <ul>
+        <li><code>WIDTH // 2</code> é o meio da largura. O <code>- 60</code> no <code>y</code> sobe o personagem um pouco, para sobrar espaço para a pergunta.</li>
+        <li><code>screen.draw.filled_circle((x, y), raio, cor)</code> desenha um <b>círculo cheio</b>: o centro, o tamanho (raio) e a cor.</li>
+        <li><code>topleft=(10, HEIGHT - 30)</code> é outro jeito de posicionar texto. Em vez de centralizar, ele prende o <b>canto superior esquerdo</b> do texto nesse ponto: 10 pixels da borda esquerda, perto do rodapé.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparece uma <b>bola dourada</b> um pouco acima do centro, e "Pecador: [seu nome]" pequeno no canto de baixo.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f2s1" data-coords><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="coord" id="coord-out" aria-live="polite">Passe o mouse na janela</p>
+      <p class="mock-cap">O centro da bola está em (400, 240).</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>A pergunta na tela</h3></div>
+      <p>Junto das outras variáveis, lá em cima, crie:</p>
+      <pre class="py">PERGUNTA = "Você orou hoje?"</pre>
+      <p>E dentro de <code>draw()</code>, <b>antes</b> do círculo, escreva a pergunta:</p>
+      <pre class="py" data-new="11-16">def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        PERGUNTA,
+        center=(WIDTH // 2, HEIGHT // 2 - 160),
+        fontsize=32,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )</pre>
+      <p>Você já conhece o <code>screen.draw.text</code>. Só mudou a posição: <code>HEIGHT // 2 - 160</code> fica bem acima do personagem.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A pergunta <b>"Você orou hoje?"</b> aparece em cima da bola dourada.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f2s2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>Os botões Sim e Não</h3></div>
+      <p>Junto das outras variáveis, crie os dois botões:</p>
+      <pre class="py"># Área (retângulo) de cada botão: (x, y) do canto e (largura, altura)
+botao_sim = Rect((WIDTH // 2 - 160, HEIGHT // 2 + 120), (120, 50))
+botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))</pre>
+      <ul>
+        <li><code>Rect((x, y), (largura, altura))</code> é um <b>retângulo</b>. O primeiro par é o canto superior esquerdo; o segundo é o tamanho. O Pygame Zero já conhece o <code>Rect</code>, não precisa de outro <code>import</code>.</li>
+        <li>Por enquanto cada botão é só uma área invisível. Agora vamos pintá-la.</li>
+      </ul>
+      <p>No fim de <code>draw()</code>, depois do personagem, acrescente:</p>
+      <pre class="py" data-new="1-5">    screen.draw.filled_rect(botao_sim, "green")
+    screen.draw.text("Sim", center=botao_sim.center, fontsize=28, color="white")
+
+    screen.draw.filled_rect(botao_nao, "red")
+    screen.draw.text("Não", center=botao_nao.center, fontsize=28, color="white")</pre>
+      <ul>
+        <li><code>screen.draw.filled_rect(retangulo, cor)</code> pinta o retângulo.</li>
+        <li><code>botao_sim.center</code> é um atalho: o próprio <code>Rect</code> calcula o ponto do meio dele. Você não precisa fazer conta.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem um botão <b>verde "Sim"</b> e um <b>vermelho "Não"</b> embaixo do personagem. Clicar ainda não faz nada.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f2s3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">O botão Sim começa em (240, 420) e tem 120 × 50.</p>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>Descobrindo o clique</h3></div>
+      <p>Depois de <code>draw()</code> (fora dela, sem recuo), crie uma nova função:</p>
+      <pre class="py">def on_mouse_down(pos):
+    if botao_sim.collidepoint(pos):
+        print("clicou no Sim")
+    elif botao_nao.collidepoint(pos):
+        print("clicou no Não")</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · evento</span>
+        <p>Um <b>evento</b> é algo que acontece durante o jogo, como um clique. A <code>on_mouse_down(pos)</code> é especial, como a <code>draw()</code>: o Pygame Zero chama ela sozinho <b>toda vez que você clica</b> na janela, e coloca em <code>pos</code> o <code>(x, y)</code> do clique.</p>
+      </div>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · decisão</span>
+        <p><code>if</code> quer dizer "<b>se</b>", e <code>elif</code> quer dizer "<b>senão, se</b>". <b>Se</b> o clique caiu dentro do botão Sim, faz uma coisa. <b>Senão, se</b> caiu no Não, faz outra. Não esqueça os <code>:</code> no fim dessas linhas.</p>
+        <p><code>botao_sim.collidepoint(pos)</code> responde <code>True</code> (verdadeiro) ou <code>False</code> (falso) para a pergunta "este ponto está dentro do retângulo?".</p>
+      </div>
+      <p><code>print(...)</code> escreve uma mensagem no <b>terminal</b> do VS Code, não na janela do jogo.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Nada muda na janela. Mas olhe o <b>terminal</b>: a cada clique num botão aparece <code>clicou no Sim</code> ou <code>clicou no Não</code>. Clicar fora dos botões não escreve nada.</p></div>
+      <pre class="term"><span class="ln out">clicou no Sim</span><span class="ln out">clicou no Não</span><span class="ln out">clicou no Sim</span></pre>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f2s3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">A janela fica igual ao passo 3. A novidade aparece no terminal.</p>
+    </div>
+  </article>
+
+  <!-- passo 5 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">5</span><h3>O personagem reage</h3></div>
+      <p>Agora o clique vai mudar o personagem de verdade. Junto das outras variáveis, lá em cima, crie:</p>
+      <pre class="py"># Estado da resposta: começa sem nenhuma resposta ainda
+respondeu = False
+resposta_foi_sim = False</pre>
+      <p><code>True</code> e <code>False</code> são os únicos dois <b>valores lógicos</b> do Python. Aqui eles guardam "o jogador já respondeu?" e "a resposta foi Sim?".</p>
+      <p>Agora troque a <code>on_mouse_down</code> inteira por esta:</p>
+      <pre class="py" data-new="2,5-8,10-13">def on_mouse_down(pos):
+    global respondeu, resposta_foi_sim, personagem_raio, personagem_cor
+
+    if botao_sim.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = True
+        personagem_raio = 60
+        personagem_cor = "yellow"
+    elif botao_nao.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = False
+        personagem_raio = 30
+        personagem_cor = "gray"</pre>
+      <div class="note gold">
+        <span class="tag pixel">Por que o global?</span>
+        <p>Uma função pode <b>ler</b> as variáveis de fora dela, mas não pode <b>mudá-las</b> sozinha. A linha <code>global</code> avisa o Python: "estas variáveis não são novas, são as lá de cima, e eu quero mudá-las de verdade". Sem o <code>global</code>, a tela nunca muda.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Clique em <b>Sim</b>: o personagem <b>cresce e fica amarelo</b>. Feche, rode de novo e clique em <b>Não</b>: ele <b>encolhe e fica cinza</b>.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f2play" data-play="nomsg"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <div class="controls"><button type="button" data-reset>Rodar de novo</button></div>
+      <p class="mock-cap">Clique nos botões da janelinha para ver como deve ficar.</p>
+    </div>
+  </article>
+
+  <!-- passo 6 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">6</span><h3>Uma mensagem para cada resposta</h3></div>
+      <p>No fim de <code>draw()</code>, depois dos botões, acrescente:</p>
+      <pre class="py" data-new="1-12">    if respondeu:
+        if resposta_foi_sim:
+            mensagem = "Muito bem! Continue assim!"
+        else:
+            mensagem = "Que tal fazer isso hoje?"
+
+        screen.draw.text(
+            mensagem,
+            center=(WIDTH // 2, HEIGHT // 2 + 220),
+            fontsize=26,
+            color=COR_DO_TEXTO,
+        )</pre>
+      <ul>
+        <li>O primeiro <code>if respondeu:</code> só deixa entrar <b>depois</b> que um botão foi clicado. Antes disso, <code>respondeu</code> é <code>False</code> e nada aparece.</li>
+        <li>O <code>if</code>/<code>else</code> de dentro escolhe <b>qual texto</b> mostrar. <code>else</code> quer dizer "<b>senão</b>".</li>
+        <li>Repare nos recuos: o <code>if</code> de dentro tem mais recuo, porque está dentro do primeiro <code>if</code>.</li>
+      </ul>
+      <div class="note idea">
+        <span class="tag pixel">= ou ==?</span>
+        <p><code>=</code> <b>guarda</b> um valor numa variável: <code>respondeu = True</code>. <code>==</code> <b>compara</b> dois valores e responde <code>True</code> ou <code>False</code>: <code>2 == 2</code> dá <code>True</code>. São coisas diferentes, e trocar um pelo outro é um dos erros mais comuns.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Antes de clicar, aparecem só a pergunta, o personagem e os botões. No <b>Sim</b>: o personagem cresce, fica amarelo e aparece <b>"Muito bem! Continue assim!"</b>. No <b>Não</b>: ele encolhe, fica cinza e aparece <b>"Que tal fazer isso hoje?"</b>.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f2play"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <div class="controls"><button type="button" data-reset>Rodar de novo</button></div>
+      <p class="mock-cap">A cena completa da Fase 2. Teste os dois botões.</p>
+    </div>
+  </article>
+
+  <div class="panel">
+    <h3>O que acontece quando você clica</h3>
+    <div class="loop" aria-label="Fluxo do clique">
+      <div class="box">Você clica<br><b>on_mouse_down(pos)</b></div>
+      <span class="arrow">→</span>
+      <div class="box">Está dentro de <b>botao_sim</b>?<br>Sim: cresce e fica amarelo</div>
+      <span class="arrow">→</span>
+      <div class="box">Senão, está dentro de <b>botao_nao</b>?<br>Sim: encolhe e fica cinza</div>
+      <span class="arrow">→</span>
+      <div class="box">Fora dos dois?<br>Nada acontece</div>
+    </div>
+  </div>
+
+  <div class="mission" data-mission="f2">
+    <h3>Sua missão da Fase 2</h3>
+    <ul>
+      <li><label><input type="checkbox" id="f2-a"><span>Escolhi a cor e o tamanho inicial do meu personagem.</span></label></li>
+      <li><label><input type="checkbox" id="f2-b"><span>Escolhi uma pergunta sobre um hábito cristão (por exemplo: "Você leu a Bíblia hoje?" ou "Você obedeceu aos seus pais hoje?").</span></label></li>
+      <li><label><input type="checkbox" id="f2-c"><span>No "Sim" o personagem cresce e muda de cor; no "Não" fica igual ou menor.</span></label></li>
+      <li><label><input type="checkbox" id="f2-d"><span>Aparece uma mensagem diferente para cada resposta.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 2 completa! Salve o <code>jogo.py</code>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="a" data-ok="Isso! O (0, 0) fica no canto de cima, à esquerda." data-no="Não. Na tela do computador, o (0, 0) é o canto superior esquerdo.">
+        <p>1. Onde fica o ponto <code>(0, 0)</code> na janela do jogo?</p>
+        <div class="opts"><button data-opt="a">No canto superior esquerdo</button><button data-opt="b">No centro</button><button data-opt="c">No canto inferior esquerdo</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Certo! O y cresce para baixo." data-no="Cuidado: na tela, o y cresce para baixo. Para descer, ele aumenta.">
+        <p>2. Para um objeto <b>descer</b> na tela, o <code>y</code> dele...</p>
+        <div class="opts"><button data-opt="a">aumenta</button><button data-opt="b">diminui</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Isso! == compara; = guarda." data-no="Não. O = guarda um valor. Quem compara é o ==.">
+        <p>3. Qual destes <b>compara</b> dois valores?</p>
+        <div class="opts"><button data-opt="a"><code>=</code></button><button data-opt="b"><code>==</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="c" data-ok="Exato. Sem o global, a função não consegue mudar as variáveis de fora." data-no="Não é isso. Sem o global, a função não muda as variáveis lá de cima, e a tela fica igual.">
+        <p>4. O que acontece se você esquecer o <code>global</code> na <code>on_mouse_down</code>?</p>
+        <div class="opts"><button data-opt="a">O jogo fecha</button><button data-opt="b">Os botões somem</button><button data-opt="c">O personagem não muda (ou aparece UnboundLocalError)</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>Uma segunda pergunta</h4>
+      <p>Faça aparecer uma segunda pergunta depois que a primeira for respondida.</p>
+      <details><summary>Ver uma dica</summary><div class="in"><p>Crie uma variável <code>numero_da_pergunta = 1</code>. Em <code>draw()</code>, use <code>if numero_da_pergunta == 1:</code> para escolher qual texto de pergunta desenhar. No <code>on_mouse_down</code>, quando um botão for clicado, mude <code>numero_da_pergunta</code> para <code>2</code> (e coloque ela no <code>global</code>).</p></div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">numero_da_pergunta = 1
+
+# dentro de draw(), no lugar do texto da PERGUNTA:
+    if numero_da_pergunta == 1:
+        pergunta = "Você orou hoje?"
+    else:
+        pergunta = "Você leu a Bíblia hoje?"
+
+    screen.draw.text(
+        pergunta,
+        center=(WIDTH // 2, HEIGHT // 2 - 160),
+        fontsize=32,
+        color=COR_DO_TEXTO,
+    )
+
+# em on_mouse_down, acrescente numero_da_pergunta no global
+# e, dentro do if do Sim e do elif do Não:
+        numero_da_pergunta = 2</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>Do seu jeito</h4>
+      <p>Mude as cores, os tamanhos e as mensagens. Que tal um personagem que fica verde e bem grande no "Sim"? Ou botões com outras cores?</p>
+      <p>Cores para experimentar: <code>"orange"</code>, <code>"pink"</code>, <code>"purple"</code>, <code>"lightgreen"</code>, <code>"white"</code>.</p>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 2 (só para conferir no final)</summary>
+    <div class="in"><pre class="py">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+PERGUNTA = "Você orou hoje?"
+
+# Posição e tamanho do personagem (um círculo, por enquanto)
+personagem_x = WIDTH // 2
+personagem_y = HEIGHT // 2 - 60
+personagem_raio = 40
+personagem_cor = "gold"
+
+# Estado da resposta: começa sem nenhuma resposta ainda
+respondeu = False
+resposta_foi_sim = False
+
+# Área (retângulo) de cada botão: (x, y) do canto e (largura, altura)
+botao_sim = Rect((WIDTH // 2 - 160, HEIGHT // 2 + 120), (120, 50))
+botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        PERGUNTA,
+        center=(WIDTH // 2, HEIGHT // 2 - 160),
+        fontsize=32,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )
+
+    screen.draw.filled_rect(botao_sim, "green")
+    screen.draw.text("Sim", center=botao_sim.center, fontsize=28, color="white")
+
+    screen.draw.filled_rect(botao_nao, "red")
+    screen.draw.text("Não", center=botao_nao.center, fontsize=28, color="white")
+
+    if respondeu:
+        if resposta_foi_sim:
+            mensagem = "Muito bem! Continue assim!"
+        else:
+            mensagem = "Que tal fazer isso hoje?"
+
+        screen.draw.text(
+            mensagem,
+            center=(WIDTH // 2, HEIGHT // 2 + 220),
+            fontsize=26,
+            color=COR_DO_TEXTO,
+        )
+
+
+def on_mouse_down(pos):
+    global respondeu, resposta_foi_sim, personagem_raio, personagem_cor
+
+    if botao_sim.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = True
+        personagem_raio = 60
+        personagem_cor = "yellow"
+    elif botao_nao.collidepoint(pos):
+        respondeu = True
+        resposta_foi_sim = False
+        personagem_raio = 30
+        personagem_cor = "gray"
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Coordenada</dt><dd>O endereço de um ponto na tela: <code>(x, y)</code>, contando do canto superior esquerdo.</dd></div>
+    <div><dt><code>topleft=(x, y)</code></dt><dd>Posiciona o texto pelo canto de cima, à esquerda, em vez de centralizar.</dd></div>
+    <div><dt><code>screen.draw.filled_circle(...)</code></dt><dd>Desenha um círculo cheio: centro, raio e cor.</dd></div>
+    <div><dt><code>Rect((x, y), (largura, altura))</code></dt><dd>Um retângulo: o canto de cima à esquerda e o tamanho.</dd></div>
+    <div><dt><code>screen.draw.filled_rect(...)</code></dt><dd>Pinta um retângulo inteiro de uma cor.</dd></div>
+    <div><dt><code>True</code> / <code>False</code></dt><dd>Verdadeiro ou falso. Os dois valores lógicos do Python.</dd></div>
+    <div><dt><code>if</code> / <code>elif</code> / <code>else</code></dt><dd>Se / senão, se / senão. É assim que o programa decide.</dd></div>
+    <div><dt><code>==</code></dt><dd>Compara dois valores. Diferente de <code>=</code>, que guarda um valor.</dd></div>
+    <div><dt>Evento</dt><dd>Algo que acontece no jogo, como um clique.</dd></div>
+    <div><dt><code>on_mouse_down(pos)</code></dt><dd>Função que o Pygame Zero chama a cada clique, com a posição em <code>pos</code>.</dd></div>
+    <div><dt><code>collidepoint(pos)</code></dt><dd>Responde se o ponto está dentro do retângulo.</dd></div>
+    <div><dt><code>global</code></dt><dd>Deixa a função mudar uma variável que foi criada fora dela.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>SyntaxError perto de if / elif / else</b><span>Faltam os dois pontos <code>:</code> no fim da linha.</span></div>
+    <div class="err"><b>O clique não faz nada</b><span>A função precisa se chamar <b>exatamente</b> <code>on_mouse_down</code> e ter <code>pos</code> entre os parênteses. Ela também precisa estar fora de <code>draw()</code>, sem recuo.</span></div>
+    <div class="err"><b>UnboundLocalError, ou a tela não muda</b><span>Falta o <code>global</code> na primeira linha de <code>on_mouse_down</code>, com todas as variáveis que ela muda.</span></div>
+    <div class="err"><b>NameError: name 'Rect' is not defined</b><span>Os botões foram criados antes do <code>import pgzrun</code>. O <code>import</code> precisa ser a primeira linha.</span></div>
+    <div class="err"><b>Usou = em vez de ==</b><span><code>=</code> guarda um valor; <code>==</code> compara. Dentro de um <code>if</code>, para comparar, use <code>==</code>.</span></div>
+    <div class="err"><b>Botão no lugar errado</b><span>Confira os números do <code>Rect</code>: o primeiro par é a posição, o segundo é o tamanho.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 3 ================= -->
+<section class="block" id="fase-3">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>3</b></div></div>
+    <div>
+      <h2>Movimentando o personagem</h2>
+      <p>A pergunta e os botões já fizeram o trabalho deles. Agora o personagem ganha vida e anda pela tela quando você aperta as setas do teclado.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>o laço do jogo</span><span><code>update()</code></span><span><code>x = x + VELOCIDADE</code></span><span><code>keyboard</code></span><span><code>on_key_down(key)</code></span><span><code>keys.SPACE</code></span>
+  </div>
+
+  <div class="panel">
+    <h3>O laço do jogo</h3>
+    <p>O Pygame Zero fica repetindo duas coisas, umas <b>60 vezes por segundo</b>: primeiro ele chama <code>update()</code> para <b>pensar</b> e mudar as coisas de lugar, depois chama <code>draw()</code> para <b>desenhar</b>. Como cada volta move o personagem só um pouquinho, o seu olho vê um movimento suave, como num desenho animado.</p>
+    <div class="loop" aria-label="update e draw se repetem">
+      <div class="box"><b>update()</b><br>olha o teclado e muda<br>personagem_x e personagem_y</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>draw()</b><br>desenha o personagem<br>na posição nova</div>
+      <span class="arrow">↺ 60× por segundo</span>
+    </div>
+  </div>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>Limpar a cena e pôr o personagem no meio</h3></div>
+      <p>Apague do seu <code>jogo.py</code>:</p>
+      <ul>
+        <li>a variável <code>PERGUNTA</code>;</li>
+        <li>os botões <code>botao_sim</code> e <code>botao_nao</code>;</li>
+        <li>as variáveis <code>respondeu</code> e <code>resposta_foi_sim</code>;</li>
+        <li>a função <code>on_mouse_down</code> inteira;</li>
+        <li>dentro de <code>draw()</code>: a pergunta, os botões e a mensagem final.</li>
+      </ul>
+      <p>Depois tire o <code>- 60</code> do <code>personagem_y</code>, crie a <code>VELOCIDADE</code> e coloque uma dica no topo da tela. O arquivo inteiro fica assim:</p>
+      <pre class="py" data-new="13,17-18,31-36">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Posição, tamanho e cor do personagem (um círculo, por enquanto)
+personagem_x = WIDTH // 2
+personagem_y = HEIGHT // 2
+personagem_raio = 40
+personagem_cor = "gold"
+
+# Quantos pixels o personagem anda a cada passo
+VELOCIDADE = 5
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Use as setas para andar. Espaço volta ao meio.",
+        center=(WIDTH // 2, 30),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )
+
+
+pgzrun.go()</pre>
+      <p><code>VELOCIDADE</code> é uma variável <b>nossa</b>, não do Pygame Zero. Ela diz quantos pixels o personagem anda de cada vez.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A bola dourada aparece no <b>centro exato</b> da tela, com a dica em cima e o seu nome no canto. Nada se mexe ainda.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f3s1"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">A bola agora está em (400, 300), o meio da tela.</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>A função update() e o primeiro movimento</h3></div>
+      <p>Depois de <code>draw()</code> (fora dela, sem recuo), crie:</p>
+      <pre class="py">def update():
+    global personagem_x, personagem_y
+
+    personagem_x = personagem_x + VELOCIDADE</pre>
+      <ul>
+        <li><code>update()</code> é outra função especial. O Pygame Zero chama ela sozinho, umas <b>60 vezes por segundo</b>, sempre <b>antes</b> de desenhar.</li>
+        <li>O <code>global</code> é o mesmo da Fase 2: sem ele, a função não consegue mudar as variáveis de fora.</li>
+      </ul>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · x = x + 5</span>
+        <p><code>personagem_x = personagem_x + VELOCIDADE</code> não é uma conta de matemática. É uma <b>ordem</b>: "pegue o valor que está em <code>personagem_x</code> agora, some <code>VELOCIDADE</code> e guarde de volta". Se <code>personagem_x</code> vale 400, depois dessa linha vale 405. Na próxima volta, 410. Depois 415...</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A bola <b>desliza sozinha para a direita</b> e some pela borda. É para ser assim mesmo. No próximo passo você pega o controle.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f3slide"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="coord" id="slide-out">personagem_x = 400</p>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>Andar só quando a seta está apertada</h3></div>
+      <p>Troque a linha do <code>personagem_x</code> por dois <code>if</code> que olham o teclado:</p>
+      <pre class="py" data-new="4-7">def update():
+    global personagem_x, personagem_y
+
+    if keyboard.right:
+        personagem_x = personagem_x + VELOCIDADE
+    if keyboard.left:
+        personagem_x = personagem_x - VELOCIDADE</pre>
+      <ul>
+        <li><code>keyboard.right</code> vale <code>True</code> <b>enquanto</b> a seta <kbd>→</kbd> está apertada, e <code>False</code> quando você solta. Como o <code>update()</code> roda o tempo todo, o jogo pergunta "a seta está apertada <b>agora</b>?" 60 vezes por segundo.</li>
+        <li><code>keyboard.left</code> <b>diminui</b> o <code>x</code>, e o personagem vai para a esquerda.</li>
+        <li>São dois <code>if</code> separados, e não um <code>elif</code>. Se você apertar as duas setas juntas, as duas linhas rodam e o personagem fica parado.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A bola fica parada até você <b>segurar</b> <kbd>→</kbd>. Soltou, ela para. Com <kbd>←</kbd> ela vai para a esquerda.</p></div>
+    </div>
+    <div class="side">
+      <div class="note gold"><span class="tag pixel">Lembrete</span><p>Primeiro clique na janela do jogo para ela receber as teclas. Se o VS Code estiver selecionado, as setas vão para o editor.</p></div>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>As quatro direções</h3></div>
+      <p>Acrescente cima e baixo dentro do <code>update()</code>:</p>
+      <pre class="py" data-new="8-11">def update():
+    global personagem_x, personagem_y
+
+    if keyboard.right:
+        personagem_x = personagem_x + VELOCIDADE
+    if keyboard.left:
+        personagem_x = personagem_x - VELOCIDADE
+    if keyboard.down:
+        personagem_y = personagem_y + VELOCIDADE
+    if keyboard.up:
+        personagem_y = personagem_y - VELOCIDADE</pre>
+      <p>Lembra da Fase 2? O <code>y</code> cresce para <b>baixo</b>. Então <b>descer</b> é <code>+ VELOCIDADE</code> e <b>subir</b> é <code>- VELOCIDADE</code>.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>O personagem anda nas 4 direções. Segurando duas setas juntas (<kbd>→</kbd> e <kbd>↑</kbd>, por exemplo), ele anda na <b>diagonal</b>.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f3play"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" id="play-space">Espaço</button>
+      </div>
+      <div class="vars" id="play-vars" aria-live="off"></div>
+      <p class="mock-cap">Clique na janelinha e use as setas do seu teclado (ou os botões). Veja os valores mudando.</p>
+    </div>
+  </article>
+
+  <!-- passo 5 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">5</span><h3>Voltar ao meio com a barra de espaço</h3></div>
+      <p>Depois do <code>update()</code> (fora dele, sem recuo), crie:</p>
+      <pre class="py">def on_key_down(key):
+    global personagem_x, personagem_y
+
+    if key == keys.SPACE:
+        personagem_x = WIDTH // 2
+        personagem_y = HEIGHT // 2</pre>
+      <ul>
+        <li><code>on_key_down(key)</code> é a prima de teclado da <code>on_mouse_down(pos)</code>. O Pygame Zero chama ela <b>uma vez</b>, no instante em que você aperta uma tecla, e <code>key</code> diz <b>qual</b> tecla foi.</li>
+        <li><code>keys.SPACE</code> é o nome que o Pygame Zero dá para a barra de espaço. Também existem <code>keys.A</code>, <code>keys.LEFT</code>, <code>keys.RETURN</code> (o Enter)...</li>
+        <li>Aqui aparece o <code>==</code> da Fase 2: "a tecla apertada <b>é igual</b> ao espaço?".</li>
+      </ul>
+      <div class="note idea">
+        <span class="tag pixel">keyboard ou on_key_down?</span>
+        <p>Use <code>keyboard.right</code> dentro do <code>update()</code> para coisas que acontecem <b>enquanto</b> a tecla está apertada, como andar. Use <code>on_key_down</code> para coisas que acontecem <b>uma vez</b> quando a tecla desce, como voltar ao meio.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Ande para longe com as setas e aperte a <b>barra de espaço</b>: o personagem volta para o centro na hora.</p></div>
+    </div>
+    <div class="side">
+      <div class="note gold"><span class="tag pixel">Teste lá em cima</span><p>A janelinha do passo 4 também responde ao <b>Espaço</b>. Experimente andar e apertar o Espaço para ver os valores voltarem para 400 e 300.</p></div>
+    </div>
+  </article>
+
+  <div class="mission" data-mission="f3">
+    <h3>Sua missão da Fase 3</h3>
+    <ul>
+      <li><label><input type="checkbox" id="f3-a"><span>Apaguei a cena de decisão da Fase 2 (pergunta, botões e <code>on_mouse_down</code>).</span></label></li>
+      <li><label><input type="checkbox" id="f3-b"><span>O personagem começa no centro da tela.</span></label></li>
+      <li><label><input type="checkbox" id="f3-c"><span>Criei o <code>update()</code> com <code>global</code>.</span></label></li>
+      <li><label><input type="checkbox" id="f3-d"><span>O personagem anda nas 4 direções com as setas.</span></label></li>
+      <li><label><input type="checkbox" id="f3-e"><span>A barra de espaço traz o personagem de volta ao meio.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 3 completa! O seu personagem já anda. Na próxima fase ele ganha um labirinto de verdade.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="b" data-ok="Isso! Umas 60 vezes por segundo, sempre antes do draw()." data-no="Não. O update() roda o tempo todo, umas 60 vezes por segundo.">
+        <p>1. Quantas vezes o Pygame Zero chama o <code>update()</code>?</p>
+        <div class="opts"><button data-opt="a">Uma vez só</button><button data-opt="b">Umas 60 vezes por segundo</button><button data-opt="c">Só quando você aperta uma tecla</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Exato! É uma ordem: pega, soma, guarda de volta." data-no="Não é isso. É uma ordem: pega o valor atual, soma 5 e guarda de volta.">
+        <p>2. O que <code>personagem_x = personagem_x + 5</code> faz?</p>
+        <div class="opts"><button data-opt="a">Pega o valor atual, soma 5 e guarda de volta</button><button data-opt="b">Dá erro, porque x nunca é igual a x + 5</button><button data-opt="c">Coloca o personagem na posição 5</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Certo! on_key_down roda uma vez, quando a tecla desce." data-no="Não. keyboard.right fica True o tempo todo enquanto você segura. Para uma vez só, use on_key_down.">
+        <p>3. Você quer que algo aconteça <b>uma vez só</b> quando apertar uma tecla. O que usa?</p>
+        <div class="opts"><button data-opt="a"><code>keyboard.right</code> no <code>update()</code></button><button data-opt="b"><code>on_key_down(key)</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Isso! Sem parênteses: é um valor True/False, não uma função." data-no="Não. keyboard.right é um valor (True ou False), então vai sem parênteses.">
+        <p>4. Qual está certo?</p>
+        <div class="opts"><button data-opt="a"><code>if keyboard.right:</code></button><button data-opt="b"><code>if keyboard.right():</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra · prévia da Fase 4</span>
+      <h4>Não deixe o personagem fugir da tela</h4>
+      <p>Hoje, se você segurar a seta, o personagem some pela borda. Faça ele parar na beirada.</p>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>O Python sabe comparar números: <code>&lt;</code> quer dizer "menor que" e <code>&gt;</code> quer dizer "maior que". Você vai aprender isso com calma na Fase 4. No fim do <code>update()</code>, pergunte: "o <code>personagem_x</code> ficou menor que 0?" Se sim, coloque ele de volta em 0. Faça o mesmo para a borda da direita (<code>WIDTH</code>), de cima e de baixo.</p>
+      </div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">    # no fim do update():
+    if personagem_x &lt; 0:
+        personagem_x = 0
+    if personagem_x &gt; WIDTH:
+        personagem_x = WIDTH
+    if personagem_y &lt; 0:
+        personagem_y = 0
+    if personagem_y &gt; HEIGHT:
+        personagem_y = HEIGHT</pre>
+        <p>Repare que metade da bola ainda sai da tela, porque o <code>x</code> e o <code>y</code> são o <b>centro</b> dela. Quer que a bola inteira fique dentro? Troque <code>0</code> por <code>personagem_raio</code> e <code>WIDTH</code> por <code>WIDTH - personagem_raio</code>.</p>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>Controles do seu jeito</h4>
+      <ul>
+        <li>Mude a <code>VELOCIDADE</code> para 2 ou para 10. O que acontece?</li>
+        <li>Faça as teclas <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> também andarem.</li>
+        <li>Faça uma tecla trocar a cor do personagem.</li>
+      </ul>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>Para o WASD, crie mais quatro <code>if</code> no <code>update()</code>, um para cada letra: <code>if keyboard.d:</code> anda para a direita, <code>if keyboard.a:</code> para a esquerda, <code>if keyboard.s:</code> desce e <code>if keyboard.w:</code> sobe.</p>
+        <p>Para trocar a cor, use o <code>on_key_down</code>: <code>if key == keys.C:</code> e, dentro, <code>personagem_cor = "pink"</code>. Não esqueça de pôr <code>personagem_cor</code> no <code>global</code>.</p>
+      </div></details>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 3 (só para conferir no final)</summary>
+    <div class="in"><pre class="py">import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Posição, tamanho e cor do personagem (um círculo, por enquanto)
+personagem_x = WIDTH // 2
+personagem_y = HEIGHT // 2
+personagem_raio = 40
+personagem_cor = "gold"
+
+# Quantos pixels o personagem anda a cada passo
+VELOCIDADE = 5
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Use as setas para andar. Espaço volta ao meio.",
+        center=(WIDTH // 2, 30),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.filled_circle(
+        (personagem_x, personagem_y), personagem_raio, personagem_cor
+    )
+
+
+def update():
+    global personagem_x, personagem_y
+
+    if keyboard.right:
+        personagem_x = personagem_x + VELOCIDADE
+    if keyboard.left:
+        personagem_x = personagem_x - VELOCIDADE
+    if keyboard.down:
+        personagem_y = personagem_y + VELOCIDADE
+    if keyboard.up:
+        personagem_y = personagem_y - VELOCIDADE
+
+
+def on_key_down(key):
+    global personagem_x, personagem_y
+
+    if key == keys.SPACE:
+        personagem_x = WIDTH // 2
+        personagem_y = HEIGHT // 2
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Laço do jogo</dt><dd>O Pygame Zero repetindo "pensar (<code>update</code>) e desenhar (<code>draw</code>)" muitas vezes por segundo.</dd></div>
+    <div><dt><code>update()</code></dt><dd>Função chamada umas 60 vezes por segundo, antes do <code>draw()</code>. É onde as coisas mudam de lugar.</dd></div>
+    <div><dt><code>x = x + 5</code></dt><dd>Pega o valor atual de <code>x</code>, soma 5 e guarda de volta.</dd></div>
+    <div><dt><code>VELOCIDADE</code></dt><dd>Variável nossa: quantos pixels o personagem anda por vez.</dd></div>
+    <div><dt><code>keyboard.left</code> / <code>.right</code> / <code>.up</code> / <code>.down</code></dt><dd><code>True</code> enquanto a seta está apertada.</dd></div>
+    <div><dt><code>on_key_down(key)</code></dt><dd>Chamada uma vez quando uma tecla é apertada. <code>key</code> diz qual foi.</dd></div>
+    <div><dt><code>keys.SPACE</code></dt><dd>O nome da barra de espaço no Pygame Zero.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>O personagem não anda, ou UnboundLocalError</b><span>Falta <code>global personagem_x, personagem_y</code> na primeira linha do <code>update()</code>. É o mesmo erro da Fase 2.</span></div>
+    <div class="err"><b>Nada acontece de jeito nenhum</b><span>O nome da função precisa ser <b>exatamente</b> <code>update</code> e <code>on_key_down</code>, em letras minúsculas. E clique na janela do jogo antes de apertar as setas.</span></div>
+    <div class="err"><b>keyboard.right()</b><span>É <code>keyboard.right</code>, sem parênteses. É um valor, não uma função.</span></div>
+    <div class="err"><b>Aperto para baixo e ele sobe</b><span>Os sinais estão trocados. Descer é <code>+ VELOCIDADE</code>; subir é <code>- VELOCIDADE</code>.</span></div>
+    <div class="err"><b>AttributeError: ... space</b><span>É <code>keys.SPACE</code>, em letras maiúsculas.</span></div>
+    <div class="err"><b>Rápido ou lento demais</b><span>Mude o número da <code>VELOCIDADE</code>. 5 é um bom começo.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<section class="block">
+  <div class="panel">
+    <span class="tag pixel" style="color: var(--wall); font-size: .85rem;">Próxima fase</span>
+    <h3>Os muros do labirinto</h3>
+    <p>Na Fase 4 o seu personagem vai ganhar paredes: um labirinto desenhado a partir de um mapa, e o personagem não vai mais conseguir atravessar parede nem sair da tela. Guarde bem o seu <code>jogo.py</code>. Ele é o começo do seu jogo inteiro.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Crescendo como Jesus · curso de programação com Python e Pygame Zero para crianças. Caderno de missões das Fases 1, 2 e 3.</p>
+  </div>
+</footer>
+
+<nav class="guia" aria-label="Andar pelo caderno">
+  <button type="button" class="fase-prev" data-go="fase-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 12 12 6 18 12"/><polyline points="6 18 12 12 18 18"/></svg>Fase anterior</button>
+  <button type="button" class="passo passo-prev" data-go="passo-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>Voltar</button>
+  <div class="onde" aria-live="polite"><b>Início</b><span></span></div>
+  <button type="button" class="passo passo-next next" data-go="passo-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>Seguir</button>
+  <button type="button" class="fase-next" data-go="fase-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 6 12 12 18 6"/><polyline points="6 12 12 18 18 12"/></svg>Próxima fase</button>
+</nav>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- destaque de código Python ---------- */
+  var KW = { "import":1, "def":1, "if":1, "elif":1, "else":1, "global":1, "True":1, "False":1, "and":1, "or":1, "not":1, "return":1 };
+  var PG = { "screen":1, "keyboard":1, "keys":1, "Rect":1, "pgzrun":1, "print":1 };
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function highlight(src) {
+    var re = /(#[^\n]*)|("(?:[^"\\\n]|\\.)*")|(\b\d+\b)|([A-Za-z_]\w*)|(\s+|[\s\S])/g;
+    var out = "", m, prev = "";
+    while ((m = re.exec(src))) {
+      if (m[1]) out += '<span class="com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="str">' + esc(m[2]) + "</span>";
+      else if (m[3]) out += '<span class="num">' + m[3] + "</span>";
+      else if (m[4]) {
+        var w = m[4];
+        if (KW[w]) out += '<span class="kw">' + w + "</span>";
+        else if (prev === "def") out += '<span class="fn">' + w + "</span>";
+        else if (PG[w]) out += '<span class="pg">' + w + "</span>";
+        else if (/^[A-Z][A-Z_0-9]+$/.test(w)) out += '<span class="const">' + w + "</span>";
+        else out += esc(w);
+        prev = w;
+        continue;
+      } else out += esc(m[5]);
+      if (m[5] && /\S/.test(m[5])) prev = "";
+    }
+    return out;
+  }
+  function parseRanges(s) {
+    var set = {};
+    (s || "").split(",").forEach(function (p) {
+      if (!p) return;
+      var a = p.split("-"), lo = +a[0], hi = +(a[1] || a[0]);
+      for (var i = lo; i <= hi; i++) set[i] = 1;
+    });
+    return set;
+  }
+  document.querySelectorAll("pre.py").forEach(function (pre) {
+    var src = pre.textContent.replace(/^\n/, "").replace(/\s+$/, "");
+    var nw = parseRanges(pre.getAttribute("data-new"));
+    pre.innerHTML = highlight(src).split("\n").map(function (line, i) {
+      return '<span class="ln' + (nw[i + 1] ? " new" : "") + '">' + (line || " ") + "</span>";
+    }).join("");
+  });
+
+  /* ---------- janelas do jogo simuladas ---------- */
+  var PGC = { skyblue:"#87ceeb", darkgreen:"#006400", navy:"#000080", purple:"#a020f0", orange:"#ffa500", black:"#000000",
+              white:"#ffffff", yellow:"#ffff00", gold:"#ffd700", gray:"#bebebe", green:"#00ff00", red:"#ff0000" };
+  function col(c) { return PGC[c] || c; }
+  function txt(t, x, y, size, color, anchor) { return { k:"text", t:t, x:x, y:y, size:size, color:color, anchor:anchor || "center" }; }
+  function paint(ctx, s) {
+    ctx.fillStyle = col(s.bg); ctx.fillRect(0, 0, 800, 600);
+    (s.items || []).forEach(function (it) {
+      if (it.k === "text") {
+        ctx.font = "bold " + Math.round(it.size * 0.74) + "px Arial, Helvetica, sans-serif";
+        ctx.fillStyle = col(it.color);
+        if (it.anchor === "topleft") { ctx.textAlign = "left"; ctx.textBaseline = "top"; }
+        else { ctx.textAlign = "center"; ctx.textBaseline = "middle"; }
+        ctx.fillText(it.t, it.x, it.y);
+      } else if (it.k === "circle") {
+        ctx.beginPath(); ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2); ctx.fillStyle = col(it.color); ctx.fill();
+      } else if (it.k === "rect") {
+        ctx.fillStyle = col(it.color); ctx.fillRect(it.x, it.y, it.w, it.h);
+      }
+    });
+  }
+  var T = "Crescendo como Jesus";
+  var pecador = function (name, fg) { return txt("Pecador: " + name, 10, 570, 16, fg || "white", "topleft"); };
+  var lab = { name: "", bg: "skyblue", fg: "white" };
+  var play2 = { r: 40, c: "gold", answered: false, yes: false };
+  var play3 = { x: 400, y: 300, keys: { left:false, right:false, up:false, down:false } };
+  var slide = { x: 400 };
+  function btnItems() {
+    return [ { k:"rect", x:240, y:420, w:120, h:50, color:"green" }, txt("Sim", 300, 445, 28, "white"),
+             { k:"rect", x:440, y:420, w:120, h:50, color:"red" }, txt("Não", 500, 445, 28, "white") ];
+  }
+  var scenes = {
+    f1s1: function () { return { title: "Pygame Zero Game", bg: "black" }; },
+    f1s2: function () { return { title: T, bg: "black" }; },
+    f1s3: function () { return { title: T, bg: "skyblue" }; },
+    f1s4: function () { return { title: T, bg: "skyblue", items: [txt("Bem-vindo(a) ao " + T + "!", 400, 300, 40, "white")] }; },
+    f1lab: function () {
+      return { title: T, bg: lab.bg, items: [
+        txt("Bem-vindo(a) ao " + T + "!", 400, 300, 40, lab.fg),
+        txt("Pecador: " + (lab.name || "Escreva seu nome aqui"), 400, 360, 24, lab.fg) ] };
+    },
+    f2s1: function () { return { title: T, bg: "skyblue", items: [pecador(lab.name || "Escreva seu nome aqui"), { k:"circle", x:400, y:240, r:40, color:"gold" }] }; },
+    f2s2: function () { return { title: T, bg: "skyblue", items: [pecador(lab.name || "Escreva seu nome aqui"), txt("Você orou hoje?", 400, 140, 32, "white"), { k:"circle", x:400, y:240, r:40, color:"gold" }] }; },
+    f2s3: function () { return { title: T, bg: "skyblue", items: [pecador(lab.name || "Escreva seu nome aqui"), txt("Você orou hoje?", 400, 140, 32, "white"), { k:"circle", x:400, y:240, r:40, color:"gold" }].concat(btnItems()) }; },
+    f2play: function (fig) {
+      var st = fig._st;
+      var items = [pecador(lab.name || "Escreva seu nome aqui"), txt("Você orou hoje?", 400, 140, 32, "white"), { k:"circle", x:400, y:240, r:st.r, color:st.c }].concat(btnItems());
+      if (st.answered && !fig.hasAttribute("data-play")) items.push(txt(st.yes ? "Muito bem! Continue assim!" : "Que tal fazer isso hoje?", 400, 520, 26, "white"));
+      return { title: T, bg: "skyblue", items: items };
+    },
+    f3s1: function () { return { title: T, bg: "skyblue", items: [pecador(lab.name || "Escreva seu nome aqui"), txt("Use as setas para andar. Espaço volta ao meio.", 400, 30, 24, "white"), { k:"circle", x:400, y:300, r:40, color:"gold" }] }; },
+    f3slide: function () { return { title: T, bg: "skyblue", items: [pecador(lab.name || "Escreva seu nome aqui"), txt("Use as setas para andar. Espaço volta ao meio.", 400, 30, 24, "white"), { k:"circle", x:slide.x, y:300, r:40, color:"gold" }] }; },
+    f3play: function () { return { title: T, bg: "skyblue", items: [pecador(lab.name || "Escreva seu nome aqui"), txt("Use as setas para andar. Espaço volta ao meio.", 400, 30, 24, "white"), { k:"circle", x:play3.x, y:play3.y, r:40, color:"gold" }] }; }
+  };
+  var figs = [];
+  document.querySelectorAll("figure.mock").forEach(function (fig) {
+    var cv = fig.querySelector("canvas");
+    fig._ctx = cv.getContext("2d");
+    fig._name = fig.getAttribute("data-scene");
+    if (fig._name === "f2play") fig._st = { r: 40, c: "gold", answered: false, yes: false };
+    figs.push(fig);
+  });
+  function render(fig, extra) {
+    var s = scenes[fig._name](fig);
+    fig.querySelector(".mock-title").textContent = s.title;
+    paint(fig._ctx, s);
+    if (extra) extra(fig._ctx);
+  }
+  function renderAll() { figs.forEach(function (f) { render(f); }); }
+  function toGame(cv, ev) {
+    var r = cv.getBoundingClientRect();
+    return { x: Math.round((ev.clientX - r.left) * 800 / r.width), y: Math.round((ev.clientY - r.top) * 600 / r.height) };
+  }
+
+  /* laboratório da fase 1 */
+  var nameEl = document.getElementById("lab-name"), bgEl = document.getElementById("lab-bg"), fgEl = document.getElementById("lab-fg");
+  function readLab() { lab.name = nameEl.value.trim(); lab.bg = bgEl.value; lab.fg = fgEl.value; renderAll(); }
+  [nameEl, bgEl, fgEl].forEach(function (el) { el.addEventListener("input", readLab); el.addEventListener("change", readLab); });
+
+  /* coordenadas da fase 2 */
+  var coordOut = document.getElementById("coord-out");
+  figs.filter(function (f) { return f.hasAttribute("data-coords"); }).forEach(function (fig) {
+    var cv = fig.querySelector("canvas");
+    function show(ev) {
+      var p = toGame(cv, ev);
+      render(fig, function (ctx) {
+        ctx.strokeStyle = "rgba(24,38,74,.55)"; ctx.lineWidth = 2; ctx.setLineDash([8, 8]);
+        ctx.beginPath(); ctx.moveTo(p.x, 0); ctx.lineTo(p.x, p.y); ctx.moveTo(0, p.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+        ctx.setLineDash([]); ctx.fillStyle = "#18264a"; ctx.beginPath(); ctx.arc(p.x, p.y, 7, 0, Math.PI * 2); ctx.fill();
+      });
+      coordOut.textContent = "x = " + p.x + ", y = " + p.y;
+    }
+    cv.addEventListener("pointermove", show);
+    cv.addEventListener("pointerdown", show);
+    cv.addEventListener("pointerleave", function () { render(fig); coordOut.textContent = "Passe o mouse na janela"; });
+  });
+
+  /* cliques da fase 2 */
+  figs.filter(function (f) { return f._name === "f2play"; }).forEach(function (fig) {
+    var cv = fig.querySelector("canvas");
+    cv.style.cursor = "pointer";
+    cv.addEventListener("pointerdown", function (ev) {
+      var p = toGame(cv, ev), st = fig._st;
+      if (p.x >= 240 && p.x <= 360 && p.y >= 420 && p.y <= 470) { st.answered = true; st.yes = true; st.r = 60; st.c = "yellow"; }
+      else if (p.x >= 440 && p.x <= 560 && p.y >= 420 && p.y <= 470) { st.answered = true; st.yes = false; st.r = 30; st.c = "gray"; }
+      render(fig);
+    });
+    var btn = fig.parentNode.querySelector("[data-reset]");
+    if (btn) btn.addEventListener("click", function () { fig._st = { r: 40, c: "gold", answered: false, yes: false }; render(fig); });
+  });
+
+  /* movimento da fase 3 */
+  var varsEl = document.getElementById("play-vars");
+  var playFig = figs.filter(function (f) { return f._name === "f3play"; })[0];
+  var playCv = playFig.querySelector("canvas");
+  var KEYMAP = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down" };
+  function showVars() {
+    var k = play3.keys;
+    function b(v) { return '<span class="' + (v ? "t" : "f") + '">' + (v ? "True" : "False") + "</span>"; }
+    varsEl.innerHTML = "<span>personagem_x</span><span>" + play3.x + "</span><span>personagem_y</span><span>" + play3.y + "</span>" +
+      "<span>keyboard.left</span>" + b(k.left) + "<span>keyboard.right</span>" + b(k.right) +
+      "<span>keyboard.up</span>" + b(k.up) + "<span>keyboard.down</span>" + b(k.down);
+    document.querySelectorAll(".pad button").forEach(function (bt) { bt.classList.toggle("on", !!k[bt.getAttribute("data-key")]); });
+  }
+  function center() { play3.x = 400; play3.y = 300; render(playFig); showVars(); }
+  playCv.addEventListener("keydown", function (e) {
+    if (KEYMAP[e.key]) { play3.keys[KEYMAP[e.key]] = true; e.preventDefault(); showVars(); }
+    else if (e.key === " ") { center(); e.preventDefault(); }
+  });
+  playCv.addEventListener("keyup", function (e) { if (KEYMAP[e.key]) { play3.keys[KEYMAP[e.key]] = false; showVars(); } });
+  playCv.addEventListener("blur", function () { play3.keys = { left:false, right:false, up:false, down:false }; showVars(); });
+  playCv.addEventListener("pointerdown", function () { playCv.focus(); });
+  document.querySelectorAll(".pad button").forEach(function (bt) {
+    var k = bt.getAttribute("data-key");
+    function on(e) { e.preventDefault(); play3.keys[k] = true; showVars(); }
+    function off() { play3.keys[k] = false; showVars(); }
+    bt.addEventListener("pointerdown", on);
+    bt.addEventListener("pointerup", off);
+    bt.addEventListener("pointerleave", off);
+    bt.addEventListener("pointercancel", off);
+  });
+  document.getElementById("play-space").addEventListener("click", center);
+  var V = 5, last = 0, acc = 0;
+  function tick(t) {
+    var dt = last ? Math.min(t - last, 100) : 16; last = t; acc += dt;
+    var moved = false;
+    while (acc >= 1000 / 60) {
+      acc -= 1000 / 60;
+      var k = play3.keys;
+      if (k.right) { play3.x += V; moved = true; }
+      if (k.left) { play3.x -= V; moved = true; }
+      if (k.down) { play3.y += V; moved = true; }
+      if (k.up) { play3.y -= V; moved = true; }
+    }
+    if (moved) { render(playFig); showVars(); }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  /* bola deslizando (fase 3, passo 2) */
+  var slideFig = figs.filter(function (f) { return f._name === "f3slide"; })[0];
+  var slideOut = document.getElementById("slide-out");
+  if (!reduce) {
+    var pause = 0;
+    setInterval(function () {
+      if (pause > 0) { pause--; if (pause === 0) slide.x = 400; }
+      else { slide.x += 5; if (slide.x > 860) pause = 40; }
+      render(slideFig);
+      slideOut.textContent = "personagem_x = " + slide.x;
+    }, 1000 / 30);
+  } else {
+    slide.x = 560; slideOut.textContent = "personagem_x = 560 (e continua crescendo)";
+  }
+
+  renderAll();
+  showVars();
+
+  /* ---------- quiz ---------- */
+  document.querySelectorAll(".q").forEach(function (q) {
+    var why = q.querySelector(".why");
+    q.querySelectorAll("button[data-opt]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        q.querySelectorAll("button").forEach(function (x) { x.classList.remove("right", "wrong"); });
+        var ok = b.getAttribute("data-opt") === q.getAttribute("data-answer");
+        b.classList.add(ok ? "right" : "wrong");
+        why.textContent = q.getAttribute(ok ? "data-ok" : "data-no");
+        why.className = "why " + (ok ? "ok" : "no");
+      });
+    });
+  });
+
+  /* ---------- missões (progresso salvo neste navegador) ---------- */
+  var KEY = "ccj-missoes-f123", saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+  function refresh(m) {
+    var boxes = m.querySelectorAll("input[type=checkbox]"), n = 0;
+    boxes.forEach(function (b) { if (b.checked) n++; });
+    m.querySelector(".meter i").style.width = (n / boxes.length * 100) + "%";
+    m.querySelector(".done-msg").hidden = n !== boxes.length;
+    var nav = document.querySelector('[data-nav="' + m.getAttribute("data-mission") + '"]');
+    nav.querySelector(".count").textContent = n + "/" + boxes.length;
+    nav.classList.toggle("done", n === boxes.length);
+  }
+  document.querySelectorAll(".mission").forEach(function (m) {
+    m.querySelectorAll("input[type=checkbox]").forEach(function (b) {
+      b.checked = !!saved[b.id];
+      b.addEventListener("change", function () { saved[b.id] = b.checked; save(); refresh(m); });
+    });
+    refresh(m);
+  });
+
+  /* ---------- guia lateral: andar de passo em passo e de fase em fase ---------- */
+  var stops = [{ el: document.getElementById("inicio"), fase: -1, top: "Início", sub: "" }];
+  var faseIni = [];
+  document.querySelectorAll("#antes, section.block[id^='fase-']").forEach(function (sec) {
+    var num = sec.id === "antes" ? "" : sec.id.slice(5);
+    var nome = num ? "Fase " + num : "Antes";
+    var fi = faseIni.length, n = 0;
+    faseIni.push(stops.length);
+    stops.push({ el: sec, fase: fi, top: nome, sub: num ? "Começo" : "de começar" });
+    sec.querySelectorAll("article.step, .mission, .quiz, .challenges, .gloss, .errs").forEach(function (el) {
+      var alvo = el, sub;
+      if (el.matches("article.step")) sub = "Passo " + (++n);
+      else if (el.classList.contains("mission")) sub = "Missão";
+      else if (el.classList.contains("quiz")) { alvo = el.closest(".panel"); sub = "Quiz"; }
+      else if (el.classList.contains("challenges")) sub = "Desafios";
+      else { alvo = el.previousElementSibling || el; sub = el.classList.contains("gloss") ? "Palavras" : "Deu erro?"; }
+      stops.push({ el: alvo, fase: fi, top: nome, sub: sub });
+    });
+  });
+
+  var topo = document.querySelector(".nav"), guia = document.querySelector(".guia");
+  var onde = guia.querySelector(".onde"), btn = {};
+  guia.querySelectorAll("button").forEach(function (b) { btn[b.getAttribute("data-go")] = b; });
+  var atual = 0, fixo = null, pedido = false;
+
+  function alvos() {
+    var f = stops[atual].fase;
+    return {
+      "passo-prev": atual > 0 ? atual - 1 : null,
+      "passo-next": atual < stops.length - 1 ? atual + 1 : null,
+      "fase-prev": f < 0 ? null : (f === 0 ? 0 : faseIni[f - 1]),
+      "fase-next": f < faseIni.length - 1 ? faseIni[f + 1] : null
+    };
+  }
+  function mostra() {
+    var s = stops[atual], a = alvos();
+    onde.querySelector("b").textContent = s.top;
+    onde.querySelector("span").textContent = s.sub;
+    Object.keys(btn).forEach(function (k) { btn[k].disabled = a[k] === null; });
+  }
+  function calcula() {
+    pedido = false;
+    // No celular a barra de cima fica mais alta: o pulo não pode parar escondido embaixo dela.
+    document.documentElement.style.scrollPaddingTop = (topo.offsetHeight + 12) + "px";
+    if (fixo !== null) { atual = fixo; mostra(); return; }
+    var lim = topo.offsetHeight + 60, i = 0;
+    for (var k = 1; k < stops.length; k++) {
+      if (stops[k].el.getBoundingClientRect().top > lim) break;
+      i = k;
+    }
+    atual = i;
+    mostra();
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(calcula); } }
+
+  guia.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    var j = alvos()[b.getAttribute("data-go")];
+    if (j === null) return;
+    // Os últimos blocos da página não conseguem subir até o topo: guarda para onde a criança pediu para ir.
+    fixo = atual = j;
+    stops[j].el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    mostra();
+  });
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      var noGuia = !!e.target.nodeType && guia.contains(e.target) && (e.type !== "keydown" || e.key === "Enter" || e.key === " ");
+      if (fixo !== null && !noGuia) { fixo = null; agenda(); }
+    }, { passive: true });
+  });
+  window.addEventListener("scroll", agenda, { passive: true });
+  window.addEventListener("resize", agenda);
+  calcula();
+
+  /* ---------- labirinto de abertura ---------- */
+  var MAP = [
+    "###############",
+    "#.............#",
+    "#.###.###.###.#",
+    "#.#.........#.#",
+    "#.#.##.#.##.#.#",
+    "#.............#",
+    "#.###.###.###.#",
+    "#.............#",
+    "###############"
+  ];
+  var hc = document.getElementById("hero-maze"), hx = hc.getContext("2d"), C = 32;
+  var path = [];
+  for (var c = 1; c <= 13; c++) path.push([c, 1]);
+  for (var r = 2; r <= 7; r++) path.push([13, r]);
+  for (c = 12; c >= 1; c--) path.push([c, 7]);
+  for (r = 6; r >= 2; r--) path.push([1, r]);
+  var ITEMS = [[4,1,"🙏"],[10,1,"📖"],[13,4,"⛪"],[9,7,"❤️"],[4,7,"🤝"],[1,4,"🙏"],[7,3,"📖"]];
+  var eaten = {}, pos = 0, ghost = 4, gdir = 1, score = 0;
+  function drawHero(frac) {
+    hx.fillStyle = "#0b1433"; hx.fillRect(0, 0, 480, 288);
+    for (var y = 0; y < MAP.length; y++) for (var x = 0; x < 15; x++) {
+      if (MAP[y][x] === "#") {
+        hx.fillStyle = "#2446c9"; hx.fillRect(x * C + 3, y * C + 3, C - 6, C - 6);
+        hx.strokeStyle = "#6d8bff"; hx.lineWidth = 2; hx.strokeRect(x * C + 6, y * C + 6, C - 12, C - 12);
+      }
+    }
+    hx.textAlign = "center"; hx.textBaseline = "middle"; hx.font = "18px 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif";
+    ITEMS.forEach(function (it, i) { if (!eaten[i]) hx.fillText(it[2], it[0] * C + 16, it[1] * C + 17); });
+    hx.fillText("😡", ghost * C + 16, 5 * C + 17);
+    var a = path[pos], b = path[(pos + 1) % path.length];
+    var px = (a[0] + (b[0] - a[0]) * frac) * C + 16, py = (a[1] + (b[1] - a[1]) * frac) * C + 16;
+    var mouth = 0.25 * Math.abs(Math.sin(frac * Math.PI)), ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+    hx.fillStyle = "#ffd700"; hx.beginPath(); hx.moveTo(px, py);
+    hx.arc(px, py, 12, ang + mouth * Math.PI, ang + (2 - mouth) * Math.PI); hx.closePath(); hx.fill();
+    hx.font = "bold 14px 'Pixelify Sans', monospace"; hx.fillStyle = "#ffd700"; hx.textAlign = "left";
+    hx.fillText("ESTATURA " + score, 8, 16);
+  }
+  if (reduce) { drawHero(0); }
+  else {
+    var hs = 0, ht = 0;
+    (function step(t) {
+      if (!ht) ht = t;
+      var f = (t - ht) / 170;
+      if (f >= 1) {
+        ht = t; f = 0; pos = (pos + 1) % path.length;
+        if (pos === 0) { eaten = {}; score = 0; }
+        ITEMS.forEach(function (it, i) { if (!eaten[i] && it[0] === path[pos][0] && it[1] === path[pos][1]) { eaten[i] = 1; score++; } });
+        hs++; if (hs % 2 === 0) { ghost += gdir; if (ghost >= 11 || ghost <= 3) gdir = -gdir; }
+      }
+      drawHero(f);
+      requestAnimationFrame(step);
+    })(performance.now());
+  }
+})();
+</script>
