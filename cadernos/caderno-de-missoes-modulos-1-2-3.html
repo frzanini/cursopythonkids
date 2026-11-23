@@ -103,6 +103,8 @@ code {
   background: var(--idea-soft); color: var(--ink);
   padding: .08em .35em; border-radius: 6px;
 }
+/* Sem ligaduras: a fonte de código juntaria != em ≠ e >= em ≥, e a criança copiaria o símbolo errado. */
+code, pre, kbd, .vars, .coord, .mapa-letras { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
 kbd {
   font-family: var(--f-code); font-size: .82em; font-weight: 700;
   border: 1px solid var(--line); border-bottom-width: 3px;
@@ -1681,6 +1683,7 @@ pgzrun.go()</pre></div>
     <span class="tag pixel" style="color: var(--wall); font-size: .85rem;">Próxima fase</span>
     <h3>Os muros do labirinto</h3>
     <p>Na Fase 4 o seu personagem vai ganhar paredes: um labirinto desenhado a partir de um mapa, e o personagem não vai mais conseguir atravessar parede nem sair da tela. Guarde bem o seu <code>jogo.py</code>. Ele é o começo do seu jogo inteiro.</p>
+    <a href="caderno-de-missoes-modulos-4-5.html#fase-4" style="align-self:flex-start; text-decoration:none; font-weight:600; border:2px solid var(--wall); border-radius:999px; padding:6px 16px;">Abrir o caderno das Fases 4 e 5 →</a>
   </div>
 </section>
 

@@ -30,6 +30,23 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Feito
 
+- 2026-11-23 — **Caderno de missões das Fases 4 e 5 publicado**
+  (`cadernos/caderno-de-missoes-modulos-4-5.html`), no mesmo padrão do caderno das Fases 1-3:
+  experimento no terminal + passos com código (linhas novas marcadas), janelinha do que deve
+  aparecer, missão, quiz, desafios, código completo (idêntico ao `exemplo.py`), palavras novas e
+  "deu erro?". Janelinhas interativas novas: laboratório da lista (índice, `len`, `for`, o
+  `IndexError` do `habitos[5]`), leitor do mapa (`MAPA[linha][coluna]` ao passar o mouse) e os dois
+  `for` desenhando as paredes em câmera lenta, labirinto jogável em três versões (atravessa
+  parede / para na parede com o `IndexError` da ponta direita e o índice negativo da esquerda,
+  igual ao Python / com túnel), laboratório da mochila (`append`, `in`, `remove`, `ValueError`) e
+  coleta dos 116 hábitos com atalho para testar o parabéns. Mapa de missões (`cadernos/index.html`)
+  libera as Fases 4 e 5 (5 de 12); o caderno das Fases 1-3 ganhou o link para o novo. Corrigido nos
+  dois cadernos: a fonte de código juntava `!=` em `≠` e `>=` em `≥` (ligaduras desligadas).
+
+- 2026-09-29 — **Cadernos publicados no GitHub Pages + mapa de missões** (`cadernos/`, workflow
+  `.github/workflows/pages.yml`): caderno das Fases 1-3 com navegação lateral e `index.html` como
+  trilha das fases 0-12, lendo o progresso das missões salvo no navegador.
+
 - 2026-09-29 — **Módulos 4 e 5 escritos** (`docs/modulo-04-os-muros-do-labirinto/` e
   `docs/modulo-05-os-bons-habitos-no-mapa/`: `material-professor.md`, `material-aluno.md`,
   `exemplo.py`). Módulo 4: listas, índice, `len`, `for`/`range`, laço dentro de laço, operadores

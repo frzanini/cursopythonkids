@@ -1,0 +1,2201 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crescendo como Jesus · Fases 4 e 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=JetBrains+Mono:wght@400;700&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+/* Layout: uma trilha de fases, como o mapa de um labirinto. Coluna de leitura larga,
+   e cada passo traz ao lado uma "janela do jogo" mostrando o que deve aparecer quando você rodar. */
+:root {
+  --ground: #eef6fb;
+  --surface: #ffffff;
+  --ink: #18264a;
+  --ink-soft: #4b5b7e;
+  --line: #cbd9ea;
+  --wall: #2446c9;
+  --gold: #f2b705;
+  --gold-ink: #5c4300;
+  --gold-soft: #fff4cc;
+  --leaf: #17835a;
+  --leaf-soft: #e1f5ea;
+  --coral: #cc3f33;
+  --coral-soft: #fde9e7;
+  --idea-soft: #e5ecff;
+  --code-bg: #131d3b;
+  --code-ink: #e6ecfb;
+  --code-dim: #8a98bf;
+  --code-new: rgba(242, 183, 5, .16);
+  --syn-kw: #ff8fb1;
+  --syn-str: #9be39b;
+  --syn-num: #ffc861;
+  --syn-pg: #7fd3ff;
+  --syn-const: #ffd96b;
+  --syn-fn: #c6a8ff;
+  --f-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --f-code: "JetBrains Mono", Consolas, "Courier New", monospace;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0d1530;
+    --surface: #152042;
+    --ink: #eaf0ff;
+    --ink-soft: #a8b5d6;
+    --line: #2a3a66;
+    --wall: #6d8bff;
+    --gold: #f7c533;
+    --gold-ink: #ffe28a;
+    --gold-soft: #2d2811;
+    --leaf: #52cf95;
+    --leaf-soft: #10302a;
+    --coral: #ff8474;
+    --coral-soft: #3a1b22;
+    --idea-soft: #1b2958;
+    --code-bg: #0a1126;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0d1530;
+  --surface: #152042;
+  --ink: #eaf0ff;
+  --ink-soft: #a8b5d6;
+  --line: #2a3a66;
+  --wall: #6d8bff;
+  --gold: #f7c533;
+  --gold-ink: #ffe28a;
+  --gold-soft: #2d2811;
+  --leaf: #52cf95;
+  --leaf-soft: #10302a;
+  --coral: #ff8474;
+  --coral-soft: #3a1b22;
+  --idea-soft: #1b2958;
+  --code-bg: #0a1126;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.65;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: -.01em; }
+h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; }
+h3 { font-size: 1.5rem; font-weight: 800; }
+h4 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--wall); }
+code {
+  font-family: var(--f-code); font-size: .86em;
+  background: var(--idea-soft); color: var(--ink);
+  padding: .08em .35em; border-radius: 6px;
+}
+/* Sem ligaduras: a fonte de código juntaria != em ≠ e >= em ≥, e a criança copiaria o símbolo errado. */
+code, pre, kbd, .vars, .coord, .mapa-letras { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+kbd {
+  font-family: var(--f-code); font-size: .82em; font-weight: 700;
+  border: 1px solid var(--line); border-bottom-width: 3px;
+  background: var(--surface); color: var(--ink);
+  padding: .05em .45em; border-radius: 7px; white-space: nowrap;
+}
+ul, ol { margin: 0; padding-left: 1.3em; max-width: 66ch; }
+li + li { margin-top: .35em; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+.pixel { font-family: var(--f-pixel); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+.stack { display: flex; flex-direction: column; gap: 18px; }
+
+/* ---------- barra de navegação ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.nav .brand { font-family: var(--f-display); font-weight: 800; font-size: 1.1rem; margin-right: auto; color: var(--ink); text-decoration: none; }
+.nav a.lvl {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--ink);
+  border: 2px solid var(--line); background: var(--surface);
+  border-radius: 999px; padding: 4px 12px 4px 6px; font-size: .88rem; font-weight: 600;
+}
+.nav a.lvl:hover { border-color: var(--wall); }
+.nav a.mapa {
+  text-decoration: none; color: var(--wall); font-weight: 600; font-size: .9rem;
+  border: 2px solid var(--wall); border-radius: 999px; padding: 3px 12px;
+}
+.nav a.mapa:hover { background: var(--wall); color: var(--surface); }
+.nav .dot {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
+  display: grid; place-items: center; font-family: var(--f-display); font-size: .9rem; font-weight: 800;
+}
+:root .nav .dot { color: #3d2d00; }
+.nav .count { color: var(--ink-soft); font-variant-numeric: tabular-nums; font-weight: 400; }
+.nav a.lvl.done { border-color: var(--leaf); }
+.nav a.lvl.done .count { color: var(--leaf); font-weight: 600; }
+
+/* ---------- abertura ---------- */
+.hero { padding-block: 48px 28px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+.eyebrow { color: var(--wall); font-size: .95rem; }
+.hero h1 { margin-top: 10px; }
+.hero h1 .gold { color: var(--gold); -webkit-text-stroke: 0; }
+.verse {
+  margin: 20px 0 0; padding: 14px 18px; border-left: 5px solid var(--gold);
+  background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1.08rem; max-width: 60ch;
+}
+.verse cite { display: block; font-style: normal; color: var(--ink-soft); font-size: .9rem; margin-top: 4px; }
+.hero .lead { margin-top: 18px; font-size: 1.08rem; }
+.demo {
+  background: #0b1433; border-radius: 18px; padding: 12px; margin: 0;
+  box-shadow: 0 18px 40px -22px rgba(10, 20, 60, .6);
+}
+.demo canvas { display: block; width: 100%; height: auto; border-radius: 10px; }
+.demo figcaption { color: #cdd7f5; font-size: .9rem; padding: 10px 6px 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .85rem;
+  border-radius: 999px; padding: 3px 10px; border: 1px solid var(--line); background: var(--surface);
+}
+.chip.good { border-color: var(--leaf); }
+.chip.bad { border-color: var(--coral); }
+
+/* ---------- parede de labirinto (divisória) ---------- */
+.maze-wall {
+  height: 14px; margin-block: 44px; border: 3px solid var(--wall); border-radius: 999px;
+  position: relative; opacity: .8;
+}
+.maze-wall::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: -60px 0 0 -2px var(--gold), 60px 0 0 -2px var(--gold), -120px 0 0 -2px var(--gold), 120px 0 0 -2px var(--gold);
+}
+
+/* ---------- seções ---------- */
+section.block { display: flex; flex-direction: column; gap: 22px; }
+.phase-head { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+.badge {
+  width: 96px; height: 96px; border-radius: 50%; background: var(--gold);
+  display: grid; place-items: center; text-align: center; color: #3d2d00;
+  font-family: var(--f-pixel); font-weight: 700; line-height: 1;
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.14);
+}
+.badge small { display: block; font-size: .72rem; letter-spacing: .1em; }
+.badge b { display: block; font-family: var(--f-display); font-weight: 800; font-size: 2.6rem; margin-top: 2px; }
+.phase-head p { color: var(--ink-soft); margin-top: 6px; font-size: 1.05rem; }
+.learn { display: flex; flex-wrap: wrap; gap: 8px; }
+.learn span {
+  font-size: .88rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 4px 10px;
+}
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
+}
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.two > * { min-width: 0; }
+
+/* passos */
+.step {
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 26px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px;
+}
+.step.solo { grid-template-columns: minmax(0, 1fr); }
+.step-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.step-title { display: flex; align-items: center; gap: 12px; }
+.step-num {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold); color: #3d2d00; display: grid; place-items: center;
+  font-family: var(--f-display); font-weight: 800; font-size: 1.2rem;
+}
+.side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
+
+/* avisos */
+.note { border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.note .tag { font-size: .8rem; }
+.note.run { background: var(--leaf-soft); }
+.note.run .tag { color: var(--leaf); }
+.note.idea { background: var(--idea-soft); }
+.note.idea .tag { color: var(--wall); }
+.note.oops { background: var(--coral-soft); }
+.note.oops .tag { color: var(--coral); }
+.note.gold { background: var(--gold-soft); }
+.note.gold .tag { color: var(--gold-ink); }
+
+/* código */
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-ink);
+  border-radius: 12px; padding: 14px 0; overflow-x: auto;
+  font-family: var(--f-code); font-size: 15px; line-height: 1.6;
+}
+pre .ln { display: block; padding-inline: 16px; min-height: 1.6em; white-space: pre; }
+pre .ln.new { background: var(--code-new); box-shadow: inset 4px 0 0 #f2b705; }
+pre .kw { color: var(--syn-kw); font-weight: 700; }
+pre .str { color: var(--syn-str); }
+pre .num { color: var(--syn-num); }
+pre .pg { color: var(--syn-pg); }
+pre .const { color: var(--syn-const); }
+pre .fn { color: var(--syn-fn); font-weight: 700; }
+pre .com { color: var(--code-dim); font-style: italic; }
+pre.term .ln::before { content: "> "; color: var(--syn-str); }
+pre.term .ln.out::before { content: ""; }
+pre.term .ln.out { color: var(--code-dim); }
+.code-label { font-size: .8rem; color: var(--ink-soft); margin-bottom: -6px; }
+.legend-new { font-size: .85rem; color: var(--ink-soft); }
+.legend-new i { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; background: var(--code-new); box-shadow: inset 3px 0 0 #f2b705; border-radius: 3px; }
+
+/* janela do jogo (simulação) */
+.mock { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #1d2433; }
+.mock-bar {
+  display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+  background: #e9edf5; color: #26304a; font-size: .78rem; font-family: "Segoe UI", system-ui, sans-serif;
+}
+.mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: #c3cad8; }
+.mock-bar i:first-child { margin-left: auto; order: 3; }
+.mock-bar .mock-title { order: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mock canvas { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.mock-cap { font-size: .82rem; color: var(--ink-soft); }
+.coord {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 8px; padding: 6px 10px;
+}
+
+/* laboratório / controles */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls label { font-size: .88rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: 4px; }
+select, input[type="text"] {
+  font: inherit; font-size: .95rem; padding: 6px 10px; border-radius: 10px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+}
+button {
+  font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
+  border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 6px 14px;
+}
+button:hover { border-color: var(--wall); }
+.pad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 44px); gap: 6px; }
+.pad button { padding: 0; font-size: 1.2rem; }
+.pad .u { grid-column: 2; grid-row: 1; }
+.pad .l { grid-column: 1; grid-row: 2; }
+.pad .d { grid-column: 2; grid-row: 2; }
+.pad .r { grid-column: 3; grid-row: 2; }
+.pad button.on { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.vars {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 10px 14px;
+  display: grid; grid-template-columns: auto auto; gap: 2px 14px; justify-content: start;
+}
+.vars .t { color: var(--syn-str); font-weight: 700; }
+.vars .f { color: var(--code-dim); }
+
+/* árvore de pastas */
+.tree { font-family: var(--f-code); font-size: .92rem; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 16px; line-height: 1.8; }
+.tree .hl { background: var(--gold-soft); color: var(--gold-ink); border-radius: 6px; padding: 0 6px; font-weight: 700; }
+.tree .dim { color: var(--ink-soft); font-family: var(--f-body); font-size: .85rem; }
+
+/* laço do jogo */
+.loop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.loop .box { border: 2px solid var(--wall); border-radius: 12px; padding: 10px 14px; background: var(--surface); }
+.loop .box b { font-family: var(--f-code); }
+.loop .arrow { font-family: var(--f-pixel); color: var(--wall); font-size: 1.1rem; }
+
+/* missão */
+.mission { border: 3px solid var(--gold); background: var(--surface); border-radius: var(--radius); padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+.mission ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mission li { margin: 0; }
+.mission label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.mission input { width: 22px; height: 22px; margin-top: 4px; accent-color: var(--leaf); flex: none; }
+.mission input:checked + span { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--leaf); }
+.meter { height: 12px; border-radius: 999px; background: var(--ground); border: 1px solid var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--leaf); transition: width .3s; }
+.mission .done-msg { color: var(--leaf); font-weight: 600; }
+
+/* desafios e segredos */
+details { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+details > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 10px; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "+"; font-family: var(--f-pixel); color: var(--wall); font-size: 1.2rem; width: 14px; }
+details[open] > summary::before { content: "−"; }
+details > .in { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.challenges { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.challenge { display: flex; flex-direction: column; gap: 12px; }
+.challenge .tag { font-size: .8rem; color: var(--wall); }
+
+/* quiz */
+.quiz { display: flex; flex-direction: column; gap: 16px; }
+.q { display: flex; flex-direction: column; gap: 8px; }
+.q p { font-weight: 600; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts button.right { background: var(--leaf-soft); border-color: var(--leaf); }
+.opts button.wrong { background: var(--coral-soft); border-color: var(--coral); }
+.why { font-size: .95rem; min-height: 1.5em; }
+.why.ok { color: var(--leaf); }
+.why.no { color: var(--coral); }
+
+/* glossário */
+.gloss { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.gloss div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: .95rem; }
+.gloss dt { font-weight: 600; }
+.gloss dd { margin: 4px 0 0; color: var(--ink-soft); }
+
+.errs { display: flex; flex-direction: column; gap: 10px; }
+.err { display: grid; grid-template-columns: minmax(0, 14rem) 1fr; gap: 16px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--coral); border-radius: 10px; font-size: .95rem; }
+.err b { font-family: var(--f-code); font-size: .85rem; overflow-wrap: anywhere; }
+
+footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
+
+/* ---------- guia lateral: passo anterior/próximo e fase anterior/próxima ---------- */
+.guia {
+  position: fixed; z-index: 20; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 76px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+  padding: 8px 6px; border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 2px solid var(--line); box-shadow: 0 6px 20px rgba(10, 20, 50, .14);
+  backdrop-filter: blur(8px);
+}
+.guia button {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: 6px 2px 4px; border-radius: 12px; font-size: .72rem; line-height: 1.15;
+}
+.guia button svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.guia button.passo { font-size: .8rem; }
+.guia button.next { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.guia button.next:hover { border-color: var(--wall); }
+.guia button:disabled { opacity: .35; cursor: default; border-color: var(--line); }
+.guia button.next:disabled { background: var(--surface); color: var(--ink); }
+.guia .onde { text-align: center; padding: 4px 0; line-height: 1.2; }
+.guia .onde b {
+  display: block; font-family: var(--f-display); font-weight: 800; font-size: 1rem; color: var(--wall);
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.guia .onde span { display: block; font-size: .78rem; color: var(--ink-soft); font-weight: 600; }
+@media (min-width: 721px) and (max-width: 1299px) {
+  .wrap { padding-right: 104px; }
+}
+@media (max-width: 720px) {
+  .guia {
+    top: auto; transform: none; left: 0; right: 0; bottom: 0; width: auto;
+    flex-direction: row; justify-content: center; gap: 6px;
+    border-radius: 16px 16px 0 0; border-width: 2px 0 0;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .guia button { flex: 1 1 0; max-width: 84px; }
+  .guia .onde { flex: 1 1 0; max-width: 92px; align-self: center; }
+  footer { padding-bottom: 110px; }
+}
+
+@media (max-width: 980px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-width: 460px; }
+}
+@media (max-width: 700px) {
+  body { font-size: 17px; }
+  .two, .challenges { grid-template-columns: 1fr; }
+  .phase-head { grid-template-columns: 1fr; }
+  .badge { width: 76px; height: 76px; }
+  .badge b { font-size: 1.9rem; }
+  .step, .panel, .mission { padding: 18px; }
+  .err { grid-template-columns: 1fr; gap: 4px; }
+  .nav .brand { flex: 1 1 60%; }
+  pre { font-size: 13.5px; }
+}
+</style>
+
+<style>
+/* ---------- extras do caderno das Fases 4 e 5 ---------- */
+.mock { position: relative; }
+.mock canvas:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+.crash {
+  position: absolute; left: 0; right: 0; bottom: 0; top: 28px;
+  background: rgba(10, 15, 35, .94); color: #ffc2b8; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 10px; justify-content: center;
+}
+.crash[hidden] { display: none; }
+.crash pre { background: transparent; padding: 0; font-size: 12px; color: #ffc2b8; white-space: pre-wrap; }
+.crash p { color: #fff; font-size: .9rem; }
+.crash button { align-self: flex-start; }
+.cells { display: flex; flex-wrap: wrap; gap: 6px; }
+.cell {
+  min-width: 52px; text-align: center; border: 2px solid var(--line); border-radius: 10px;
+  background: var(--surface); padding: 4px 8px; font-size: .88rem; line-height: 1.3;
+  transition: border-color .15s, background .15s;
+}
+.cell small { display: block; font-family: var(--f-code); color: var(--ink-soft); font-size: .75rem; }
+.cell.hit { border-color: var(--gold); background: var(--gold-soft); }
+.cell.letra { min-width: 40px; font-family: var(--f-code); font-weight: 700; }
+.cells .vazia { color: var(--ink-soft); font-size: .9rem; padding: 6px 2px; }
+.lab-out { min-height: 4.8em; }
+.side pre.term .ln { white-space: pre-wrap; overflow-wrap: anywhere; }
+.lab-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-btns button { font-family: var(--f-code); font-size: .82rem; padding: 4px 10px; }
+.lab-btns button.bad { border-color: var(--coral); }
+.ultimo { font-size: .85rem; color: var(--ink-soft); min-height: 2.6em; }
+.ultimo b { font-family: var(--f-code); color: var(--ink); font-weight: 700; }
+.mapa-letras { font-family: var(--f-code); font-size: 13px; line-height: 1.25; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 12px 14px; overflow-x: auto; white-space: pre; margin: 0; }
+.mapa-letras .w { color: #7f9bff; }
+.mapa-letras .d { color: var(--syn-str); }
+.mapa-letras .i { color: var(--code-dim); }
+.vazio-cap { color: var(--ink-soft); font-size: .85rem; }
+.hero-placar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.hero-placar span { font-family: var(--f-code); font-size: .82rem; background: #17224a; color: #e6ecfb; border-radius: 8px; padding: 3px 10px; }
+.prox-link { display: inline-flex; align-self: flex-start; text-decoration: none; font-weight: 600; border: 2px solid var(--wall); border-radius: 999px; padding: 6px 16px; }
+.prox-link:hover { background: var(--wall); color: var(--surface); }
+</style>
+
+<nav class="nav" aria-label="Fases do caderno">
+  <div class="wrap">
+    <a class="mapa" href="index.html">← Mapa</a>
+    <a class="brand" href="#inicio">Crescendo como Jesus</a>
+    <a class="lvl" href="#fase-4" data-nav="f4"><span class="dot">4</span>Labirinto <span class="count">0/6</span></a>
+    <a class="lvl" href="#fase-5" data-nav="f5"><span class="dot">5</span>Bons hábitos <span class="count">0/5</span></a>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow pixel">Caderno de missões · Fases 4 e 5</div>
+      <h1>Crescendo como <span class="gold">Jesus</span></h1>
+      <blockquote class="verse">
+        "E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."
+        <cite>Lucas 2:52</cite>
+      </blockquote>
+      <p class="lead">O seu personagem já anda. Agora ele ganha um <b>labirinto de verdade</b>, desenhado a partir de um mapa feito de letras, e os corredores se enchem de <b>bons hábitos</b> para coletar, um de cada vez. Ninguém cresce de uma vez só: é um pouco por dia.</p>
+      <div class="legend" aria-label="Bons hábitos do jogo">
+        <span class="chip good">🙏 Oração</span><span class="chip good">📖 Bíblia</span><span class="chip good">⛪ Culto</span><span class="chip good">❤️ Obedecer aos pais</span><span class="chip good">🤝 Ajudar o próximo</span>
+      </div>
+    </div>
+    <figure class="demo">
+      <canvas id="hero-maze" width="800" height="600" aria-label="Animação: a bola dourada anda sozinha pelo labirinto azul e as bolinhas verdes somem quando ela passa por cima"></canvas>
+      <figcaption>É assim que o seu jogo vai ficar no fim da Fase 5: o labirinto, o túnel do meio e os bons hábitos sumindo quando você passa.
+        <span class="hero-placar"><span id="hero-len">len(habitos) = 116</span></span>
+      </figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ANTES DE COMEÇAR ================= -->
+<section class="block" id="antes">
+  <h2>Antes de começar</h2>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Você vem da Fase 3</h3>
+      <p>Este caderno continua o mesmo <code>jogo.py</code> das Fases 1, 2 e 3, na raiz da pasta <code>crescendo-como-jesus</code>. Ele precisa estar assim:</p>
+      <ul>
+        <li>a bola dourada anda nas 4 direções com as setas (<code>update()</code> com <code>keyboard</code>);</li>
+        <li>a barra de espaço traz a bola de volta ao meio (<code>on_key_down(key)</code>).</li>
+      </ul>
+      <p>Ainda não chegou lá? Termine primeiro no <a href="caderno-de-missoes-modulos-1-2-3.html#fase-3">caderno das Fases 1 a 3</a>.</p>
+      <div class="tree" aria-label="Estrutura de pastas">
+        📁 crescendo-como-jesus<br>
+        &nbsp;&nbsp;&nbsp;📄 <span class="hl">jogo.py</span> <span class="dim">← o mesmo de sempre</span><br>
+        &nbsp;&nbsp;&nbsp;📁 aula-04 <span class="dim">← listas.py (Fase 4)</span><br>
+        &nbsp;&nbsp;&nbsp;📁 aula-05 <span class="dim">← mochila.py (Fase 5)</span><br>
+        &nbsp;&nbsp;&nbsp;📦 .venv
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Como usar este caderno</h3>
+      <ol>
+        <li>Cada fase começa com um <b>experimento</b> num arquivo separado, só com Python. O resultado aparece no <b>terminal</b>.</li>
+        <li>Depois vêm os <b>passos</b> do jogo. Leia o passo inteiro, <b>digite</b> o código, <b>rode</b> e <b>compare</b> com a janelinha ao lado.</li>
+        <li>Muitas janelinhas são de <b>brincar</b>: clique nelas e use as setas do teclado (ou os botões).</li>
+      </ol>
+      <p class="legend-new"><i></i> As linhas marcadas assim no código são as <b>novas</b> daquele passo. As outras você já tem.</p>
+      <div class="note gold">
+        <span class="tag pixel">Hoje tem muita coisa nova</span>
+        <p>A Fase 4 é a mais comprida do curso até aqui. Se não der tempo de terminar, tudo bem: você continua no começo da próxima aula.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 4 ================= -->
+<section class="block" id="fase-4">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>4</b></div></div>
+    <div>
+      <h2>Os muros do labirinto</h2>
+      <p>Você vai escrever um <b>mapa feito de letras</b> e ensinar o computador a ler esse mapa para desenhar as paredes. O personagem passa a andar pelos corredores, sem atravessar parede e sem sair da tela.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>lista</span><span>índice (começa no 0)</span><span><code>len(...)</code></span><span><code>for</code></span><span><code>range(n)</code></span><span><code>for</code> dentro de <code>for</code></span><span><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code> <code>!=</code></span>
+  </div>
+
+  <!-- experimento -->
+  <article class="step" data-sub="Experimento">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">🧪</span><h3>Experimente: listas no terminal</h3></div>
+      <p>Antes de mexer no jogo, crie o arquivo <code>listas.py</code> <b>dentro da pasta <code>aula-04</code></b> (não no <code>jogo.py</code>). Ele não tem <code>pgzrun</code>: é Python puro. Digite e rode com <b>▶ Run Python File</b>:</p>
+      <pre class="py">habitos = ["Oração", "Bíblia", "Culto", "Obedecer aos pais", "Ajudar o próximo"]
+
+print(habitos[0])
+print(habitos[4])
+print(len(habitos))</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · lista e índice</span>
+        <p>Uma <b>lista</b> é uma variável que guarda <b>vários valores em fila</b>, entre <code>[ ]</code> e separados por vírgula.</p>
+        <p>Cada valor tem uma posição, o <b>índice</b>. A contagem começa do <b>0</b>: <code>habitos[0]</code> é o primeiro e <code>habitos[4]</code> é o quinto, o último. <code>len(habitos)</code> diz <b>quantos itens</b> a lista tem.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No terminal aparece:</p>
+        <pre class="term"><span class="ln out">Oração</span><span class="ln out">Ajudar o próximo</span><span class="ln out">5</span></pre>
+      </div>
+      <div class="note oops">
+        <span class="tag pixel">Erre de propósito</span>
+        <p>Troque <code>habitos[4]</code> por <code>habitos[5]</code> e rode. Aparece <code>IndexError: list index out of range</code>: "o índice 5 está <b>fora</b> da lista", que só vai de 0 a 4. Volte para <code>[4]</code> e guarde esse erro na memória. Ele vai aparecer de novo hoje!</p>
+      </div>
+      <p>Agora acrescente, embaixo:</p>
+      <pre class="py">for habito in habitos:
+    print("Bom hábito: " + habito)
+
+for numero in range(5):
+    print(numero)</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · for e range</span>
+        <p><code>for habito in habitos:</code> quer dizer "<b>para cada</b> item da lista, chame ele de <code>habito</code> e faça o que está recuado embaixo". O recuo funciona igual ao do <code>def</code> e do <code>if</code>.</p>
+        <p><code>range(5)</code> é a fila de números <code>0, 1, 2, 3, 4</code>. Começa no 0 e para <b>antes</b> do 5, igual aos índices.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem cinco linhas começando com <code>Bom hábito: </code>, uma para cada item, e depois os números de <code>0</code> a <code>4</code>, um por linha.</p></div>
+      <p>Por último, acrescente:</p>
+      <pre class="py">linha = "#..#"
+print(linha[0])
+print(linha[1])
+
+print(3 &lt; 5)
+print(3 &gt; 5)
+print(5 &gt;= 5)
+print("#" != ".")</pre>
+      <ul>
+        <li>Um <b>texto</b> também é uma fila, só que de <b>letras</b>. <code>linha[0]</code> é a primeira letra, <code>"#"</code>.</li>
+        <li><code>&lt;</code> (menor), <code>&gt;</code> (maior), <code>&lt;=</code> (menor ou igual), <code>&gt;=</code> (maior ou igual), <code>==</code> (igual) e <code>!=</code> (<b>diferente</b>) comparam dois valores e respondem <code>True</code> ou <code>False</code>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem <code>#</code>, <code>.</code>, <code>True</code>, <code>False</code>, <code>True</code>, <code>True</code>, um por linha.</p></div>
+    </div>
+    <div class="side">
+      <div class="panel" style="padding:16px">
+        <h4>Laboratório da lista</h4>
+        <div class="cells" id="lista-cells" aria-label="A lista habitos"></div>
+        <div class="lab-btns" id="lista-btns" aria-label="Escolha o que imprimir"></div>
+        <pre class="term lab-out" id="lista-out" aria-live="polite"><span class="ln out">Clique num botão para "rodar".</span></pre>
+      </div>
+      <div class="panel" style="padding:16px">
+        <h4>Um texto também é uma fila</h4>
+        <div class="cells" id="texto-cells" aria-label="As letras do texto linha"></div>
+        <p class="vazio-cap">Passe o mouse (ou toque) numa letra para ver o índice dela.</p>
+        <pre class="term" id="texto-out" aria-live="polite"><span class="ln">print(linha[0])</span><span class="ln out">#</span></pre>
+      </div>
+    </div>
+  </article>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>O mapa</h3></div>
+      <p>Volte para o <code>jogo.py</code>. Logo depois do <code>import pgzrun</code>, coloque o mapa (o professor passa o texto pronto) e troque o <code>WIDTH = 800</code> e o <code>HEIGHT = 600</code> por este cálculo:</p>
+      <pre class="py" data-new="3-27">import pgzrun
+
+MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    ",
+]
+
+TILE = 40
+
+COLUNAS = len(MAPA[0])
+LINHAS = len(MAPA)
+
+WIDTH = COLUNAS * TILE
+HEIGHT = LINHAS * TILE
+TITLE = "Crescendo como Jesus"</pre>
+      <ul>
+        <li>O <code>MAPA</code> é uma <b>lista de textos</b>: cada texto é uma linha do labirinto. <code>#</code> é parede e <code>.</code> é caminho. Os pontinhos vão virar os bons hábitos na Fase 5.</li>
+        <li>Toda linha tem <b>exatamente 20</b> letras, até as linhas de espaço. A primeira e a última ficam vazias: é onde vão a dica e o seu nome.</li>
+        <li><code>TILE</code> é uma variável <b>nossa</b>: o tamanho de cada quadradinho do mapa, 40 pixels.</li>
+        <li><code>len(MAPA[0])</code> conta as letras da primeira linha (20) e <code>len(MAPA)</code> conta as linhas (15). A janela fica com 20 × 40 = <b>800</b> de largura e 15 × 40 = <b>600</b> de altura.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A janela abre <b>do mesmo tamanho de antes</b>. Ainda não aparece parede nenhuma: o mapa existe, mas ninguém mandou desenhar.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f4s1"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">Igual à Fase 3. A novidade está escondida no código.</p>
+      <pre class="mapa-letras" id="mapa-letras" aria-label="O mapa com o número de cada linha"></pre>
+      <p class="mock-cap">O mapa com o número (índice) de cada linha. Repare: começa no 0 e vai até 14.</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>Desenhar as paredes</h3></div>
+      <p>Junto das outras cores, crie:</p>
+      <pre class="py">COR_DA_PAREDE = "navy"</pre>
+      <p>Dentro da <code>draw()</code>, logo depois do <code>screen.fill(...)</code>, acrescente:</p>
+      <pre class="py" data-new="4-8">def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    # ... o resto da draw() continua igual</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · laço dentro de laço</span>
+        <p>Leia assim: "<b>para cada linha</b>, <b>para cada coluna</b>: se a letra ali é <code>#</code>, desenha um quadrado naquele lugar". É um <code>for</code> <b>dentro</b> de outro <code>for</code>.</p>
+        <p><code>MAPA[linha]</code> é a linha inteira (um texto) e <code>MAPA[linha][coluna]</code> é <b>uma letra</b> dessa linha.</p>
+      </div>
+      <ul>
+        <li>O canto do quadrado fica em <code>coluna * TILE</code> (o <code>x</code>) e <code>linha * TILE</code> (o <code>y</code>). É o mesmo <code>Rect</code> dos botões da Fase 2.</li>
+      </ul>
+      <div class="note gold">
+        <span class="tag pixel">Atenção ao recuo</span>
+        <p>São quatro degraus: o <code>for</code>, o segundo <code>for</code> mais para dentro, o <code>if</code> mais para dentro ainda, e o desenho lá no fundo. Cada degrau quer dizer "isto fica dentro daquilo".</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>O <b>labirinto azul-escuro</b> aparece! A bola da Fase 3 ainda anda <b>por cima</b> das paredes. Isso muda agora.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f4walls" data-grid><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="coord" id="grid-out" aria-live="polite">Passe o mouse no labirinto</p>
+      <div class="controls"><button type="button" id="grid-anim">▶ Ver os dois for desenhando</button></div>
+      <p class="mock-cap">No seu computador é tão rápido que você nem vê. Aqui está em câmera lenta: o <code>for</code> de fora escolhe a linha, o de dentro passa por todas as colunas dela.</p>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>O personagem mora num quadradinho</h3></div>
+      <p>Troque as variáveis <code>personagem_x</code>, <code>personagem_y</code> e <code>VELOCIDADE</code> por estas:</p>
+      <pre class="py" data-new="1-5">INICIO_COLUNA = 9
+INICIO_LINHA = 12
+
+personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"</pre>
+      <p>Na <code>draw()</code>, troque a linha que desenha o personagem por:</p>
+      <pre class="py" data-new="1-3">    x = personagem_coluna * TILE + TILE // 2
+    y = personagem_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)</pre>
+      <p>E ainda:</p>
+      <ul>
+        <li><b>Apague a função <code>update()</code> inteira.</b> Num labirinto, o personagem vai andar <b>um quadradinho por aperto de seta</b>, e isso fica no <code>on_key_down</code>.</li>
+        <li>No <code>on_key_down</code>, troque <code>personagem_x</code> e <code>personagem_y</code> por <code>personagem_coluna</code> e <code>personagem_linha</code> (no <code>global</code> também), e <code>WIDTH // 2</code> e <code>HEIGHT // 2</code> por <code>INICIO_COLUNA</code> e <code>INICIO_LINHA</code>:</li>
+      </ul>
+      <pre class="py" data-new="2,5-6">def on_key_down(key):
+    global personagem_coluna, personagem_linha
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA</pre>
+      <ul>
+        <li>Mude a dica do topo para a faixa vazia de cima:</li>
+      </ul>
+      <pre class="py" data-new="2-3">    screen.draw.text(
+        "Setas: anda um quadradinho. Espaco: volta ao inicio.",
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )</pre>
+      <div class="note idea">
+        <span class="tag pixel">Por que + TILE // 2?</span>
+        <p><code>coluna * TILE</code> é o <b>canto</b> do quadradinho. Somando meio quadradinho (<code>TILE // 2</code>, que dá 20), a bola fica bem no <b>centro</b> dele. A coluna 9 e a linha 12 (contando do 0!) são o espaço vazio no meio do corredor de baixo.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A bola dourada aparece <b>encaixada no corredor de baixo</b>, parada. As setas ainda não fazem nada.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f4s3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">Coluna 9, linha 12. Em pixels, o centro fica em x = 9 × 40 + 20 = <b>380</b> e y = 12 × 40 + 20 = <b>500</b>.</p>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>Andar um quadradinho por aperto</h3></div>
+      <p>Dentro do <code>on_key_down</code>, depois do <code>if</code> do espaço, escreva:</p>
+      <pre class="py" data-new="8-21">def on_key_down(key):
+    global personagem_coluna, personagem_linha
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+
+    nova_coluna = personagem_coluna
+    nova_linha = personagem_linha
+
+    if key == keys.RIGHT:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.LEFT:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.DOWN:
+        nova_linha = personagem_linha + 1
+    if key == keys.UP:
+        nova_linha = personagem_linha - 1
+
+    personagem_coluna = nova_coluna
+    personagem_linha = nova_linha</pre>
+      <ul>
+        <li>Primeiro o jogo <b>pensa</b>: "para onde o personagem <b>quer</b> ir?" (<code>nova_coluna</code>, <code>nova_linha</code>). Depois ele anda.</li>
+        <li><code>keys.RIGHT</code>, <code>keys.LEFT</code>, <code>keys.DOWN</code> e <code>keys.UP</code> são os nomes das setas, em letras MAIÚSCULAS.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Cada aperto de seta anda <b>um quadradinho</b>. Mas o personagem <b>atravessa as paredes</b>! Vamos consertar.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f4play" data-mode="livre"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="mock-cap">Clique na janelinha e use as setas. Repare: ela passa por cima do azul.</p>
+    </div>
+  </article>
+
+  <!-- passo 5 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">5</span><h3>Não atravessar parede</h3></div>
+      <p>Troque as duas últimas linhas (<code>personagem_coluna = nova_coluna</code> e <code>personagem_linha = nova_linha</code>) por:</p>
+      <pre class="py" data-new="20-22">def on_key_down(key):
+    global personagem_coluna, personagem_linha
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+
+    nova_coluna = personagem_coluna
+    nova_linha = personagem_linha
+
+    if key == keys.RIGHT:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.LEFT:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.DOWN:
+        nova_linha = personagem_linha + 1
+    if key == keys.UP:
+        nova_linha = personagem_linha - 1
+
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha</pre>
+      <p><code>!=</code> quer dizer <b>diferente</b>. Leia: "se a letra do lugar novo <b>não é</b> parede, anda". Se for parede, o personagem fica onde está.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>O personagem <b>para na frente das paredes</b>.</p></div>
+      <div class="note oops">
+        <span class="tag pixel">Agora teste isto</span>
+        <p>Vá até o <b>corredor do meio</b> (aquele aberto dos dois lados) e saia pela <b>ponta direita</b>. O jogo fecha com <code>IndexError: string index out of range</code>. É o mesmo erro do experimento! As colunas vão de 0 a 19, e o personagem tentou olhar a <b>coluna 20</b>, que não existe.</p>
+        <p>Pela ponta esquerda não dá erro na hora, mas o personagem <b>some de um jeito esquisito</b>. O próximo passo conserta os dois lados.</p>
+      </div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f4play" data-mode="parede"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas>
+        <div class="crash" hidden><p>💥 A janela do jogo fechou. No terminal apareceu:</p><pre></pre><button type="button" data-rerun>Rodar de novo</button></div>
+      </figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="ultimo" aria-live="polite"></p>
+    </div>
+  </article>
+
+  <!-- passo 6 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">6</span><h3>O túnel</h3></div>
+      <p>Coloque quatro linhas <b>entre</b> os <code>if</code> das setas e o <code>if</code> da parede:</p>
+      <pre class="py" data-new="20-23">def on_key_down(key):
+    global personagem_coluna, personagem_linha
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+
+    nova_coluna = personagem_coluna
+    nova_linha = personagem_linha
+
+    if key == keys.RIGHT:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.LEFT:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.DOWN:
+        nova_linha = personagem_linha + 1
+    if key == keys.UP:
+        nova_linha = personagem_linha - 1
+
+    if nova_coluna &lt; 0:
+        nova_coluna = COLUNAS - 1
+    if nova_coluna &gt;= COLUNAS:
+        nova_coluna = 0
+
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha</pre>
+      <ul>
+        <li>"Saiu pela esquerda (coluna <b>menor que 0</b>)? Aparece na última coluna. Saiu pela direita (coluna <b>20 ou mais</b>)? Aparece na coluna 0." É o <b>túnel</b>.</li>
+        <li>Tem que ficar <b>antes</b> do <code>if</code> da parede: assim o jogo nunca olha uma coluna que não existe.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Pelo corredor do meio, o personagem <b>sai por um lado e entra pelo outro</b>. Nas outras bordas o mapa é fechado com <code>#</code>, então ele nunca sai da tela. A barra de espaço traz ele de volta ao começo.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f4play" data-mode="tunel"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="ultimo" aria-live="polite"></p>
+      <p class="mock-cap">O labirinto completo da Fase 4. Teste as paredes e o túnel.</p>
+    </div>
+  </article>
+
+  <div class="panel">
+    <h3>O que acontece quando você aperta uma seta</h3>
+    <div class="loop" aria-label="Fluxo de um aperto de seta">
+      <div class="box"><b>on_key_down(key)</b><br>uma seta foi apertada</div>
+      <span class="arrow">→</span>
+      <div class="box">calcula <b>nova_coluna</b><br>e <b>nova_linha</b></div>
+      <span class="arrow">→</span>
+      <div class="box">saiu por um lado?<br><b>túnel</b>: aparece do outro</div>
+      <span class="arrow">→</span>
+      <div class="box">o lugar novo é <b>"#"</b>?<br>Não: anda. Sim: fica parado.</div>
+    </div>
+  </div>
+
+  <div class="mission" data-mission="f4">
+    <h3>Sua missão da Fase 4</h3>
+    <p>Marque cada item quando ele estiver funcionando:</p>
+    <ul>
+      <li><label><input type="checkbox" id="f4-a"><span>Rodei o <code>aula-04/listas.py</code> e vi as listas, o <code>for</code> e as comparações no terminal.</span></label></li>
+      <li><label><input type="checkbox" id="f4-b"><span>Coloquei o mapa no <code>jogo.py</code> e a janela nasce do tamanho dele.</span></label></li>
+      <li><label><input type="checkbox" id="f4-c"><span>As paredes são desenhadas com dois <code>for</code>.</span></label></li>
+      <li><label><input type="checkbox" id="f4-d"><span>O personagem mora num quadradinho e anda um quadradinho por aperto.</span></label></li>
+      <li><label><input type="checkbox" id="f4-e"><span>O personagem não atravessa parede.</span></label></li>
+      <li><label><input type="checkbox" id="f4-f"><span>O túnel do meio funciona sem erro.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 4 completa! O seu jogo já tem um labirinto. Salve o <code>jogo.py</code> e o <code>aula-04/listas.py</code>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="b" data-ok="Isso! A contagem começa do 0: [0] é Oração, [1] é Bíblia." data-no="Cuidado: o índice começa do 0. habitos[0] é Oração, então habitos[1] é Bíblia.">
+        <p>1. Com <code>habitos = ["Oração", "Bíblia", "Culto"]</code>, o que é <code>habitos[1]</code>?</p>
+        <div class="opts"><button data-opt="a">"Oração"</button><button data-opt="b">"Bíblia"</button><button data-opt="c">"Culto"</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Certo! Começa no 0 e para antes do 4." data-no="Não. range(4) começa no 0 e para ANTES do 4: 0, 1, 2, 3.">
+        <p>2. Quais números o <code>range(4)</code> dá?</p>
+        <div class="opts"><button data-opt="a">1, 2, 3, 4</button><button data-opt="b">0, 1, 2, 3</button><button data-opt="c">0, 1, 2, 3, 4</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Exato! != é diferente. == é que é igual." data-no="Não. != quer dizer diferente. Quem compara igual é o ==.">
+        <p>3. O que <code>!=</code> quer dizer?</p>
+        <div class="opts"><button data-opt="a">igual</button><button data-opt="b">diferente</button><button data-opt="c">maior</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Isso! Se o túnel viesse depois, o jogo olharia a coluna 20, que não existe, e daria IndexError." data-no="Não é isso. A ordem importa: o túnel conserta a coluna antes de o jogo olhar o MAPA, senão dá IndexError.">
+        <p>4. Por que o túnel precisa vir <b>antes</b> do <code>if</code> da parede?</p>
+        <div class="opts"><button data-opt="a">Para o jogo nunca olhar uma coluna que não existe</button><button data-opt="b">Para o jogo ficar mais rápido</button><button data-opt="c">Tanto faz a ordem</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>W A S D e a bola que avisa</h4>
+      <p>Faça as teclas <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> também andarem. Ou faça o personagem ficar <b>vermelho</b> quando tentar andar para uma parede, e voltar a ser dourado quando andar.</p>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>Para o WASD, crie mais quatro <code>if</code> junto dos das setas: <code>if key == keys.D:</code> faz a mesma coisa que o <code>keys.RIGHT</code>, e assim por diante.</p>
+        <p>Para a cor, use um <code>else</code> no <code>if</code> da parede, mudando o <code>personagem_cor</code>. Ele precisa entrar no <code>global</code>.</p>
+      </div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">    global personagem_coluna, personagem_linha, personagem_cor
+
+    # junto dos if das setas:
+    if key == keys.D:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.A:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.S:
+        nova_linha = personagem_linha + 1
+    if key == keys.W:
+        nova_linha = personagem_linha - 1
+
+    # o if da parede ganha um else:
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha
+        personagem_cor = "gold"
+    else:
+        personagem_cor = "red"</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>O seu próprio labirinto</h4>
+      <ul>
+        <li>Desenhe o seu labirinto trocando <code>#</code> e <code>.</code> de lugar. Mantenha <b>20 letras por linha</b> e as bordas fechadas com <code>#</code>.</li>
+        <li>Mude a <code>COR_DA_PAREDE</code> e a <code>COR_DE_FUNDO</code>.</li>
+        <li>Troque o <code>TILE</code> para <code>30</code>. O que acontece com a janela? Por quê?</li>
+      </ul>
+      <details><summary>Ver a resposta do TILE</summary><div class="in">
+        <p>A janela encolhe para 20 × 30 = <b>600</b> por 15 × 30 = <b>450</b>. Como o <code>WIDTH</code> e o <code>HEIGHT</code> são calculados a partir do mapa e do <code>TILE</code>, tudo se ajusta sozinho. Só a letra da dica pode ficar grande demais.</p>
+      </div></details>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 4 (só para conferir no final)</summary>
+    <div class="in"><p>Use para comparar com o seu, ou para destravar se empacar. Não copie: é digitando que se aprende.</p>
+    <pre class="py">import pgzrun
+
+# O labirinto: uma LISTA de textos. Cada texto é uma linha do mapa.
+#   "#" = parede
+#   "." = caminho (é onde os bons hábitos vão aparecer no Módulo 5)
+#   " " = caminho vazio
+# A primeira e a última linha ficam vazias: é o espaço dos textos.
+# A linha do meio é aberta nas pontas: é o túnel.
+MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    ",
+]
+
+# Tamanho de cada quadradinho do mapa, em pixels
+TILE = 40
+
+COLUNAS = len(MAPA[0])  # quantas letras tem uma linha do mapa (20)
+LINHAS = len(MAPA)      # quantas linhas tem o mapa (15)
+
+WIDTH = COLUNAS * TILE  # 20 x 40 = 800
+HEIGHT = LINHAS * TILE  # 15 x 40 = 600
+
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+COR_DA_PAREDE = "navy"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Onde o personagem começa: coluna e linha do mapa (contando a partir do 0)
+INICIO_COLUNA = 9
+INICIO_LINHA = 12
+
+# O personagem agora mora num quadradinho do mapa
+personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    # As paredes: passa por todas as linhas e, em cada linha, por todas as
+    # colunas. Onde o mapa tem "#", desenha um quadrado.
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    screen.draw.text(
+        "Setas: anda um quadradinho. Espaco: volta ao inicio.",
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    # Do quadradinho (coluna, linha) para os pixels do centro dele
+    x = personagem_coluna * TILE + TILE // 2
+    y = personagem_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)
+
+
+def on_key_down(key):
+    global personagem_coluna, personagem_linha
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+
+    # 1. Para onde o personagem QUER ir?
+    nova_coluna = personagem_coluna
+    nova_linha = personagem_linha
+
+    if key == keys.RIGHT:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.LEFT:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.DOWN:
+        nova_linha = personagem_linha + 1
+    if key == keys.UP:
+        nova_linha = personagem_linha - 1
+
+    # 2. O túnel: saiu por um lado, entra pelo outro
+    if nova_coluna &lt; 0:
+        nova_coluna = COLUNAS - 1
+    if nova_coluna &gt;= COLUNAS:
+        nova_coluna = 0
+
+    # 3. Só anda se lá não for parede
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Lista</dt><dd>Uma variável que guarda vários valores em fila, entre <code>[ ]</code>, separados por vírgula.</dd></div>
+    <div><dt>Item</dt><dd>Cada valor guardado dentro da lista.</dd></div>
+    <div><dt>Índice</dt><dd>A posição de um item, contando <b>a partir do 0</b>: <code>lista[0]</code> é o primeiro.</dd></div>
+    <div><dt><code>len(...)</code></dt><dd>Diz quantos itens tem uma lista, ou quantas letras tem um texto.</dd></div>
+    <div><dt><code>for</code></dt><dd>Repete um bloco de código <b>para cada</b> item de uma lista.</dd></div>
+    <div><dt><code>range(n)</code></dt><dd>A fila de números de <code>0</code> até <code>n - 1</code>, para usar no <code>for</code>.</dd></div>
+    <div><dt>Laço dentro de laço</dt><dd>Um <code>for</code> dentro de outro: para cada linha, passa por cada coluna.</dd></div>
+    <div><dt><code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code> <code>==</code> <code>!=</code></dt><dd>Menor, maior, menor ou igual, maior ou igual, igual, <b>diferente</b>. Respondem <code>True</code> ou <code>False</code>.</dd></div>
+    <div><dt>Mapa</dt><dd>A lista de textos que desenha o labirinto com letras: <code>#</code> parede, <code>.</code> caminho.</dd></div>
+    <div><dt><code>TILE</code></dt><dd>Variável nossa: o tamanho de cada quadradinho do mapa, em pixels.</dd></div>
+    <div><dt><code>keys.RIGHT</code> / <code>.LEFT</code> / <code>.UP</code> / <code>.DOWN</code></dt><dd>Os nomes das setas no Pygame Zero, para usar no <code>on_key_down</code>.</dd></div>
+    <div><dt><code>IndexError</code></dt><dd>Erro de quando você pede uma posição que não existe.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>IndexError: string index out of range</b><span>Falta o túnel (Passo 6), ou ele está <b>depois</b> do <code>if</code> da parede. Ele tem que vir antes.</span></div>
+    <div class="err"><b>O labirinto sai torto</b><span>Alguma linha do mapa não tem 20 letras, ou falta uma <b>vírgula</b> no fim de alguma linha do mapa.</span></div>
+    <div class="err"><b>Só aparece um pedaço das paredes</b><span>Confira o <b>recuo</b>: o segundo <code>for</code> dentro do primeiro, o <code>if</code> dentro do segundo, e o desenho dentro do <code>if</code>.</span></div>
+    <div class="err"><b>O personagem aparece dentro da parede</b><span>O <code>INICIO_COLUNA</code> ou o <code>INICIO_LINHA</code> aponta para um <code>#</code>. Lembre que a contagem começa do 0.</span></div>
+    <div class="err"><b>O personagem não anda</b><span>O <code>global</code> do <code>on_key_down</code> tem que ser <code>global personagem_coluna, personagem_linha</code>.</span></div>
+    <div class="err"><b>NameError: name 'personagem_x' is not defined</b><span>Sobrou algum <code>personagem_x</code> ou <code>personagem_y</code> da Fase 3. Se o erro aparece quando você <b>segura</b> uma seta, sobrou o <code>update()</code>: apague a função inteira.</span></div>
+    <div class="err"><b>keys.right</b><span>É <code>keys.RIGHT</code>, em letras maiúsculas.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 5 ================= -->
+<section class="block" id="fase-5">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>5</b></div></div>
+    <div>
+      <h2>Os bons hábitos no mapa</h2>
+      <p>Os pontinhos <code>.</code> do mapa, que até agora não apareciam, viram <b>bons hábitos</b> espalhados pelos corredores. Quando o personagem passa por cima de um, ele <b>some</b>: você coletou aquele hábito. Quando não sobrar nenhum, aparece uma mensagem de parabéns.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>lista vazia <code>[]</code></span><span><code>.append(...)</code></span><span><code>in</code></span><span><code>.remove(...)</code></span><span>pares <code>(coluna, linha)</code></span>
+  </div>
+
+  <div class="panel">
+    <h3>Ainda não terminou o labirinto?</h3>
+    <p>Se a Fase 4 ainda não está pronta, <b>termine primeiro</b>: o personagem precisa andar sem atravessar parede, e o túnel precisa funcionar sem erro. Depois volte para cá.</p>
+    <p>Ninguém cresce de uma vez. Os bons hábitos (🙏 oração, 📖 Bíblia, ⛪ culto, ❤️ obedecer aos pais, 🤝 ajudar o próximo) são assim: um de cada vez, pelo caminho.</p>
+  </div>
+
+  <!-- experimento -->
+  <article class="step" data-sub="Experimento">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">🧪</span><h3>Experimente: a mochila</h3></div>
+      <p>Crie o arquivo <code>mochila.py</code> <b>dentro da pasta <code>aula-05</code></b> (não no <code>jogo.py</code>). Digite e rode com <b>▶ Run Python File</b>:</p>
+      <pre class="py">mochila = []
+print(mochila)
+print(len(mochila))
+
+mochila.append("Oração")
+mochila.append("Bíblia")
+mochila.append("Culto")
+print(mochila)
+print(len(mochila))</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · lista vazia e append</span>
+        <p><code>mochila = []</code> é uma lista <b>vazia</b>, sem nenhum item. <code>mochila.append("Oração")</code> coloca um item <b>no fim</b> da lista.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No terminal aparece:</p>
+        <pre class="term"><span class="ln out">[]</span><span class="ln out">0</span><span class="ln out">['Oração', 'Bíblia', 'Culto']</span><span class="ln out">3</span></pre>
+      </div>
+      <p>Agora acrescente:</p>
+      <pre class="py">print("Bíblia" in mochila)
+print("Preguiça" in mochila)
+
+mochila.remove("Bíblia")
+print(mochila)
+print("Bíblia" in mochila)</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · in e remove</span>
+        <p><code>"Bíblia" in mochila</code> pergunta: "a Bíblia <b>está</b> na mochila?". Responde <code>True</code> ou <code>False</code>. <code>mochila.remove("Bíblia")</code> <b>tira</b> a Bíblia da lista.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem mais estas linhas. A preguiça não está na mochila! 😄</p>
+        <pre class="term"><span class="ln out">True</span><span class="ln out">False</span><span class="ln out">['Oração', 'Culto']</span><span class="ln out">False</span></pre>
+      </div>
+      <div class="note oops">
+        <span class="tag pixel">Erre de propósito</span>
+        <p>Acrescente <code>mochila.remove("Mentira")</code> no fim e rode. Aparece <code>ValueError: list.remove(x): x not in list</code>: não dá para tirar o que não está lá. Por isso, no jogo, a gente sempre <b>pergunta com <code>in</code> antes</b> de usar o <code>remove</code>. Apague essa linha.</p>
+      </div>
+      <p>Por último, acrescente:</p>
+      <pre class="py">lugar = (3, 2)
+print(lugar[0])
+print(lugar[1])</pre>
+      <p><code>(3, 2)</code> guarda <b>dois números juntos</b>: um <b>par</b>. É igual ao <code>(x, y)</code> que você usa no <code>filled_circle</code> desde a Fase 2. <code>lugar[0]</code> é o primeiro número e <code>lugar[1]</code> é o segundo.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem <code>3</code> e <code>2</code>.</p></div>
+    </div>
+    <div class="side">
+      <div class="panel" style="padding:16px">
+        <h4>Laboratório da mochila</h4>
+        <div class="cells" id="mochila-cells" aria-label="O que está na mochila"></div>
+        <div class="controls">
+          <label for="mochila-item">Item<select id="mochila-item">
+            <option>Oração</option><option>Bíblia</option><option>Culto</option><option>Obedecer aos pais</option><option>Ajudar o próximo</option><option>Preguiça</option><option>Mentira</option>
+          </select></label>
+        </div>
+        <div class="lab-btns">
+          <button type="button" data-moch="append">.append(...)</button>
+          <button type="button" data-moch="in">... in mochila</button>
+          <button type="button" data-moch="remove">.remove(...)</button>
+          <button type="button" data-moch="len">len(mochila)</button>
+          <button type="button" data-moch="limpa">mochila = []</button>
+        </div>
+        <pre class="term lab-out" id="mochila-out" aria-live="polite"><span class="ln">print(mochila)</span><span class="ln out">[]</span></pre>
+      </div>
+    </div>
+  </article>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>A lista de hábitos, lida do mapa</h3></div>
+      <p>Volte para o <code>jogo.py</code>. Depois das variáveis do personagem, <b>fora de qualquer função</b> (sem recuo), escreva:</p>
+      <pre class="py" data-new="6-12">personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"
+
+habitos = []
+for linha in range(LINHAS):
+    for coluna in range(COLUNAS):
+        if MAPA[linha][coluna] == ".":
+            habitos.append((coluna, linha))
+
+print(len(habitos))</pre>
+      <ul>
+        <li>É o <b>mesmo</b> <code>for</code> dentro de <code>for</code> que desenha as paredes. Só que agora ele procura <code>.</code> em vez de <code>#</code> e, em vez de desenhar, <b>guarda</b> o lugar <code>(coluna, linha)</code> na lista.</li>
+        <li>Repare nos <b>dois pares de parênteses</b> em <code>append((coluna, linha))</code>: os de fora são do <code>append</code>, os de dentro fazem o par.</li>
+        <li>Como esse código está <b>fora das funções</b>, ele roda <b>uma vez só</b>, quando o jogo abre.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A janela abre igual, e no <b>terminal</b> aparece:</p>
+        <pre class="term"><span class="ln out">116</span></pre>
+        <p>É a quantidade de pontinhos do mapa. (Se você mudou o mapa, o número vai ser outro, e tudo bem.) Depois de conferir, <b>apague a linha do <code>print</code></b>.</p>
+      </div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f5s1" data-grid5><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="coord" id="grid5-out" aria-live="polite">Passe o mouse nos corredores</p>
+      <p class="mock-cap">A janela não muda. Mas a lista existe: passe o mouse num corredor para ver o par <code>(coluna, linha)</code> que foi guardado ali.</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>Desenhar os hábitos</h3></div>
+      <p>Junto das outras cores, crie:</p>
+      <pre class="py">COR_DO_HABITO = "darkgreen"</pre>
+      <p>Na <code>draw()</code>, <b>depois</b> do <code>for</code> que desenha as paredes:</p>
+      <pre class="py" data-new="10-13">def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    for habito in habitos:
+        x = habito[0] * TILE + TILE // 2
+        y = habito[1] * TILE + TILE // 2
+        screen.draw.filled_circle((x, y), 6, COR_DO_HABITO)
+
+    # ... o resto da draw() continua igual</pre>
+      <ul>
+        <li>Leia assim: "<b>para cada</b> hábito da lista, desenha uma bolinha no centro do quadradinho dele".</li>
+        <li><code>habito[0]</code> é a coluna e <code>habito[1]</code> é a linha. A conta para achar o centro é a mesma do personagem.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Os corredores ficam <b>cheios de bolinhas verdes</b>! O personagem passa por cima delas, mas elas ainda não somem.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f5s2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
+      <p class="mock-cap">116 bolinhas, uma em cada <code>.</code> do mapa.</p>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>Coletar</h3></div>
+      <p>No <b>fim</b> do <code>on_key_down</code>, depois do <code>if</code> da parede (no mesmo recuo dele, não dentro), escreva:</p>
+      <pre class="py" data-new="6-7">    # ... o começo do on_key_down continua igual
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha
+
+    if (personagem_coluna, personagem_linha) in habitos:
+        habitos.remove((personagem_coluna, personagem_linha))</pre>
+      <ul>
+        <li>Leia assim: "o lugar onde o personagem está <b>é um dos hábitos</b> da lista? Então tira da lista".</li>
+        <li>A <code>draw()</code> desenha <b>só o que está na lista</b>. Saiu da lista, some da tela.</li>
+        <li>O <code>in</code> vem antes do <code>remove</code> para não dar aquele <code>ValueError</code> da mochila.</li>
+      </ul>
+      <div class="note idea">
+        <span class="tag pixel">E o global?</span>
+        <p>Aqui <b>não</b> precisa pôr <code>habitos</code> no <code>global</code>. O <code>remove</code> tira um item <b>de dentro</b> da mesma lista; ele não troca a lista por outra. O <code>global</code> só é preciso quando a função faz <code>habitos = ...</code>.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Cada bolinha <b>some</b> quando o personagem para em cima dela. Ande um pouco e veja o caminho limpo que fica para trás.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f5play" data-mode="coleta"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="ultimo" aria-live="polite"></p>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>A mensagem de parabéns</h3></div>
+      <p>Na <code>draw()</code>, troque o texto fixo da dica do topo por isto:</p>
+      <pre class="py" data-new="1-11">    if len(habitos) == 0:
+        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+    else:
+        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+
+    screen.draw.text(
+        mensagem,
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )</pre>
+      <ul>
+        <li><code>len(habitos) == 0</code> quer dizer "a lista ficou <b>vazia</b>": não sobrou nenhum hábito no mapa.</li>
+        <li>A variável <code>mensagem</code> guarda <b>qual</b> texto vai aparecer.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode e jogue até o fim!</span><p>Colete todos os hábitos. Quando você pegar o último, a dica do topo vira <b>"Parabens! Voce encheu sua vida de bons habitos!"</b></p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="f5play" data-mode="parabens"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-rerun>Rodar de novo</button>
+        <button type="button" data-atalho>Atalho: deixar só 1 hábito</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="ultimo" aria-live="polite"></p>
+      <p class="mock-cap">Sem paciência para pegar os 116 aqui? O atalho deixa só o hábito ao lado do começo. É só para testar a mensagem: no seu jogo, colete todos!</p>
+    </div>
+  </article>
+
+  <div class="panel">
+    <h3>O que acontece quando o personagem anda</h3>
+    <div class="loop" aria-label="Fluxo da coleta">
+      <div class="box"><b>on_key_down(key)</b><br>o personagem andou</div>
+      <span class="arrow">→</span>
+      <div class="box">tem um hábito aqui?<br><b>(coluna, linha) in habitos</b></div>
+      <span class="arrow">→</span>
+      <div class="box">sim: <b>habitos.remove(...)</b><br>sai da lista</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>draw()</b> desenha só o que<br>está na lista: sumiu!</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>len(habitos) == 0</b>?<br>Parabéns!</div>
+    </div>
+  </div>
+
+  <div class="mission" data-mission="f5">
+    <h3>Sua missão da Fase 5</h3>
+    <ul>
+      <li><label><input type="checkbox" id="f5-a"><span>Rodei o <code>aula-05/mochila.py</code> e vi o <code>append</code>, o <code>in</code> e o <code>remove</code> no terminal.</span></label></li>
+      <li><label><input type="checkbox" id="f5-b"><span>Montei a lista <code>habitos</code> lendo o mapa (e conferi o número no terminal).</span></label></li>
+      <li><label><input type="checkbox" id="f5-c"><span>Os hábitos aparecem como bolinhas nos corredores.</span></label></li>
+      <li><label><input type="checkbox" id="f5-d"><span>O hábito some quando o personagem passa por cima.</span></label></li>
+      <li><label><input type="checkbox" id="f5-e"><span>Aparece a mensagem de parabéns quando não sobra nenhum.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 5 completa! Você encheu o labirinto, e a sua vida, de bons hábitos. Salve o <code>jogo.py</code> e o <code>aula-05/mochila.py</code>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="a" data-ok="Isso! O append coloca no fim da lista." data-no="Não. O append coloca um item novo no FIM da lista.">
+        <p>1. O que <code>mochila.append("Culto")</code> faz?</p>
+        <div class="opts"><button data-opt="a">Coloca "Culto" no fim da lista</button><button data-opt="b">Tira "Culto" da lista</button><button data-opt="c">Pergunta se "Culto" está na lista</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Certo! A preguiça não está na mochila." data-no="Olhe de novo: a mochila só tem Oração e Culto. A preguiça não está lá, então dá False.">
+        <p>2. Com <code>mochila = ["Oração", "Culto"]</code>, o que <code>"Preguiça" in mochila</code> responde?</p>
+        <div class="opts"><button data-opt="a"><code>True</code></button><button data-opt="b"><code>False</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Exato! Tirar o que não está na lista dá ValueError." data-no="Não é isso. O remove dá ValueError se o item não estiver na lista; o in confere antes.">
+        <p>3. Por que perguntar com <code>in</code> antes do <code>remove</code>?</p>
+        <div class="opts"><button data-opt="a">Para não dar ValueError quando o item não está lá</button><button data-opt="b">Porque o remove só funciona depois de um in</button><button data-opt="c">Para o hábito ficar verde</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Isso! Lista vazia: não sobrou nenhum hábito." data-no="Não. len(habitos) == 0 quer dizer que a lista ficou vazia: todos os hábitos foram coletados.">
+        <p>4. Quando <code>len(habitos) == 0</code> fica <code>True</code>?</p>
+        <div class="opts"><button data-opt="a">Logo no começo do jogo</button><button data-opt="b">Quando não sobrou nenhum hábito</button><button data-opt="c">Quando o personagem bate na parede</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>Tecla R: todos os hábitos de volta</h4>
+      <p>Faça a tecla <kbd>R</kbd> trazer <b>todos os hábitos de volta</b>. Outro desafio: use <code>print</code> para mostrar no terminal quantos hábitos faltam, a cada um que você coleta.</p>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>Dentro do <code>on_key_down</code>, crie um <code>if key == keys.R:</code> e, dentro dele, escreva <code>habitos = []</code> e o mesmo <code>for</code> que monta a lista.</p>
+        <p>Aqui você <b>precisa</b> pôr <code>habitos</code> no <code>global</code>, porque a função troca a lista inteira por uma nova.</p>
+      </div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">def on_key_down(key):
+    global personagem_coluna, personagem_linha, habitos
+
+    if key == keys.R:
+        habitos = []
+        for linha in range(LINHAS):
+            for coluna in range(COLUNAS):
+                if MAPA[linha][coluna] == ".":
+                    habitos.append((coluna, linha))
+
+    # ... o resto continua igual. E, para contar no terminal:
+    if (personagem_coluna, personagem_linha) in habitos:
+        habitos.remove((personagem_coluna, personagem_linha))
+        print(len(habitos))</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>Hábitos do seu jeito</h4>
+      <ul>
+        <li>Mude a cor e o tamanho das bolinhas.</li>
+        <li>Desenhe os hábitos como quadradinhos, com <code>Rect</code> e <code>filled_rect</code>.</li>
+        <li>Coloque hábitos também no corredor do túnel, trocando os espaços do mapa por <code>.</code>. O número no terminal muda?</li>
+      </ul>
+      <details><summary>Ver uma dica dos quadradinhos</summary><div class="in">
+        <p>O canto do quadradinho pequeno fica um pouco depois do canto do quadradinho do mapa. Algo assim, dentro do <code>for habito in habitos:</code>:</p>
+        <pre class="py">        caixa = Rect((habito[0] * TILE + 14, habito[1] * TILE + 14), (12, 12))
+        screen.draw.filled_rect(caixa, COR_DO_HABITO)</pre>
+      </div></details>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 5 (só para conferir no final)</summary>
+    <div class="in"><p>Use para comparar com o seu, ou para destravar se empacar.</p>
+    <pre class="py">import pgzrun
+
+# O labirinto: uma LISTA de textos. Cada texto é uma linha do mapa.
+#   "#" = parede
+#   "." = caminho com um bom hábito para coletar
+#   " " = caminho vazio
+# A primeira e a última linha ficam vazias: é o espaço dos textos.
+# A linha do meio é aberta nas pontas: é o túnel.
+MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    ",
+]
+
+# Tamanho de cada quadradinho do mapa, em pixels
+TILE = 40
+
+COLUNAS = len(MAPA[0])  # quantas letras tem uma linha do mapa (20)
+LINHAS = len(MAPA)      # quantas linhas tem o mapa (15)
+
+WIDTH = COLUNAS * TILE  # 20 x 40 = 800
+HEIGHT = LINHAS * TILE  # 15 x 40 = 600
+
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+COR_DA_PAREDE = "navy"
+COR_DO_HABITO = "darkgreen"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Onde o personagem começa: coluna e linha do mapa (contando a partir do 0)
+INICIO_COLUNA = 9
+INICIO_LINHA = 12
+
+# O personagem agora mora num quadradinho do mapa
+personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"
+
+# Os bons hábitos: uma lista com a posição (coluna, linha) de cada um.
+# Ela começa vazia e é enchida olhando o mapa: cada "." vira um hábito.
+habitos = []
+for linha in range(LINHAS):
+    for coluna in range(COLUNAS):
+        if MAPA[linha][coluna] == ".":
+            habitos.append((coluna, linha))
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    # As paredes: passa por todas as linhas e, em cada linha, por todas as
+    # colunas. Onde o mapa tem "#", desenha um quadrado.
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    # Os bons hábitos: uma bolinha no centro de cada quadradinho da lista
+    for habito in habitos:
+        x = habito[0] * TILE + TILE // 2
+        y = habito[1] * TILE + TILE // 2
+        screen.draw.filled_circle((x, y), 6, COR_DO_HABITO)
+
+    # A lista ficou vazia? Então todos os hábitos foram coletados!
+    if len(habitos) == 0:
+        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+    else:
+        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+
+    screen.draw.text(
+        mensagem,
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    # Do quadradinho (coluna, linha) para os pixels do centro dele
+    x = personagem_coluna * TILE + TILE // 2
+    y = personagem_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)
+
+
+def on_key_down(key):
+    global personagem_coluna, personagem_linha
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+
+    # 1. Para onde o personagem QUER ir?
+    nova_coluna = personagem_coluna
+    nova_linha = personagem_linha
+
+    if key == keys.RIGHT:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.LEFT:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.DOWN:
+        nova_linha = personagem_linha + 1
+    if key == keys.UP:
+        nova_linha = personagem_linha - 1
+
+    # 2. O túnel: saiu por um lado, entra pelo outro
+    if nova_coluna &lt; 0:
+        nova_coluna = COLUNAS - 1
+    if nova_coluna &gt;= COLUNAS:
+        nova_coluna = 0
+
+    # 3. Só anda se lá não for parede
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha
+
+    # 4. Parou em cima de um bom hábito? Ele sai da lista (e some da tela)
+    if (personagem_coluna, personagem_linha) in habitos:
+        habitos.remove((personagem_coluna, personagem_linha))
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Lista vazia <code>[]</code></dt><dd>Uma lista sem nenhum item, pronta para ser enchida.</dd></div>
+    <div><dt><code>.append(...)</code></dt><dd>Coloca um item novo no fim da lista.</dd></div>
+    <div><dt><code>in</code></dt><dd>Pergunta se um item está na lista. Responde <code>True</code> ou <code>False</code>.</dd></div>
+    <div><dt><code>.remove(...)</code></dt><dd>Tira um item da lista. Dá erro se o item não estiver lá.</dd></div>
+    <div><dt>Par <code>(coluna, linha)</code></dt><dd>Dois valores guardados juntos. Pega cada um com <code>[0]</code> e <code>[1]</code>.</dd></div>
+    <div><dt><code>ValueError</code></dt><dd>Erro de quando você tenta tirar da lista um item que não está nela.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>ValueError: list.remove(x): x not in list</b><span>Falta o <code>if ... in habitos:</code> antes do <code>remove</code>. Ou a ordem ficou trocada: é sempre <b>coluna primeiro, linha depois</b>.</span></div>
+    <div class="err"><b>As bolinhas não somem</b><span>Confira se é <code>(coluna, linha)</code> em todo lugar (no <code>append</code> e no <code>in</code>), e se o <code>if</code> da coleta não ficou recuado dentro de outro <code>if</code>.</span></div>
+    <div class="err"><b>TypeError: list.append() takes exactly one argument (2 given)</b><span>Faltaram os parênteses de dentro. É <code>habitos.append((coluna, linha))</code>, com <b>dois</b> pares de parênteses.</span></div>
+    <div class="err"><b>Nenhuma bolinha aparece</b><span>O <code>for</code> que desenha tem que estar dentro da <code>draw()</code> e <b>depois</b> do <code>screen.fill(...)</code>. E o <code>if</code> que monta a lista procura <code>"."</code>, não <code>"#"</code>.</span></div>
+    <div class="err"><b>O parabéns aparece logo no começo</b><span>A lista ficou vazia. Confira se o <code>habitos = []</code> está <b>antes</b> do <code>for</code> que enche a lista, e não depois.</span></div>
+    <div class="err"><b>UnboundLocalError quando aperta R</b><span>No desafio extra, faltou <code>habitos</code> no <code>global</code>.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<section class="block">
+  <div class="panel">
+    <span class="tag pixel" style="color: var(--wall); font-size: .85rem;">Próxima fase</span>
+    <h3>A estatura</h3>
+    <p>Na Fase 6, cada bom hábito coletado vai fazer você <b>crescer</b>: um placar de <b>estatura</b> aparece na tela e sobe a cada hábito, como Jesus, que crescia em estatura. Guarde bem o seu <code>jogo.py</code>.</p>
+    <a class="prox-link" href="index.html">Ver o mapa de missões →</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Crescendo como Jesus · curso de programação com Python e Pygame Zero para crianças. Caderno de missões das Fases 4 e 5.</p>
+  </div>
+</footer>
+
+<nav class="guia" aria-label="Andar pelo caderno">
+  <button type="button" class="fase-prev" data-go="fase-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 12 12 6 18 12"/><polyline points="6 18 12 12 18 18"/></svg>Fase anterior</button>
+  <button type="button" class="passo passo-prev" data-go="passo-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>Voltar</button>
+  <div class="onde" aria-live="polite"><b>Início</b><span></span></div>
+  <button type="button" class="passo passo-next next" data-go="passo-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>Seguir</button>
+  <button type="button" class="fase-next" data-go="fase-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 6 12 12 18 6"/><polyline points="6 12 12 18 18 12"/></svg>Próxima fase</button>
+</nav>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- destaque de código Python ---------- */
+  var KW = { "import":1, "def":1, "if":1, "elif":1, "else":1, "global":1, "True":1, "False":1, "and":1, "or":1, "not":1, "return":1, "for":1, "in":1 };
+  var PG = { "screen":1, "keyboard":1, "keys":1, "Rect":1, "pgzrun":1, "print":1, "len":1, "range":1 };
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function highlight(src) {
+    var re = /(#[^\n]*)|("(?:[^"\\\n]|\\.)*")|(\b\d+\b)|([A-Za-z_]\w*)|(\s+|[\s\S])/g;
+    var out = "", m, prev = "";
+    while ((m = re.exec(src))) {
+      if (m[1]) out += '<span class="com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="str">' + esc(m[2]) + "</span>";
+      else if (m[3]) out += '<span class="num">' + m[3] + "</span>";
+      else if (m[4]) {
+        var w = m[4];
+        if (KW[w]) out += '<span class="kw">' + w + "</span>";
+        else if (prev === "def") out += '<span class="fn">' + w + "</span>";
+        else if (PG[w]) out += '<span class="pg">' + w + "</span>";
+        else if (/^[A-Z][A-Z_0-9]+$/.test(w)) out += '<span class="const">' + w + "</span>";
+        else out += esc(w);
+        prev = w;
+        continue;
+      } else out += esc(m[5]);
+      if (m[5] && /\S/.test(m[5])) prev = "";
+    }
+    return out;
+  }
+  function parseRanges(s) {
+    var set = {};
+    (s || "").split(",").forEach(function (p) {
+      if (!p) return;
+      var a = p.split("-"), lo = +a[0], hi = +(a[1] || a[0]);
+      for (var i = lo; i <= hi; i++) set[i] = 1;
+    });
+    return set;
+  }
+  document.querySelectorAll("pre.py").forEach(function (pre) {
+    var src = pre.textContent.replace(/^\n/, "").replace(/\s+$/, "");
+    var nw = parseRanges(pre.getAttribute("data-new"));
+    pre.innerHTML = highlight(src).split("\n").map(function (line, i) {
+      return '<span class="ln' + (nw[i + 1] ? " new" : "") + '">' + (line || " ") + "</span>";
+    }).join("");
+  });
+  function term(lines) {
+    // lines: [["cmd", "texto"], ["out", "texto"], ["err", "texto"]]
+    return lines.map(function (l) {
+      var style = l[0] === "err" ? ' style="color:#ff9d8f"' : "";
+      return '<span class="ln' + (l[0] === "cmd" ? "" : " out") + '"' + style + ">" + esc(l[1]) + "</span>";
+    }).join("");
+  }
+
+  /* ---------- o mapa do jogo ---------- */
+  var MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    "
+  ];
+  var TILE = 40, COLUNAS = 20, LINHAS = 15, IC = 9, IL = 12;
+  function todosHabitos() {
+    var h = [];
+    for (var l = 0; l < LINHAS; l++) for (var c = 0; c < COLUNAS; c++) if (MAPA[l][c] === ".") h.push([c, l]);
+    return h;
+  }
+  function temHabito(h, c, l) { for (var i = 0; i < h.length; i++) if (h[i][0] === c && h[i][1] === l) return i; return -1; }
+
+  /* ---------- janelas do jogo simuladas ---------- */
+  var PGC = { skyblue:"#87ceeb", navy:"#000080", darkgreen:"#006400", white:"#ffffff", gold:"#ffd700" };
+  function col(c) { return PGC[c] || c; }
+  function txt(t, x, y, size, color, anchor) { return { k:"text", t:t, x:x, y:y, size:size, color:color || "white", anchor:anchor || "center" }; }
+  function paint(ctx, s) {
+    ctx.fillStyle = col(s.bg); ctx.fillRect(0, 0, 800, 600);
+    (s.items || []).forEach(function (it) {
+      if (it.k === "text") {
+        ctx.font = "bold " + Math.round(it.size * 0.74) + "px Arial, Helvetica, sans-serif";
+        ctx.fillStyle = col(it.color);
+        if (it.anchor === "topleft") { ctx.textAlign = "left"; ctx.textBaseline = "top"; }
+        else { ctx.textAlign = "center"; ctx.textBaseline = "middle"; }
+        ctx.fillText(it.t, it.x, it.y);
+      } else if (it.k === "circle") {
+        ctx.beginPath(); ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2); ctx.fillStyle = col(it.color); ctx.fill();
+      } else if (it.k === "walls") {
+        ctx.fillStyle = col("navy");
+        var n = it.ate === undefined ? COLUNAS * LINHAS : it.ate;
+        for (var i = 0; i < n; i++) {
+          var l = Math.floor(i / COLUNAS), c = i % COLUNAS;
+          if (MAPA[l][c] === "#") ctx.fillRect(c * TILE, l * TILE, TILE, TILE);
+        }
+      } else if (it.k === "habits") {
+        ctx.fillStyle = col("darkgreen");
+        it.list.forEach(function (h) { ctx.beginPath(); ctx.arc(h[0] * TILE + 20, h[1] * TILE + 20, 6, 0, Math.PI * 2); ctx.fill(); });
+      }
+    });
+  }
+  var T = "Crescendo como Jesus";
+  var PEC = txt("Pecador: Escreva seu nome aqui", 10, 570, 16, "white", "topleft");
+  var DICA3 = txt("Use as setas para andar. Espaço volta ao meio.", 400, 30, 24);
+  var DICA4 = "Setas: anda um quadradinho. Espaco: volta ao inicio.";
+  var DICA5 = "Setas: anda. Passe por cima dos bons habitos.";
+  var PARABENS = "Parabens! Voce encheu sua vida de bons habitos!";
+  function bola(c, l) { return { k:"circle", x:c * TILE + 20, y:l * TILE + 20, r:16, color:"gold" }; }
+  var wallAnim = { ate: undefined };
+  var TODOS = todosHabitos();
+
+  var scenes = {
+    f4s1: function () { return { title: T, bg: "skyblue", items: [PEC, DICA3, { k:"circle", x:400, y:300, r:40, color:"gold" }] }; },
+    f4walls: function () { return { title: T, bg: "skyblue", items: [{ k:"walls", ate: wallAnim.ate }, PEC, DICA3, { k:"circle", x:400, y:300, r:40, color:"gold" }] }; },
+    f4s3: function () { return { title: T, bg: "skyblue", items: [{ k:"walls" }, txt(DICA4, 400, 20, 24), PEC, bola(IC, IL)] }; },
+    f4play: function (fig) { var st = fig._st; return { title: T, bg: "skyblue", items: [{ k:"walls" }, txt(DICA4, 400, 20, 24), PEC, bola(st.c, st.l)] }; },
+    f5s1: function () { return { title: T, bg: "skyblue", items: [{ k:"walls" }, txt(DICA4, 400, 20, 24), PEC, bola(IC, IL)] }; },
+    f5s2: function () { return { title: T, bg: "skyblue", items: [{ k:"walls" }, { k:"habits", list: TODOS }, txt(DICA4, 400, 20, 24), PEC, bola(IC, IL)] }; },
+    f5play: function (fig) {
+      var st = fig._st, msg = DICA4;
+      if (fig._mode === "parabens") msg = st.h.length === 0 ? PARABENS : DICA5;
+      return { title: T, bg: "skyblue", items: [{ k:"walls" }, { k:"habits", list: st.h }, txt(msg, 400, 20, 24), PEC, bola(st.c, st.l)] };
+    }
+  };
+  var figs = [];
+  document.querySelectorAll("figure.mock").forEach(function (fig) {
+    var cv = fig.querySelector("canvas");
+    fig._ctx = cv.getContext("2d");
+    fig._name = fig.getAttribute("data-scene");
+    fig._mode = fig.getAttribute("data-mode");
+    figs.push(fig);
+  });
+  function render(fig, extra) {
+    var s = scenes[fig._name](fig);
+    fig.querySelector(".mock-title").textContent = s.title;
+    paint(fig._ctx, s);
+    if (extra) extra(fig._ctx);
+  }
+  function toGame(cv, ev) {
+    var r = cv.getBoundingClientRect();
+    return { x: Math.round((ev.clientX - r.left) * 800 / r.width), y: Math.round((ev.clientY - r.top) * 600 / r.height) };
+  }
+  function marca(ctx, c, l, cor) {
+    ctx.strokeStyle = cor || "#f2b705"; ctx.lineWidth = 5; ctx.strokeRect(c * TILE + 2.5, l * TILE + 2.5, TILE - 5, TILE - 5);
+  }
+
+  /* ---------- laboratório da lista (Fase 4) ---------- */
+  var HAB = ["Oração", "Bíblia", "Culto", "Obedecer aos pais", "Ajudar o próximo"];
+  var listaCells = document.getElementById("lista-cells"), listaOut = document.getElementById("lista-out");
+  listaCells.innerHTML = HAB.map(function (h, i) { return '<div class="cell" data-i="' + i + '">' + esc(h) + "<small>[" + i + "]</small></div>"; }).join("");
+  var lb = document.getElementById("lista-btns");
+  [0, 1, 2, 3, 4, 5].forEach(function (i) {
+    var b = document.createElement("button"); b.type = "button"; b.textContent = "habitos[" + i + "]";
+    if (i === 5) b.className = "bad";
+    b.addEventListener("click", function () {
+      listaCells.querySelectorAll(".cell").forEach(function (c) { c.classList.toggle("hit", +c.getAttribute("data-i") === i); });
+      if (i < HAB.length) listaOut.innerHTML = term([["cmd", "print(habitos[" + i + "])"], ["out", HAB[i]]]);
+      else listaOut.innerHTML = term([["cmd", "print(habitos[5])"], ["err", "IndexError: list index out of range"], ["out", "(a lista só vai do 0 ao 4)"]]);
+    });
+    lb.appendChild(b);
+  });
+  var bl = document.createElement("button"); bl.type = "button"; bl.textContent = "len(habitos)";
+  bl.addEventListener("click", function () {
+    listaCells.querySelectorAll(".cell").forEach(function (c) { c.classList.add("hit"); });
+    listaOut.innerHTML = term([["cmd", "print(len(habitos))"], ["out", "5"]]);
+  });
+  lb.appendChild(bl);
+  var bf = document.createElement("button"); bf.type = "button"; bf.textContent = "for habito in habitos";
+  bf.addEventListener("click", function () {
+    var cells = listaCells.querySelectorAll(".cell"), i = 0, linhas = [["cmd", "for habito in habitos: ..."]];
+    function passo() {
+      cells.forEach(function (c, k) { c.classList.toggle("hit", k === i); });
+      linhas.push(["out", "Bom hábito: " + HAB[i]]);
+      listaOut.innerHTML = term(linhas);
+      i++;
+      if (i < HAB.length) setTimeout(passo, reduce ? 0 : 450);
+    }
+    passo();
+  });
+  lb.appendChild(bf);
+
+  var textoCells = document.getElementById("texto-cells"), textoOut = document.getElementById("texto-out");
+  textoCells.innerHTML = "#..#".split("").map(function (ch, i) { return '<div class="cell letra" tabindex="0" data-i="' + i + '">' + ch + "<small>[" + i + "]</small></div>"; }).join("");
+  textoCells.querySelectorAll(".cell").forEach(function (c) {
+    function show() {
+      var i = +c.getAttribute("data-i");
+      textoCells.querySelectorAll(".cell").forEach(function (o) { o.classList.toggle("hit", o === c); });
+      textoOut.innerHTML = term([["cmd", "print(linha[" + i + "])"], ["out", "#..#"[i]]]);
+    }
+    c.addEventListener("pointerenter", show); c.addEventListener("focus", show); c.addEventListener("click", show);
+  });
+
+  /* ---------- o mapa com índices (Fase 4, passo 1) ---------- */
+  document.getElementById("mapa-letras").innerHTML = MAPA.map(function (linha, i) {
+    var n = (i < 10 ? " " : "") + i;
+    return '<span class="i">' + n + '  "</span>' + linha.split("").map(function (ch) {
+      return ch === "#" ? '<span class="w">#</span>' : ch === "." ? '<span class="d">.</span>' : " ";
+    }).join("") + '<span class="i">"</span>';
+  }).join("\n");
+
+  /* ---------- leitor do mapa (Fase 4, passo 2) ---------- */
+  var gridFig = document.querySelector("[data-grid]"), gridOut = document.getElementById("grid-out"), animando = false;
+  (function () {
+    var cv = gridFig.querySelector("canvas");
+    function show(ev) {
+      if (animando) return;
+      var p = toGame(cv, ev), c = Math.min(19, Math.max(0, Math.floor(p.x / TILE))), l = Math.min(14, Math.max(0, Math.floor(p.y / TILE)));
+      render(gridFig, function (ctx) { marca(ctx, c, l); });
+      var ch = MAPA[l][c];
+      gridOut.textContent = "MAPA[" + l + "][" + c + '] é "' + ch + '"' + (ch === "#" ? "  → desenha parede" : "  → não desenha nada");
+    }
+    cv.addEventListener("pointermove", show);
+    cv.addEventListener("pointerdown", show);
+    cv.addEventListener("pointerleave", function () { if (!animando) { render(gridFig); gridOut.textContent = "Passe o mouse no labirinto"; } });
+    document.getElementById("grid-anim").addEventListener("click", function () {
+      if (animando) return;
+      if (reduce) { wallAnim.ate = undefined; render(gridFig); gridOut.textContent = "Pronto: as 300 casas foram olhadas."; return; }
+      animando = true; wallAnim.ate = 0;
+      var t = setInterval(function () {
+        wallAnim.ate += 2;
+        var i = Math.min(wallAnim.ate, COLUNAS * LINHAS) - 1, l = Math.floor(i / COLUNAS), c = i % COLUNAS;
+        render(gridFig, function (ctx) { marca(ctx, c, l); });
+        gridOut.textContent = "linha = " + l + ", coluna = " + c + '  →  MAPA[' + l + "][" + c + '] é "' + MAPA[l][c] + '"';
+        if (wallAnim.ate >= COLUNAS * LINHAS) {
+          clearInterval(t); animando = false; wallAnim.ate = undefined; render(gridFig);
+          gridOut.textContent = "Pronto: 15 linhas × 20 colunas = 300 casas olhadas.";
+        }
+      }, 25);
+    });
+  })();
+
+  /* ---------- leitor dos pares (Fase 5, passo 1) ---------- */
+  (function () {
+    var fig = document.querySelector("[data-grid5]"), out = document.getElementById("grid5-out"), cv = fig.querySelector("canvas");
+    function show(ev) {
+      var p = toGame(cv, ev), c = Math.min(19, Math.max(0, Math.floor(p.x / TILE))), l = Math.min(14, Math.max(0, Math.floor(p.y / TILE)));
+      var i = temHabito(TODOS, c, l);
+      render(fig, function (ctx) { marca(ctx, c, l, i >= 0 ? "#006400" : "#f2b705"); });
+      out.textContent = i >= 0 ? "(" + c + ", " + l + ") está na lista: é o item habitos[" + i + "]" : "(" + c + ", " + l + ') não está: MAPA[' + l + "][" + c + '] é "' + MAPA[l][c] + '"';
+    }
+    cv.addEventListener("pointermove", show);
+    cv.addEventListener("pointerdown", show);
+    cv.addEventListener("pointerleave", function () { render(fig); out.textContent = "Passe o mouse nos corredores"; });
+  })();
+
+  /* ---------- jogo simulado: on_key_down igual ao Python ---------- */
+  function letra(l, c) {
+    // Igual ao Python: índice negativo conta do fim; fora da faixa é IndexError.
+    if (l < -LINHAS || l >= LINHAS) throw "IndexError: list index out of range";
+    var s = MAPA[l < 0 ? LINHAS + l : l];
+    if (c < -COLUNAS || c >= COLUNAS) throw "IndexError: string index out of range";
+    return s.charAt(c < 0 ? COLUNAS + c : c);
+  }
+  function novoEstado(fig) {
+    var st = { c: IC, l: IL, crash: false, ultimo: "" };
+    if (fig._name === "f5play") st.h = todosHabitos();
+    return st;
+  }
+  var DIR = { right: [1, 0], left: [-1, 0], down: [0, 1], up: [0, -1] };
+  function aperta(fig, k) {
+    var st = fig._st, modo = fig._mode;
+    if (st.crash) return;
+    if (k === "space") { st.c = IC; st.l = IL; st.ultimo = "Espaço: voltou ao início."; }
+    var nc = st.c, nl = st.l;
+    if (DIR[k]) { nc += DIR[k][0]; nl += DIR[k][1]; }
+    if (modo === "livre") { st.c = nc; st.l = nl; return; }
+    var tunel = false;
+    if (modo !== "parede") {
+      if (nc < 0) { nc = COLUNAS - 1; tunel = true; }
+      if (nc >= COLUNAS) { nc = 0; tunel = true; }
+    }
+    var ch;
+    try { ch = letra(nl, nc); }
+    catch (e) {
+      st.crash = true;
+      var box = fig.querySelector(".crash");
+      box.querySelector("pre").textContent = 'Traceback (most recent call last):\n  File "jogo.py", in on_key_down\n    if MAPA[nova_linha][nova_coluna] != "#":\n' + e;
+      box.hidden = false;
+      st.ultimo = "Tentou olhar a coluna " + nc + ", que não existe.";
+      return;
+    }
+    if (!DIR[k]) return;
+    if (ch !== "#") {
+      st.c = nc; st.l = nl;
+      st.ultimo = (tunel ? "Túnel! " : "") + 'MAPA[' + nl + "][" + nc + '] é "' + ch + '" → anda.';
+      if (modo === "parede" && nc < 0) st.ultimo = 'MAPA[8][' + nc + '] é "' + ch + '" (índice negativo conta do fim!) → anda para fora da tela.';
+    } else {
+      st.ultimo = 'MAPA[' + nl + "][" + nc + '] é "#" → fica onde está.';
+    }
+    if (st.h) {
+      var i = temHabito(st.h, st.c, st.l);
+      if (i >= 0) { st.h.splice(i, 1); st.ultimo += " Pegou um bom hábito!"; }
+    }
+  }
+  function mostraVars(fig) {
+    var side = fig.closest(".side"), st = fig._st, v = side.querySelector(".vars"), u = side.querySelector(".ultimo");
+    var html = "<span>personagem_coluna</span><span>" + st.c + "</span><span>personagem_linha</span><span>" + st.l + "</span>";
+    if (st.h) html += "<span>len(habitos)</span><span" + (st.h.length === 0 ? ' class="t"' : "") + ">" + st.h.length + "</span>";
+    if (v) v.innerHTML = html;
+    if (u) u.innerHTML = st.ultimo ? "Último aperto: <b>" + esc(st.ultimo) + "</b>" : "Clique na janelinha e aperte uma seta.";
+  }
+  var KEYMAP = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down", " ": "space" };
+  figs.filter(function (f) { return f._name === "f4play" || f._name === "f5play"; }).forEach(function (fig) {
+    var cv = fig.querySelector("canvas"), side = fig.closest(".side");
+    fig._st = novoEstado(fig);
+    function vai(k) { aperta(fig, k); render(fig); mostraVars(fig); }
+    function reinicia() { fig._st = novoEstado(fig); var b = fig.querySelector(".crash"); if (b) b.hidden = true; render(fig); mostraVars(fig); }
+    cv.addEventListener("keydown", function (e) {
+      var k = KEYMAP[e.key];
+      if (k) { e.preventDefault(); vai(k); }
+    });
+    cv.addEventListener("pointerdown", function () { cv.focus(); });
+    side.querySelectorAll("[data-key]").forEach(function (bt) {
+      bt.addEventListener("click", function () { vai(bt.getAttribute("data-key")); });
+    });
+    side.querySelectorAll("[data-rerun]").forEach(function (bt) { bt.addEventListener("click", reinicia); });
+    var at = side.querySelector("[data-atalho]");
+    if (at) at.addEventListener("click", function () {
+      fig._st = novoEstado(fig); fig._st.h = [[8, 12]];
+      fig._st.ultimo = "Atalho: sobrou só o hábito em (8, 12). Ande uma vez para a esquerda!";
+      render(fig); mostraVars(fig); cv.focus();
+    });
+    render(fig); mostraVars(fig);
+  });
+  figs.forEach(function (f) { if (!f._st) render(f); });
+
+  /* ---------- laboratório da mochila (Fase 5) ---------- */
+  var mochila = [], mCells = document.getElementById("mochila-cells"), mOut = document.getElementById("mochila-out"), mItem = document.getElementById("mochila-item");
+  var RUINS = { "Preguiça": 1, "Mentira": 1 };
+  function pyLista(a) { return "[" + a.map(function (x) { return "'" + x + "'"; }).join(", ") + "]"; }
+  function desenhaMochila(destaque) {
+    mCells.innerHTML = mochila.length ? mochila.map(function (h, i) { return '<div class="cell' + (i === destaque ? " hit" : "") + '">' + esc(h) + "<small>[" + i + "]</small></div>"; }).join("")
+      : '<span class="vazia">(mochila vazia)</span>';
+  }
+  document.querySelectorAll("[data-moch]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var op = b.getAttribute("data-moch"), it = mItem.value, q = '"' + it + '"', linhas;
+      if (op === "append") {
+        if (RUINS[it]) { linhas = [["cmd", "mochila.append(" + q + ")"], ["out", "Hmm... esse não é um bom hábito para carregar! 😉 Escolha outro."]]; desenhaMochila(); }
+        else { mochila.push(it); desenhaMochila(mochila.length - 1); linhas = [["cmd", "mochila.append(" + q + ")"], ["cmd", "print(mochila)"], ["out", pyLista(mochila)]]; }
+      } else if (op === "in") {
+        var i = mochila.indexOf(it); desenhaMochila(i);
+        linhas = [["cmd", "print(" + q + " in mochila)"], ["out", i >= 0 ? "True" : "False"]];
+      } else if (op === "remove") {
+        var j = mochila.indexOf(it);
+        if (j < 0) linhas = [["cmd", "mochila.remove(" + q + ")"], ["err", "ValueError: list.remove(x): x not in list"], ["out", "(não dá para tirar o que não está lá)"]];
+        else { mochila.splice(j, 1); linhas = [["cmd", "mochila.remove(" + q + ")"], ["cmd", "print(mochila)"], ["out", pyLista(mochila)]]; }
+        desenhaMochila();
+      } else if (op === "len") {
+        desenhaMochila(); linhas = [["cmd", "print(len(mochila))"], ["out", String(mochila.length)]];
+      } else {
+        mochila = []; desenhaMochila(); linhas = [["cmd", "mochila = []"], ["cmd", "print(mochila)"], ["out", "[]"]];
+      }
+      mOut.innerHTML = term(linhas);
+    });
+  });
+  desenhaMochila();
+
+  /* ---------- quiz ---------- */
+  document.querySelectorAll(".q").forEach(function (q) {
+    var why = q.querySelector(".why");
+    q.querySelectorAll("button[data-opt]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        q.querySelectorAll("button").forEach(function (x) { x.classList.remove("right", "wrong"); });
+        var ok = b.getAttribute("data-opt") === q.getAttribute("data-answer");
+        b.classList.add(ok ? "right" : "wrong");
+        why.textContent = q.getAttribute(ok ? "data-ok" : "data-no");
+        why.className = "why " + (ok ? "ok" : "no");
+      });
+    });
+  });
+
+  /* ---------- missões (progresso salvo neste navegador) ---------- */
+  var KEY = "ccj-missoes-f45", saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+  function refresh(m) {
+    var boxes = m.querySelectorAll("input[type=checkbox]"), n = 0;
+    boxes.forEach(function (b) { if (b.checked) n++; });
+    m.querySelector(".meter i").style.width = (n / boxes.length * 100) + "%";
+    m.querySelector(".done-msg").hidden = n !== boxes.length;
+    var nav = document.querySelector('[data-nav="' + m.getAttribute("data-mission") + '"]');
+    nav.querySelector(".count").textContent = n + "/" + boxes.length;
+    nav.classList.toggle("done", n === boxes.length);
+  }
+  document.querySelectorAll(".mission").forEach(function (m) {
+    m.querySelectorAll("input[type=checkbox]").forEach(function (b) {
+      b.checked = !!saved[b.id];
+      b.addEventListener("change", function () { saved[b.id] = b.checked; save(); refresh(m); });
+    });
+    refresh(m);
+  });
+
+  /* ---------- guia lateral: andar de passo em passo e de fase em fase ---------- */
+  var stops = [{ el: document.getElementById("inicio"), fase: -1, top: "Início", sub: "" }];
+  var faseIni = [];
+  document.querySelectorAll("#antes, section.block[id^='fase-']").forEach(function (sec) {
+    var num = sec.id === "antes" ? "" : sec.id.slice(5);
+    var nome = num ? "Fase " + num : "Antes";
+    var fi = faseIni.length, n = 0;
+    faseIni.push(stops.length);
+    stops.push({ el: sec, fase: fi, top: nome, sub: num ? "Começo" : "de começar" });
+    sec.querySelectorAll("article.step, .mission, .quiz, .challenges, .gloss, .errs").forEach(function (el) {
+      var alvo = el, sub;
+      if (el.matches("article.step")) sub = el.getAttribute("data-sub") || "Passo " + (++n);
+      else if (el.classList.contains("mission")) sub = "Missão";
+      else if (el.classList.contains("quiz")) { alvo = el.closest(".panel"); sub = "Quiz"; }
+      else if (el.classList.contains("challenges")) sub = "Desafios";
+      else { alvo = el.previousElementSibling || el; sub = el.classList.contains("gloss") ? "Palavras" : "Deu erro?"; }
+      stops.push({ el: alvo, fase: fi, top: nome, sub: sub });
+    });
+  });
+
+  var topo = document.querySelector(".nav"), guia = document.querySelector(".guia");
+  var onde = guia.querySelector(".onde"), btn = {};
+  guia.querySelectorAll("button").forEach(function (b) { btn[b.getAttribute("data-go")] = b; });
+  var atual = 0, fixo = null, pedido = false;
+
+  function alvos() {
+    var f = stops[atual].fase;
+    return {
+      "passo-prev": atual > 0 ? atual - 1 : null,
+      "passo-next": atual < stops.length - 1 ? atual + 1 : null,
+      "fase-prev": f < 0 ? null : (f === 0 ? 0 : faseIni[f - 1]),
+      "fase-next": f < faseIni.length - 1 ? faseIni[f + 1] : null
+    };
+  }
+  function mostra() {
+    var s = stops[atual], a = alvos();
+    onde.querySelector("b").textContent = s.top;
+    onde.querySelector("span").textContent = s.sub;
+    Object.keys(btn).forEach(function (k) { btn[k].disabled = a[k] === null; });
+  }
+  function calcula() {
+    pedido = false;
+    document.documentElement.style.scrollPaddingTop = (topo.offsetHeight + 12) + "px";
+    if (fixo !== null) { atual = fixo; mostra(); return; }
+    var lim = topo.offsetHeight + 60, i = 0;
+    for (var k = 1; k < stops.length; k++) {
+      if (stops[k].el.getBoundingClientRect().top > lim) break;
+      i = k;
+    }
+    atual = i;
+    mostra();
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(calcula); } }
+
+  guia.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    var j = alvos()[b.getAttribute("data-go")];
+    if (j === null) return;
+    fixo = atual = j;
+    stops[j].el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    mostra();
+  });
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      var noGuia = !!e.target.nodeType && guia.contains(e.target) && (e.type !== "keydown" || e.key === "Enter" || e.key === " ");
+      if (fixo !== null && !noGuia) { fixo = null; agenda(); }
+    }, { passive: true });
+  });
+  window.addEventListener("scroll", agenda, { passive: true });
+  window.addEventListener("resize", agenda);
+  calcula();
+
+  /* ---------- labirinto de abertura: o jogo da Fase 5 andando sozinho ---------- */
+  var hc = document.getElementById("hero-maze"), hx = hc.getContext("2d"), heroLen = document.getElementById("hero-len");
+  var hero = { c: IC, l: IL, pc: IC, pl: IL, d: [-1, 0], h: todosHabitos(), pausa: 0 };
+  function livre(c, l) { if (c < 0) c = COLUNAS - 1; if (c >= COLUNAS) c = 0; return MAPA[l][c] !== "#"; }
+  function escolhe() {
+    var op = [], bons = [];
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(function (d) {
+      if (d[0] === -hero.d[0] && d[1] === -hero.d[1]) return;
+      var c = hero.c + d[0], l = hero.l + d[1];
+      if (!livre(c, l)) return;
+      op.push(d);
+      var cc = (c + COLUNAS) % COLUNAS;
+      if (temHabito(hero.h, cc, l) >= 0) bons.push(d);
+    });
+    if (!op.length) return [-hero.d[0], -hero.d[1]];
+    var lista = bons.length && Math.random() < 0.85 ? bons : op;
+    return lista[Math.floor(Math.random() * lista.length)];
+  }
+  function anda() {
+    if (hero.pausa > 0) { hero.pausa--; if (hero.pausa === 0) { hero.h = todosHabitos(); hero.c = hero.pc = IC; hero.l = hero.pl = IL; } return; }
+    hero.d = escolhe();
+    hero.pc = hero.c; hero.pl = hero.l;
+    hero.c += hero.d[0]; hero.l += hero.d[1];
+    if (hero.c < 0) { hero.c = COLUNAS - 1; hero.pc = COLUNAS; }
+    if (hero.c >= COLUNAS) { hero.c = 0; hero.pc = -1; }
+    var i = temHabito(hero.h, hero.c, hero.l);
+    if (i >= 0) hero.h.splice(i, 1);
+    if (!hero.h.length) hero.pausa = 14;
+  }
+  function pintaHero(f) {
+    var msg = hero.h.length ? DICA5 : PARABENS;
+    paint(hx, { bg: "skyblue", items: [{ k:"walls" }, { k:"habits", list: hero.h }, txt(msg, 400, 20, 24), PEC] });
+    var x = (hero.pc + (hero.c - hero.pc) * f) * TILE + 20, y = (hero.pl + (hero.l - hero.pl) * f) * TILE + 20;
+    hx.beginPath(); hx.arc(x, y, 16, 0, Math.PI * 2); hx.fillStyle = "#ffd700"; hx.fill();
+    heroLen.textContent = "len(habitos) = " + hero.h.length;
+  }
+  if (reduce) { pintaHero(1); }
+  else {
+    var t0 = 0;
+    (function passo(t) {
+      if (!t0) t0 = t;
+      var f = (t - t0) / 150;
+      if (f >= 1) { t0 = t; f = 0; anda(); }
+      pintaHero(hero.pausa > 0 ? 1 : f);
+      requestAnimationFrame(passo);
+    })(performance.now());
+  }
+})();
+</script>
