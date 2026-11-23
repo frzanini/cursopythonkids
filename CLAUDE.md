@@ -71,7 +71,7 @@ curso**, gerado de uma vez para todos os módulos no fim do projeto, depois que 
 das aulas estiver revisado — ver `docs/backlog/status.md` e a issue #12. A prioridade atual é
 revisar e escrever o conteúdo das aulas (`material-*.md` + `exemplo.py`).
 
-Módulos 0 a 7 já estão no formato novo. Módulos 8–12 ainda não foram escritos. Ver
+Módulos 0 a 8 já estão no formato novo. Módulos 9–12 ainda não foram escritos. Ver
 `docs/crescendo-como-jesus-conteudo-programatico.md` § Materiais por módulo.
 
 ## Onde fica o quê

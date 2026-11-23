@@ -1,0 +1,1767 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crescendo como Jesus · Fase 8</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=JetBrains+Mono:wght@400;700&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+/* Layout: uma trilha de fases, como o mapa de um labirinto. Coluna de leitura larga,
+   e cada passo traz ao lado uma "janela do jogo" mostrando o que deve aparecer quando você rodar. */
+:root {
+  --ground: #eef6fb;
+  --surface: #ffffff;
+  --ink: #18264a;
+  --ink-soft: #4b5b7e;
+  --line: #cbd9ea;
+  --wall: #2446c9;
+  --gold: #f2b705;
+  --gold-ink: #5c4300;
+  --gold-soft: #fff4cc;
+  --leaf: #17835a;
+  --leaf-soft: #e1f5ea;
+  --coral: #cc3f33;
+  --coral-soft: #fde9e7;
+  --idea-soft: #e5ecff;
+  --code-bg: #131d3b;
+  --code-ink: #e6ecfb;
+  --code-dim: #8a98bf;
+  --code-new: rgba(242, 183, 5, .16);
+  --syn-kw: #ff8fb1;
+  --syn-str: #9be39b;
+  --syn-num: #ffc861;
+  --syn-pg: #7fd3ff;
+  --syn-const: #ffd96b;
+  --syn-fn: #c6a8ff;
+  --f-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --f-code: "JetBrains Mono", Consolas, "Courier New", monospace;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0d1530;
+    --surface: #152042;
+    --ink: #eaf0ff;
+    --ink-soft: #a8b5d6;
+    --line: #2a3a66;
+    --wall: #6d8bff;
+    --gold: #f7c533;
+    --gold-ink: #ffe28a;
+    --gold-soft: #2d2811;
+    --leaf: #52cf95;
+    --leaf-soft: #10302a;
+    --coral: #ff8474;
+    --coral-soft: #3a1b22;
+    --idea-soft: #1b2958;
+    --code-bg: #0a1126;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0d1530;
+  --surface: #152042;
+  --ink: #eaf0ff;
+  --ink-soft: #a8b5d6;
+  --line: #2a3a66;
+  --wall: #6d8bff;
+  --gold: #f7c533;
+  --gold-ink: #ffe28a;
+  --gold-soft: #2d2811;
+  --leaf: #52cf95;
+  --leaf-soft: #10302a;
+  --coral: #ff8474;
+  --coral-soft: #3a1b22;
+  --idea-soft: #1b2958;
+  --code-bg: #0a1126;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.65;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: -.01em; }
+h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; }
+h3 { font-size: 1.5rem; font-weight: 800; }
+h4 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--wall); }
+code {
+  font-family: var(--f-code); font-size: .86em;
+  background: var(--idea-soft); color: var(--ink);
+  padding: .08em .35em; border-radius: 6px;
+}
+/* Sem ligaduras: a fonte de código juntaria != em ≠ e >= em ≥, e a criança copiaria o símbolo errado. */
+code, pre, kbd, .vars, .coord, .mapa-letras { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+/* Código no meio do texto pode quebrar a linha: no celular, um nome comprido não empurra a página para o lado. */
+p code, li code, dd code { overflow-wrap: anywhere; }
+kbd {
+  font-family: var(--f-code); font-size: .82em; font-weight: 700;
+  border: 1px solid var(--line); border-bottom-width: 3px;
+  background: var(--surface); color: var(--ink);
+  padding: .05em .45em; border-radius: 7px; white-space: nowrap;
+}
+ul, ol { margin: 0; padding-left: 1.3em; max-width: 66ch; }
+li + li { margin-top: .35em; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+.pixel { font-family: var(--f-pixel); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+.stack { display: flex; flex-direction: column; gap: 18px; }
+
+/* ---------- barra de navegação ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.nav .brand { font-family: var(--f-display); font-weight: 800; font-size: 1.1rem; margin-right: auto; color: var(--ink); text-decoration: none; }
+.nav a.lvl {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--ink);
+  border: 2px solid var(--line); background: var(--surface);
+  border-radius: 999px; padding: 4px 12px 4px 6px; font-size: .88rem; font-weight: 600;
+}
+.nav a.lvl:hover { border-color: var(--wall); }
+.nav a.mapa {
+  text-decoration: none; color: var(--wall); font-weight: 600; font-size: .9rem;
+  border: 2px solid var(--wall); border-radius: 999px; padding: 3px 12px;
+}
+.nav a.mapa:hover { background: var(--wall); color: var(--surface); }
+.nav .dot {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
+  display: grid; place-items: center; font-family: var(--f-display); font-size: .9rem; font-weight: 800;
+}
+:root .nav .dot { color: #3d2d00; }
+.nav .count { color: var(--ink-soft); font-variant-numeric: tabular-nums; font-weight: 400; }
+.nav a.lvl.done { border-color: var(--leaf); }
+.nav a.lvl.done .count { color: var(--leaf); font-weight: 600; }
+
+/* ---------- abertura ---------- */
+.hero { padding-block: 48px 28px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+.eyebrow { color: var(--wall); font-size: .95rem; }
+.hero h1 { margin-top: 10px; }
+.hero h1 .gold { color: var(--gold); -webkit-text-stroke: 0; }
+.verse {
+  margin: 20px 0 0; padding: 14px 18px; border-left: 5px solid var(--gold);
+  background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1.08rem; max-width: 60ch;
+}
+.verse cite { display: block; font-style: normal; color: var(--ink-soft); font-size: .9rem; margin-top: 4px; }
+.hero .lead { margin-top: 18px; font-size: 1.08rem; }
+.demo {
+  background: #0b1433; border-radius: 18px; padding: 12px; margin: 0;
+  box-shadow: 0 18px 40px -22px rgba(10, 20, 60, .6);
+}
+.demo canvas { display: block; width: 100%; height: auto; border-radius: 10px; }
+.demo figcaption { color: #cdd7f5; font-size: .9rem; padding: 10px 6px 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .85rem;
+  border-radius: 999px; padding: 3px 10px; border: 1px solid var(--line); background: var(--surface);
+}
+.chip.good { border-color: var(--leaf); }
+.chip.bad { border-color: var(--coral); }
+
+/* ---------- parede de labirinto (divisória) ---------- */
+.maze-wall {
+  height: 14px; margin-block: 44px; border: 3px solid var(--wall); border-radius: 999px;
+  position: relative; opacity: .8;
+}
+.maze-wall::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: -60px 0 0 -2px var(--gold), 60px 0 0 -2px var(--gold), -120px 0 0 -2px var(--gold), 120px 0 0 -2px var(--gold);
+}
+
+/* ---------- seções ---------- */
+section.block { display: flex; flex-direction: column; gap: 22px; }
+.phase-head { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+.badge {
+  width: 96px; height: 96px; border-radius: 50%; background: var(--gold);
+  display: grid; place-items: center; text-align: center; color: #3d2d00;
+  font-family: var(--f-pixel); font-weight: 700; line-height: 1;
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.14);
+}
+.badge small { display: block; font-size: .72rem; letter-spacing: .1em; }
+.badge b { display: block; font-family: var(--f-display); font-weight: 800; font-size: 2.6rem; margin-top: 2px; }
+.phase-head p { color: var(--ink-soft); margin-top: 6px; font-size: 1.05rem; }
+.learn { display: flex; flex-wrap: wrap; gap: 8px; }
+.learn span {
+  font-size: .88rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 4px 10px;
+}
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
+}
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.two > * { min-width: 0; }
+
+/* passos */
+.step {
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 26px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px;
+}
+.step.solo { grid-template-columns: minmax(0, 1fr); }
+.step-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.step-title { display: flex; align-items: center; gap: 12px; }
+.step-num {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold); color: #3d2d00; display: grid; place-items: center;
+  font-family: var(--f-display); font-weight: 800; font-size: 1.2rem;
+}
+.side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
+
+/* avisos */
+.note { border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.note .tag { font-size: .8rem; }
+.note.run { background: var(--leaf-soft); }
+.note.run .tag { color: var(--leaf); }
+.note.idea { background: var(--idea-soft); }
+.note.idea .tag { color: var(--wall); }
+.note.oops { background: var(--coral-soft); }
+.note.oops .tag { color: var(--coral); }
+.note.gold { background: var(--gold-soft); }
+.note.gold .tag { color: var(--gold-ink); }
+
+/* código */
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-ink);
+  border-radius: 12px; padding: 14px 0; overflow-x: auto;
+  font-family: var(--f-code); font-size: 15px; line-height: 1.6;
+}
+pre .ln { display: block; padding-inline: 16px; min-height: 1.6em; white-space: pre; }
+pre .ln.new { background: var(--code-new); box-shadow: inset 4px 0 0 #f2b705; }
+pre .kw { color: var(--syn-kw); font-weight: 700; }
+pre .str { color: var(--syn-str); }
+pre .num { color: var(--syn-num); }
+pre .pg { color: var(--syn-pg); }
+pre .const { color: var(--syn-const); }
+pre .fn { color: var(--syn-fn); font-weight: 700; }
+pre .com { color: var(--code-dim); font-style: italic; }
+pre.term .ln::before { content: "> "; color: var(--syn-str); }
+pre.term .ln.out::before { content: ""; }
+pre.term .ln.out { color: var(--code-dim); }
+.code-label { font-size: .8rem; color: var(--ink-soft); margin-bottom: -6px; }
+.legend-new { font-size: .85rem; color: var(--ink-soft); }
+.legend-new i { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; background: var(--code-new); box-shadow: inset 3px 0 0 #f2b705; border-radius: 3px; }
+
+/* janela do jogo (simulação) */
+.mock { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #1d2433; }
+.mock-bar {
+  display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+  background: #e9edf5; color: #26304a; font-size: .78rem; font-family: "Segoe UI", system-ui, sans-serif;
+}
+.mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: #c3cad8; }
+.mock-bar i:first-child { margin-left: auto; order: 3; }
+.mock-bar .mock-title { order: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mock canvas { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.mock-cap { font-size: .82rem; color: var(--ink-soft); }
+.coord {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 8px; padding: 6px 10px;
+}
+
+/* laboratório / controles */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls label { font-size: .88rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: 4px; }
+select, input[type="text"] {
+  font: inherit; font-size: .95rem; padding: 6px 10px; border-radius: 10px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+}
+button {
+  font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
+  border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 6px 14px;
+}
+button:hover { border-color: var(--wall); }
+.pad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 44px); gap: 6px; }
+.pad button { padding: 0; font-size: 1.2rem; }
+.pad .u { grid-column: 2; grid-row: 1; }
+.pad .l { grid-column: 1; grid-row: 2; }
+.pad .d { grid-column: 2; grid-row: 2; }
+.pad .r { grid-column: 3; grid-row: 2; }
+.pad button.on { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.vars {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 10px 14px;
+  display: grid; grid-template-columns: auto auto; gap: 2px 14px; justify-content: start;
+}
+.vars .t { color: var(--syn-str); font-weight: 700; }
+.vars .f { color: var(--code-dim); }
+
+/* árvore de pastas */
+.tree { font-family: var(--f-code); font-size: .92rem; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 16px; line-height: 1.8; }
+.tree .hl { background: var(--gold-soft); color: var(--gold-ink); border-radius: 6px; padding: 0 6px; font-weight: 700; }
+.tree .dim { color: var(--ink-soft); font-family: var(--f-body); font-size: .85rem; }
+
+/* laço do jogo */
+.loop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.loop .box { border: 2px solid var(--wall); border-radius: 12px; padding: 10px 14px; background: var(--surface); }
+.loop .box b { font-family: var(--f-code); }
+.loop .arrow { font-family: var(--f-pixel); color: var(--wall); font-size: 1.1rem; }
+
+/* missão */
+.mission { border: 3px solid var(--gold); background: var(--surface); border-radius: var(--radius); padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+.mission ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mission li { margin: 0; }
+.mission label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.mission input { width: 22px; height: 22px; margin-top: 4px; accent-color: var(--leaf); flex: none; }
+.mission input:checked + span { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--leaf); }
+.meter { height: 12px; border-radius: 999px; background: var(--ground); border: 1px solid var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--leaf); transition: width .3s; }
+.mission .done-msg { color: var(--leaf); font-weight: 600; }
+
+/* desafios e segredos */
+details { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+details > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 10px; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "+"; font-family: var(--f-pixel); color: var(--wall); font-size: 1.2rem; width: 14px; }
+details[open] > summary::before { content: "−"; }
+details > .in { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.challenges { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.challenge { display: flex; flex-direction: column; gap: 12px; }
+.challenge .tag { font-size: .8rem; color: var(--wall); }
+
+/* quiz */
+.quiz { display: flex; flex-direction: column; gap: 16px; }
+.q { display: flex; flex-direction: column; gap: 8px; }
+.q p { font-weight: 600; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts button.right { background: var(--leaf-soft); border-color: var(--leaf); }
+.opts button.wrong { background: var(--coral-soft); border-color: var(--coral); }
+.why { font-size: .95rem; min-height: 1.5em; }
+.why.ok { color: var(--leaf); }
+.why.no { color: var(--coral); }
+
+/* glossário */
+.gloss { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.gloss div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: .95rem; }
+.gloss dt { font-weight: 600; }
+.gloss dd { margin: 4px 0 0; color: var(--ink-soft); }
+
+.errs { display: flex; flex-direction: column; gap: 10px; }
+.err { display: grid; grid-template-columns: minmax(0, 14rem) 1fr; gap: 16px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--coral); border-radius: 10px; font-size: .95rem; }
+.err b { font-family: var(--f-code); font-size: .85rem; overflow-wrap: anywhere; }
+
+footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
+
+/* ---------- guia lateral: passo anterior/próximo e fase anterior/próxima ---------- */
+.guia {
+  position: fixed; z-index: 20; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 76px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+  padding: 8px 6px; border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 2px solid var(--line); box-shadow: 0 6px 20px rgba(10, 20, 50, .14);
+  backdrop-filter: blur(8px);
+}
+.guia button {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: 6px 2px 4px; border-radius: 12px; font-size: .72rem; line-height: 1.15;
+}
+.guia button svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.guia button.passo { font-size: .8rem; }
+.guia button.next { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.guia button.next:hover { border-color: var(--wall); }
+.guia button:disabled { opacity: .35; cursor: default; border-color: var(--line); }
+.guia button.next:disabled { background: var(--surface); color: var(--ink); }
+.guia .onde { text-align: center; padding: 4px 0; line-height: 1.2; }
+.guia .onde b {
+  display: block; font-family: var(--f-display); font-weight: 800; font-size: 1rem; color: var(--wall);
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.guia .onde span { display: block; font-size: .78rem; color: var(--ink-soft); font-weight: 600; }
+@media (min-width: 721px) and (max-width: 1299px) {
+  .wrap { padding-right: 104px; }
+}
+@media (max-width: 720px) {
+  .guia {
+    top: auto; transform: none; left: 0; right: 0; bottom: 0; width: auto;
+    flex-direction: row; justify-content: center; gap: 6px;
+    border-radius: 16px 16px 0 0; border-width: 2px 0 0;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .guia button { flex: 1 1 0; max-width: 84px; }
+  .guia .onde { flex: 1 1 0; max-width: 92px; align-self: center; }
+  footer { padding-bottom: 110px; }
+}
+
+@media (max-width: 980px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-width: 460px; }
+}
+@media (max-width: 700px) {
+  body { font-size: 17px; }
+  .two, .challenges { grid-template-columns: 1fr; }
+  .phase-head { grid-template-columns: 1fr; }
+  .badge { width: 76px; height: 76px; }
+  .badge b { font-size: 1.9rem; }
+  .step, .panel, .mission { padding: 18px; }
+  .err { grid-template-columns: 1fr; gap: 4px; }
+  /* No celular a barra de cima fica numa linha só: o Mapa e, de cada fase, só o número e a contagem.
+     A guia de baixo faz o resto da navegação. */
+  .nav .brand { display: none; }
+  .nav .wrap { flex-wrap: nowrap; gap: 8px; }
+  .nav a.lvl { font-size: 0; gap: 6px; padding: 3px 10px 3px 4px; }
+  .nav a.lvl .dot, .nav a.lvl .count { font-size: .82rem; }
+  .nav a.mapa { margin-right: auto; }
+  pre { font-size: 13.5px; }
+}
+</style>
+
+<style>
+/* ---------- extras do caderno das Fases 4 e 5 ---------- */
+.mock { position: relative; }
+.mock canvas:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+.crash {
+  position: absolute; left: 0; right: 0; bottom: 0; top: 28px;
+  background: rgba(10, 15, 35, .94); color: #ffc2b8; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 10px; justify-content: center;
+}
+.crash[hidden] { display: none; }
+.crash pre { background: transparent; padding: 0; font-size: 12px; color: #ffc2b8; white-space: pre-wrap; }
+.crash p { color: #fff; font-size: .9rem; }
+.crash button { align-self: flex-start; }
+.cells { display: flex; flex-wrap: wrap; gap: 6px; }
+.cell {
+  min-width: 52px; text-align: center; border: 2px solid var(--line); border-radius: 10px;
+  background: var(--surface); padding: 4px 8px; font-size: .88rem; line-height: 1.3;
+  transition: border-color .15s, background .15s;
+}
+.cell small { display: block; font-family: var(--f-code); color: var(--ink-soft); font-size: .75rem; }
+.cell.hit { border-color: var(--gold); background: var(--gold-soft); }
+.cell.letra { min-width: 40px; font-family: var(--f-code); font-weight: 700; }
+.cells .vazia { color: var(--ink-soft); font-size: .9rem; padding: 6px 2px; }
+.lab-out { min-height: 4.8em; }
+.side pre.term .ln { white-space: pre-wrap; overflow-wrap: anywhere; }
+.lab-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-btns button { font-family: var(--f-code); font-size: .82rem; padding: 4px 10px; }
+.lab-btns button.bad { border-color: var(--coral); }
+.ultimo { font-size: .85rem; color: var(--ink-soft); min-height: 2.6em; }
+.ultimo b { font-family: var(--f-code); color: var(--ink); font-weight: 700; }
+.mapa-letras { font-family: var(--f-code); font-size: 13px; line-height: 1.25; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 12px 14px; overflow-x: auto; white-space: pre; margin: 0; }
+.mapa-letras .w { color: #7f9bff; }
+.mapa-letras .d { color: var(--syn-str); }
+.mapa-letras .i { color: var(--code-dim); }
+.vazio-cap { color: var(--ink-soft); font-size: .85rem; }
+.hero-placar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.hero-placar span { font-family: var(--f-code); font-size: .82rem; background: #17224a; color: #e6ecfb; border-radius: 8px; padding: 3px 10px; }
+.prox-link { display: inline-flex; align-self: flex-start; text-decoration: none; font-weight: 600; border: 2px solid var(--wall); border-radius: 999px; padding: 6px 16px; }
+.prox-link:hover { background: var(--wall); color: var(--surface); }
+</style>
+
+<style>
+/* ---------- extras do caderno da Fase 8 ---------- */
+.maquina { display: grid; grid-template-columns: auto 1fr; gap: 8px 12px; align-items: center; }
+.maquina input[type="number"] { width: 90px; font: inherit; font-size: .95rem; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--ink); }
+.maquina label { font-family: var(--f-code); font-size: .88rem; }
+.check-linha { display: flex; gap: 8px; align-items: center; font-size: .88rem; color: var(--ink-soft); }
+</style>
+
+<nav class="nav" aria-label="Fases do caderno">
+  <div class="wrap">
+    <a class="mapa" href="index.html">← Mapa</a>
+    <a class="brand" href="#inicio">Crescendo como Jesus</a>
+    <a class="lvl" href="#fase-8" data-nav="f8"><span class="dot">8</span>Vidas <span class="count">0/6</span></a>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow pixel">Caderno de missões · Fase 8</div>
+      <h1>Crescendo como <span class="gold">Jesus</span></h1>
+      <blockquote class="verse">
+        "Em todas estas coisas somos mais que vencedores, por meio daquele que nos amou."
+        <cite>Romanos 8:37</cite>
+      </blockquote>
+      <p class="lead">Agora a tentação não passa mais por você à toa: encostar nela custa uma <b>vida</b>. Quando as vidas acabam, a tela lembra quem já venceu. E você vai aprender a criar as suas <b>próprias funções</b>, para o código parar de se repetir.</p>
+      <div class="legend" aria-label="Itens do jogo">
+        <span class="chip good">🙏 Oração</span><span class="chip good">📖 Bíblia</span><span class="chip good">⛪ Culto</span><span class="chip good">❤️ Obedecer aos pais</span><span class="chip good">🤝 Ajudar o próximo</span>
+        <span class="chip bad">😡 Desobediência</span>
+      </div>
+    </div>
+    <figure class="demo">
+      <canvas id="hero-maze" width="800" height="600" aria-label="Animação: o jogo joga sozinho, a tentação alcança a bola dourada, as vidas do rodapé diminuem e aparece a tela com JESUS"></canvas>
+      <figcaption>É assim que o seu jogo vai ficar no fim da Fase 8: três vidas no rodapé e, quando elas acabam, a tela que lembra que JESUS já venceu.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ANTES DE COMEÇAR ================= -->
+<section class="block" id="antes">
+  <h2>Antes de começar</h2>
+  <div class="two">
+    <div class="panel">
+      <h3>Você vem da Fase 7</h3>
+      <p>Este caderno continua o mesmo <code>jogo.py</code>, na raiz da pasta <code>crescendo-como-jesus</code>. Ele precisa estar assim:</p>
+      <ul>
+        <li>o personagem anda sozinho, e as setas só escolhem a direção (virando na hora certa);</li>
+        <li>a tentação vermelha anda sozinha e sorteia o caminho nos cruzamentos;</li>
+        <li>o placar com a estatura, o "Faltam" e a régua continua funcionando.</li>
+      </ul>
+      <p>Parou no Passo 3 da Fase 7, sem a tentação? Termine os Passos 4 e 5 no <a href="caderno-de-missoes-modulos-6-7.html#fase-7">caderno das Fases 6 e 7</a> primeiro: hoje ela é essencial.</p>
+      <div class="tree" aria-label="Estrutura de pastas">
+        📁 crescendo-como-jesus<br>
+        &nbsp;&nbsp;&nbsp;📄 <span class="hl">jogo.py</span> <span class="dim">← o mesmo de sempre</span><br>
+        &nbsp;&nbsp;&nbsp;📁 aula-08 <span class="dim">← funcoes.py</span><br>
+        &nbsp;&nbsp;&nbsp;📦 .venv
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Como usar este caderno</h3>
+      <ol>
+        <li>Comece pelo <b>experimento</b> num arquivo separado. O resultado aparece no <b>terminal</b>.</li>
+        <li>Depois, os <b>passos</b> do jogo: leia, <b>digite</b>, <b>rode</b> e <b>compare</b> com a janelinha ao lado.</li>
+        <li>As janelinhas são de <b>brincar</b>: clique nelas e use as setas (ou os botões).</li>
+      </ol>
+      <p class="legend-new"><i></i> As linhas marcadas assim no código são as <b>novas</b> daquele passo.</p>
+      <div class="note gold">
+        <span class="tag pixel">Regra de ouro</span>
+        <p>Tudo o que você criar fica <b>antes</b> do <code>pgzrun.go()</code>, inclusive as suas funções novas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 8 ================= -->
+<section class="block" id="fase-8">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>8</b></div></div>
+    <div>
+      <h2>Encostar na tentação</h2>
+      <p>Você começa com <b>3 vidas</b>. Cada vez que a tentação te alcança, você perde uma e os dois voltam para o começo. Sem vidas, aparece a tela de fim de jogo. E o túnel, que estava copiado quatro vezes, vira uma <b>função</b>.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>criar uma função com <code>def</code></span><span>chamar com <code>()</code></span><span>parâmetro</span><span><code>return</code></span><span><code>None</code></span><span>vidas</span><span>fim de jogo</span>
+  </div>
+
+  <!-- experimento -->
+  <article class="step" data-sub="Experimento">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">🧪</span><h3>Experimente: as suas funções</h3></div>
+      <p>Crie o arquivo <code>funcoes.py</code> <b>dentro da pasta <code>aula-08</code></b>. Digite e rode com <b>▶ Run Python File</b>:</p>
+      <pre class="py">def boas_vindas():
+    print("Olá!")
+    print("Vamos crescer como Jesus.")
+
+
+boas_vindas()
+boas_vindas()</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · criar e chamar</span>
+        <p><code>def boas_vindas():</code> <b>cria</b> uma função. O que está recuado embaixo é o que ela faz. Você já fez isso com a <code>draw()</code>, mas quem chamava a <code>draw()</code> era o Pygame Zero.</p>
+        <p><code>boas_vindas()</code> <b>chama</b> a função: o Python vai lá e faz o que está dentro dela. Chamou duas vezes, ela faz duas vezes.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No terminal aparece, duas vezes: <code>Olá!</code> e <code>Vamos crescer como Jesus.</code></p></div>
+      <p>Agora acrescente, embaixo:</p>
+      <pre class="py">def dobro(numero):
+    return numero * 2
+
+
+print(dobro(5))
+print(dobro(21))</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · parâmetro e return</span>
+        <p><code>numero</code> é um <b>parâmetro</b>: o valor que a função recebe entre os parênteses. Em <code>dobro(5)</code>, ele vale 5.</p>
+        <p><code>return</code> <b>devolve</b> o resultado para quem chamou. Por isso dá para pôr <code>dobro(5)</code> dentro do <code>print</code>.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem mais duas linhas: <code>10</code> e <code>42</code>.</p></div>
+      <p>Por último, a função que vai para o jogo:</p>
+      <pre class="py">def corrige_tunel(coluna):
+    if coluna &lt; 0:
+        return 19
+    if coluna &gt;= 20:
+        return 0
+    return coluna
+
+
+print(corrige_tunel(-1))
+print(corrige_tunel(20))
+print(corrige_tunel(7))</pre>
+      <p>Saiu pela esquerda (<code>-1</code>)? Devolve <code>19</code>. Pela direita (<code>20</code>)? Devolve <code>0</code>. Senão, devolve a mesma coluna. O <code>return</code> também faz a função <b>sair na hora</b>: as linhas de baixo nem rodam.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>As últimas linhas são <code>19</code>, <code>0</code> e <code>7</code>.</p></div>
+      <div class="note oops">
+        <span class="tag pixel">Erre de propósito</span>
+        <p>Troque <code>print(dobro(5))</code> por <code>print(dobro)</code>, sem os parênteses: aparece algo como <code>&lt;function dobro at 0x...&gt;</code>. Sem os <code>()</code>, a função <b>não é chamada</b>.</p>
+        <p>Depois apague o <code>return</code> da <code>dobro</code> (deixe só <code>numero * 2</code>): o <code>print(dobro(5))</code> mostra <b><code>None</code></b>, que quer dizer "nada". A conta foi feita, mas a função não devolveu. Desfaça as duas mudanças.</p>
+      </div>
+    </div>
+    <div class="side">
+      <div class="panel" style="padding:16px">
+        <h4>A máquina de funções</h4>
+        <div class="maquina">
+          <label for="m-dobro">dobro(</label><input type="number" id="m-dobro" value="5" aria-label="O número que a função dobro recebe">
+          <label for="m-tunel">corrige_tunel(</label><input type="number" id="m-tunel" value="-1" aria-label="A coluna que a função corrige_tunel recebe">
+        </div>
+        <label class="check-linha"><input type="checkbox" id="m-semreturn"> apagar o <code>return</code> da <code>dobro</code></label>
+        <div class="lab-btns">
+          <button type="button" data-maq="dobro">print(dobro(...))</button>
+          <button type="button" data-maq="tunel">print(corrige_tunel(...))</button>
+          <button type="button" data-maq="semparenteses" class="bad">print(dobro)</button>
+          <button type="button" data-maq="boas">boas_vindas()</button>
+          <button type="button" data-maq="boas-sem" class="bad">boas_vindas</button>
+        </div>
+        <pre class="term lab-out" id="maq-out" aria-live="polite"><span class="ln out">Escolha um número e clique num botão.</span></pre>
+      </div>
+    </div>
+  </article>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>O túnel vira uma função</h3></div>
+      <p>Volte para o <code>jogo.py</code>. Logo <b>antes</b> do <code>def draw():</code> (fora de qualquer função, sem recuo), crie:</p>
+      <pre class="py" data-new="1-9"># ---------------- as nossas funções ----------------
+
+def corrige_tunel(coluna):
+    # Saiu por um lado? Devolve a coluna do outro lado. Senão, devolve a mesma.
+    if coluna &lt; 0:
+        return COLUNAS - 1
+    if coluna &gt;= COLUNAS:
+        return 0
+    return coluna</pre>
+      <p>Agora, no <code>update()</code>, troque cada um dos <b>quatro</b> túneis por uma chamada. Os três primeiros têm este formato (a direção muda em cada um):</p>
+      <pre class="py">        nova_coluna = personagem_coluna + proxima_direcao[0]
+        nova_linha = personagem_linha + proxima_direcao[1]
+        if nova_coluna &lt; 0:
+            nova_coluna = COLUNAS - 1
+        if nova_coluna &gt;= COLUNAS:
+            nova_coluna = 0</pre>
+      <p>e viram assim, sem os quatro <code>if</code>:</p>
+      <pre class="py" data-new="1">        nova_coluna = corrige_tunel(personagem_coluna + proxima_direcao[0])
+        nova_linha = personagem_linha + proxima_direcao[1]</pre>
+      <p>Faça o mesmo com o <code>personagem_coluna + direcao[0]</code> (o andar) e com o <code>tentacao_coluna + opcao[0]</code> (os caminhos livres). O quarto é o da tentação andando, que vira:</p>
+      <pre class="py" data-new="1">        tentacao_coluna = corrige_tunel(tentacao_coluna + tentacao_direcao[0])
+        tentacao_linha = tentacao_linha + tentacao_direcao[1]</pre>
+      <ul>
+        <li>Esta função <b>não precisa</b> de <code>global</code>: ela só <b>lê</b> o <code>COLUNAS</code>, não muda nada lá fora.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>O jogo funciona <b>igualzinho</b> a antes, com túnel e tudo. A diferença está no código: os quatro túneis (16 linhas de <code>if</code>) viraram <b>uma</b> função. Se um dia precisar mudar o túnel, você muda num lugar só.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m8p1"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <p class="mock-cap">Igual à Fase 7. Leve o personagem até o túnel do meio: ele ainda atravessa.</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>As vidas</h3></div>
+      <p>Logo <b>depois</b> da <code>estatura = 0</code>, crie:</p>
+      <pre class="py" data-new="1-3"># As vidas: um contador que DESCE. Encostou na tentação, perde uma.
+VIDAS_INICIAIS = 3
+vidas = VIDAS_INICIAIS</pre>
+      <p>Na <code>draw()</code>, logo depois da moldura da régua, desenhe uma bolinha para cada vida:</p>
+      <pre class="py" data-new="1-2">    for numero in range(vidas):
+        screen.draw.filled_circle((250 + numero * 30, HEIGHT - 20), 9, personagem_cor)</pre>
+      <p><code>range(vidas)</code> dá <code>0, 1, 2</code> quando <code>vidas</code> é 3. Cada bolinha fica 30 pixels à direita da anterior: em 250, 280 e 310.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No rodapé, entre o seu nome e a régua, aparecem <b>3 bolinhas douradas</b>: as suas vidas.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m8p2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <p class="mock-cap">As 3 vidas ficam em x = 250, 280 e 310, perto do rodapé.</p>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>A função que reinicia as posições</h3></div>
+      <p>Logo <b>depois</b> da <code>corrige_tunel</code>, crie:</p>
+      <pre class="py" data-new="1-13">def reiniciar_posicoes():
+    # Coloca o personagem e a tentação de volta no começo, parados
+    global personagem_coluna, personagem_linha, direcao, proxima_direcao
+    global tentacao_coluna, tentacao_linha, tentacao_direcao
+
+    personagem_coluna = INICIO_COLUNA
+    personagem_linha = INICIO_LINHA
+    direcao = (0, 0)
+    proxima_direcao = (0, 0)
+    tentacao_coluna = TENTACAO_INICIO_COLUNA
+    tentacao_linha = TENTACAO_INICIO_LINHA
+    tentacao_direcao = (-1, 0)</pre>
+      <p>Esta função <b>muda</b> variáveis de fora, então precisa do <code>global</code>. Agora use a função no <code>on_key_down</code>: troque o <code>global</code> e o <code>if</code> do espaço por estes (as quatro setas continuam iguais embaixo):</p>
+      <pre class="py" data-new="2,5">def on_key_down(key):
+    global proxima_direcao
+
+    if key == keys.SPACE:
+        reiniciar_posicoes()</pre>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Ande um pouco e aperte <b>espaço</b>: agora o personagem <b>e</b> a tentação voltam para o começo.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m8p3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <p class="mock-cap">Espere a tentação se afastar e aperte Espaço.</p>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>Encostar na tentação</h3></div>
+      <p>Logo <b>depois</b> da <code>reiniciar_posicoes</code>, crie:</p>
+      <pre class="py" data-new="1-7">def verificar_encontro():
+    # O personagem e a tentação estão no mesmo quadradinho? Perde uma vida.
+    global vidas
+
+    if (personagem_coluna, personagem_linha) == (tentacao_coluna, tentacao_linha):
+        vidas = vidas - 1
+        reiniciar_posicoes()</pre>
+      <ul>
+        <li><code>==</code> entre dois <b>pares</b> compara os dois números de uma vez: mesma coluna e mesma linha.</li>
+        <li>Uma função pode <b>chamar outra</b>: a <code>verificar_encontro</code> chama a <code>reiniciar_posicoes</code>.</li>
+      </ul>
+      <p>Agora chame a função em <b>dois</b> lugares do <code>update()</code>. Depois que o <b>personagem</b> anda (embaixo da coleta):</p>
+      <pre class="py" data-new="5">        if (personagem_coluna, personagem_linha) in habitos:
+            habitos.remove((personagem_coluna, personagem_linha))
+            estatura = estatura + PONTOS_POR_HABITO
+
+        verificar_encontro()</pre>
+      <p>E depois que a <b>tentação</b> anda (embaixo do túnel dela):</p>
+      <pre class="py" data-new="4">        tentacao_coluna = corrige_tunel(tentacao_coluna + tentacao_direcao[0])
+        tentacao_linha = tentacao_linha + tentacao_direcao[1]
+
+        verificar_encontro()</pre>
+      <div class="note idea">
+        <span class="tag pixel">Por que nos dois lugares?</span>
+        <p>Se você só olhar depois que o personagem anda, a tentação pode <b>andar para cima de você</b> e ninguém perceber. Olhando depois de cada um andar, ninguém atravessa ninguém.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Deixe a tentação te alcançar: <b>uma bolinha some</b> e os dois voltam para o começo. Depois da terceira vez, as bolinhas acabam... mas o jogo continua! Isso a gente arruma agora.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m8p4"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-chama>Atalho: trazer a tentação</button>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="ultimo" aria-live="polite"></p>
+    </div>
+  </article>
+
+  <!-- passo 5 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">5</span><h3>O fim de jogo</h3></div>
+      <p>Logo <b>depois</b> das vidas, crie:</p>
+      <pre class="py" data-new="1-2"># Quando as vidas acabam, o jogo para e mostra a tela de fim de jogo
+fim_de_jogo = False</pre>
+      <p>Na <code>verificar_encontro</code>, ponha <code>fim_de_jogo</code> no <code>global</code> e, <b>dentro</b> do <code>if</code> do encontro, embaixo do <code>reiniciar_posicoes()</code>, acrescente:</p>
+      <pre class="py" data-new="3,8-9">def verificar_encontro():
+    # O personagem e a tentação estão no mesmo quadradinho? Perde uma vida.
+    global vidas, fim_de_jogo
+
+    if (personagem_coluna, personagem_linha) == (tentacao_coluna, tentacao_linha):
+        vidas = vidas - 1
+        reiniciar_posicoes()
+        if vidas == 0:
+            fim_de_jogo = True</pre>
+      <p>E no <code>update()</code>, logo <b>depois</b> das três linhas de <code>global</code>:</p>
+      <pre class="py" data-new="1-2">    if fim_de_jogo:
+        return</pre>
+      <p>O <code>return</code> também funciona numa função que não devolve nada: ele faz o <code>update()</code> <b>sair na hora</b>. Com o fim de jogo, nada mais anda.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Perca as 3 vidas: na terceira, o jogo <b>congela</b>. Ninguém anda mais. Falta a tela.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m8p5"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-chama>Atalho: trazer a tentação</button>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+    </div>
+  </article>
+
+  <!-- passo 6 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">6</span><h3>A tela de fim de jogo</h3></div>
+      <p>Logo <b>depois</b> da <code>verificar_encontro</code>, crie a função que desenha a tela:</p>
+      <pre class="py" data-new="1-32">def desenhar_derrota():
+    # Na derrota, o destaque é para JESUS: é Ele quem venceu.
+    screen.fill("midnightblue")
+    screen.draw.text("JESUS", center=(WIDTH // 2, 110), fontsize=90, color="gold")
+    screen.draw.text("já venceu na cruz.", center=(WIDTH // 2, 185), fontsize=34, color=COR_DO_TEXTO)
+    screen.draw.text(
+        "O mal nunca tem a última palavra.",
+        center=(WIDTH // 2, 225),
+        fontsize=26,
+        color=COR_DO_TEXTO,
+    )
+
+    linhas = [
+        "Persevere todos os dias:",
+        "oração, Bíblia, culto,",
+        "obediência e ajudar o próximo.",
+        "",
+        "Em todas estas coisas somos mais que vencedores,",
+        "por meio daquele que nos amou. (Romanos 8:37)",
+    ]
+    y = 295
+    for linha in linhas:
+        screen.draw.text(linha, center=(WIDTH // 2, y), fontsize=24, color=COR_DO_TEXTO)
+        y = y + 32
+
+    screen.draw.text(
+        "Estatura alcançada: " + str(estatura),
+        center=(WIDTH // 2, 520),
+        fontsize=30,
+        color="gold",
+    )</pre>
+      <p>As frases do meio estão numa <b>lista</b>, e o <code>for</code> desenha uma de cada vez, descendo 32 pixels a cada linha. O <code>""</code> é uma linha vazia, para dar um respiro. E no <b>começo</b> da <code>draw()</code>, antes do <code>screen.fill(COR_DE_FUNDO)</code>:</p>
+      <pre class="py" data-new="2-4">def draw():
+    if fim_de_jogo:
+        desenhar_derrota()
+        return
+
+    screen.fill(COR_DE_FUNDO)</pre>
+      <div class="note run"><span class="tag pixel">Rode e perca as 3 vidas!</span><p>A tela fica <b>azul-escura</b>, com <b>JESUS</b> em dourado, "já venceu na cruz.", o convite para perseverar, Romanos 8:37 e a sua estatura.</p></div>
+      <div class="note gold">
+        <span class="tag pixel">Para conversar</span>
+        <p>Perder no jogo não é o fim. Na vida também: a vitória já foi conquistada por Jesus na cruz. O nosso papel é perseverar, um bom hábito de cada vez.</p>
+      </div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m8p6"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-chama>Atalho: trazer a tentação</button>
+        <button type="button" data-uma>Atalho: só 1 vida</button>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="mock-cap">Os atalhos são só para testar mais rápido: "só 1 vida" e depois "trazer a tentação".</p>
+    </div>
+  </article>
+
+  <div class="panel">
+    <h3>O que acontece quando a tentação te alcança</h3>
+    <div class="loop" aria-label="Fluxo do encontro">
+      <div class="box">alguém andou<br>(você ou a tentação)</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>verificar_encontro()</b><br>mesmo quadradinho?</div>
+      <span class="arrow">→</span>
+      <div class="box">sim: <b>vidas - 1</b><br><b>reiniciar_posicoes()</b></div>
+      <span class="arrow">→</span>
+      <div class="box"><b>vidas == 0</b>?<br>fim de jogo: tela de JESUS</div>
+    </div>
+  </div>
+
+  <div class="mission" data-mission="f8">
+    <h3>Sua missão da Fase 8</h3>
+    <ul>
+      <li><label><input type="checkbox" id="f8-a"><span>Rodei o <code>aula-08/funcoes.py</code> e vi o <code>def</code>, o parâmetro e o <code>return</code> funcionando.</span></label></li>
+      <li><label><input type="checkbox" id="f8-b"><span>Troquei os quatro túneis pela função <code>corrige_tunel</code>.</span></label></li>
+      <li><label><input type="checkbox" id="f8-c"><span>As 3 vidas aparecem como bolinhas no rodapé.</span></label></li>
+      <li><label><input type="checkbox" id="f8-d"><span>Criei a <code>reiniciar_posicoes</code> e usei no espaço.</span></label></li>
+      <li><label><input type="checkbox" id="f8-e"><span>A tentação tira uma vida quando me alcança.</span></label></li>
+      <li><label><input type="checkbox" id="f8-f"><span>Sem vidas, o jogo para e mostra a tela de JESUS.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 8 completa! Agora o seu jogo tem desafio de verdade. Salve o <code>jogo.py</code> e o <code>aula-08/funcoes.py</code>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="a" data-ok="Isso! O def cria; para usar, é preciso chamar com ()." data-no="Não. O def só CRIA a função. Ela roda quando alguém chama com ().">
+        <p>1. O que o <code>def</code> faz?</p>
+        <div class="opts"><button data-opt="a">Cria uma função</button><button data-opt="b">Chama uma função</button><button data-opt="c">Apaga uma função</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Certo! O parâmetro numero vale 5, e o return devolve 10." data-no="Não. numero vale 5 e a função devolve numero * 2: dá 10.">
+        <p>2. Com <code>def dobro(numero): return numero * 2</code>, o que <code>dobro(5)</code> devolve?</p>
+        <div class="opts"><button data-opt="a">5</button><button data-opt="b">10</button><button data-opt="c"><code>None</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Exato! Sem return, volta None: nada." data-no="Não. Uma função sem return devolve None, que quer dizer nada.">
+        <p>3. O que uma função <b>sem</b> <code>return</code> devolve?</p>
+        <div class="opts"><button data-opt="a">0</button><button data-opt="b"><code>None</code></button><button data-opt="c">Dá erro</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Isso! Olhando depois de cada um andar, ninguém passa pelo outro." data-no="Não. É para pegar o encontro depois que QUALQUER um dos dois anda: assim ninguém atravessa ninguém.">
+        <p>4. Por que a <code>verificar_encontro()</code> é chamada em dois lugares?</p>
+        <div class="opts"><button data-opt="a">Para ninguém atravessar o outro</button><button data-opt="b">Para perder duas vidas</button><button data-opt="c">Para o jogo ficar mais rápido</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Certo! O global só é preciso para MUDAR variáveis de fora." data-no="Não. Ela só lê o COLUNAS e não muda nada lá fora: global só é preciso para mudar.">
+        <p>5. Por que a <code>corrige_tunel</code> não precisa de <code>global</code>?</p>
+        <div class="opts"><button data-opt="a">Ela só lê, não muda nada de fora</button><button data-opt="b">Porque ela tem parâmetro</button><button data-opt="c">Porque ela é curta</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>ENTER para jogar de novo</h4>
+      <p>Faça a tecla <kbd>Enter</kbd> começar um <b>jogo novo</b> depois do fim de jogo, e escreva <code>"Aperte ENTER para jogar de novo"</code> na tela de fim.</p>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>Crie uma função <code>novo_jogo()</code> que monta a lista <code>habitos</code> de novo (o mesmo <code>for</code> dentro de <code>for</code>), zera a estatura, devolve as vidas, desliga o <code>fim_de_jogo</code> e chama a <code>reiniciar_posicoes()</code>. Ela precisa de <code>global</code> para tudo isso.</p>
+        <p>No <code>on_key_down</code>, use um <code>if</code> dentro do outro: <code>if key == keys.RETURN:</code> e, dentro dele, <code>if fim_de_jogo:</code>.</p>
+      </div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">def novo_jogo():
+    global habitos, estatura, vidas, fim_de_jogo
+
+    habitos = []
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == ".":
+                habitos.append((coluna, linha))
+    estatura = 0
+    vidas = VIDAS_INICIAIS
+    fim_de_jogo = False
+    reiniciar_posicoes()
+
+# no fim da desenhar_derrota():
+    screen.draw.text(
+        "Aperte ENTER para jogar de novo",
+        center=(WIDTH // 2, 570),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+# no on_key_down, embaixo do if do espaço:
+    if key == keys.RETURN:
+        if fim_de_jogo:
+            novo_jogo()</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>Do seu jeito</h4>
+      <ul>
+        <li>Mude o <code>VIDAS_INICIAIS</code>. O jogo fica mais fácil com 5?</li>
+        <li>Desenhe as vidas como quadradinhos, com <code>Rect</code> e <code>filled_rect</code>.</li>
+        <li>Troque as cores da tela de fim de jogo.</li>
+        <li>Acrescente uma frase sua de encorajamento na lista <code>linhas</code>.</li>
+      </ul>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 8 (só para conferir no final)</summary>
+    <div class="in"><p>Use para comparar com o seu, ou para destravar se empacar. No seu, o texto do pecador pode estar antes da mensagem do topo: tanto faz a ordem desses dois.</p>
+    <pre class="py">import pgzrun
+import random
+
+# O labirinto: uma LISTA de textos. Cada texto é uma linha do mapa.
+#   "#" = parede
+#   "." = caminho com um bom hábito para coletar
+#   " " = caminho vazio
+# A primeira e a última linha ficam vazias: é o espaço dos textos.
+# A linha do meio é aberta nas pontas: é o túnel.
+MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    ",
+]
+
+# Tamanho de cada quadradinho do mapa, em pixels
+TILE = 40
+
+COLUNAS = len(MAPA[0])  # quantas letras tem uma linha do mapa (20)
+LINHAS = len(MAPA)      # quantas linhas tem o mapa (15)
+
+WIDTH = COLUNAS * TILE  # 20 x 40 = 800
+HEIGHT = LINHAS * TILE  # 15 x 40 = 600
+
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+COR_DA_PAREDE = "navy"
+COR_DO_HABITO = "darkgreen"
+COR_DA_REGUA = "gold"
+COR_DA_TENTACAO = "crimson"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Onde o personagem começa: coluna e linha do mapa (contando a partir do 0)
+INICIO_COLUNA = 9
+INICIO_LINHA = 12
+
+# O personagem agora mora num quadradinho do mapa
+personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"
+
+# Quanto cada bom hábito faz você crescer
+PONTOS_POR_HABITO = 10
+
+# A estatura: um contador. Começa em 0 e cresce a cada bom hábito.
+estatura = 0
+
+# As vidas: um contador que DESCE. Encostou na tentação, perde uma.
+VIDAS_INICIAIS = 3
+vidas = VIDAS_INICIAIS
+
+# Quando as vidas acabam, o jogo para e mostra a tela de fim de jogo
+fim_de_jogo = False
+
+# O relógio do jogo: a cada ESPERA_PERSONAGEM voltas do update(), o personagem anda
+ESPERA_PERSONAGEM = 12
+quadros_personagem = 0
+
+# A direção é um par: (1, 0) direita, (-1, 0) esquerda, (0, 1) baixo, (0, -1) cima.
+# O personagem anda SOZINHO na direção guardada. As setas só escolhem a
+# próxima direção, que vale assim que der para virar.
+direcao = (0, 0)           # (0, 0) = parado
+proxima_direcao = (0, 0)
+
+# A tentação (desobediência) começa no meio do labirinto, olhando para a esquerda
+TENTACAO_INICIO_COLUNA = 9
+TENTACAO_INICIO_LINHA = 8
+tentacao_coluna = TENTACAO_INICIO_COLUNA
+tentacao_linha = TENTACAO_INICIO_LINHA
+tentacao_direcao = (-1, 0)
+
+# As quatro direções que a tentação pode tentar
+DIRECOES = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+# A tentação tem o relógio dela: é um pouco mais lenta que você
+ESPERA_TENTACAO = 16
+quadros_tentacao = 0
+
+# Os bons hábitos: uma lista com a posição (coluna, linha) de cada um.
+# Ela começa vazia e é enchida olhando o mapa: cada "." vira um hábito.
+habitos = []
+for linha in range(LINHAS):
+    for coluna in range(COLUNAS):
+        if MAPA[linha][coluna] == ".":
+            habitos.append((coluna, linha))
+
+
+# ---------------- as nossas funções ----------------
+
+def corrige_tunel(coluna):
+    # Saiu por um lado? Devolve a coluna do outro lado. Senão, devolve a mesma.
+    if coluna &lt; 0:
+        return COLUNAS - 1
+    if coluna &gt;= COLUNAS:
+        return 0
+    return coluna
+
+
+def reiniciar_posicoes():
+    # Coloca o personagem e a tentação de volta no começo, parados
+    global personagem_coluna, personagem_linha, direcao, proxima_direcao
+    global tentacao_coluna, tentacao_linha, tentacao_direcao
+
+    personagem_coluna = INICIO_COLUNA
+    personagem_linha = INICIO_LINHA
+    direcao = (0, 0)
+    proxima_direcao = (0, 0)
+    tentacao_coluna = TENTACAO_INICIO_COLUNA
+    tentacao_linha = TENTACAO_INICIO_LINHA
+    tentacao_direcao = (-1, 0)
+
+
+def verificar_encontro():
+    # O personagem e a tentação estão no mesmo quadradinho? Perde uma vida.
+    global vidas, fim_de_jogo
+
+    if (personagem_coluna, personagem_linha) == (tentacao_coluna, tentacao_linha):
+        vidas = vidas - 1
+        reiniciar_posicoes()
+        if vidas == 0:
+            fim_de_jogo = True
+
+
+def desenhar_derrota():
+    # Na derrota, o destaque é para JESUS: é Ele quem venceu.
+    screen.fill("midnightblue")
+    screen.draw.text("JESUS", center=(WIDTH // 2, 110), fontsize=90, color="gold")
+    screen.draw.text("já venceu na cruz.", center=(WIDTH // 2, 185), fontsize=34, color=COR_DO_TEXTO)
+    screen.draw.text(
+        "O mal nunca tem a última palavra.",
+        center=(WIDTH // 2, 225),
+        fontsize=26,
+        color=COR_DO_TEXTO,
+    )
+
+    linhas = [
+        "Persevere todos os dias:",
+        "oração, Bíblia, culto,",
+        "obediência e ajudar o próximo.",
+        "",
+        "Em todas estas coisas somos mais que vencedores,",
+        "por meio daquele que nos amou. (Romanos 8:37)",
+    ]
+    y = 295
+    for linha in linhas:
+        screen.draw.text(linha, center=(WIDTH // 2, y), fontsize=24, color=COR_DO_TEXTO)
+        y = y + 32
+
+    screen.draw.text(
+        "Estatura alcançada: " + str(estatura),
+        center=(WIDTH // 2, 520),
+        fontsize=30,
+        color="gold",
+    )
+
+
+def draw():
+    # Acabaram as vidas? Mostra a tela de fim de jogo e sai da draw() na hora.
+    if fim_de_jogo:
+        desenhar_derrota()
+        return
+
+    screen.fill(COR_DE_FUNDO)
+
+    # As paredes: passa por todas as linhas e, em cada linha, por todas as
+    # colunas. Onde o mapa tem "#", desenha um quadrado.
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    # Os bons hábitos: uma bolinha no centro de cada quadradinho da lista
+    for habito in habitos:
+        x = habito[0] * TILE + TILE // 2
+        y = habito[1] * TILE + TILE // 2
+        screen.draw.filled_circle((x, y), 6, COR_DO_HABITO)
+
+    # O placar (HUD): a estatura à esquerda e quantos hábitos faltam à direita.
+    # str() transforma o número em texto, para poder juntar com o +.
+    screen.draw.text(
+        "Estatura: " + str(estatura),
+        topleft=(10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        "Faltam: " + str(len(habitos)),
+        topright=(WIDTH - 10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )
+
+    # A lista ficou vazia? Então todos os hábitos foram coletados!
+    if len(habitos) == 0:
+        mensagem = "Parabéns! Você cresceu!"
+    else:
+        mensagem = "As setas escolhem o caminho!"
+
+    screen.draw.text(
+        mensagem,
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    # A régua da estatura: um retângulo que fica mais comprido quanto mais
+    # você cresce. A estatura máxima é 1160, e 1160 // 3 dá 386 pixels.
+    # A moldura (só a borda) mostra até onde a régua pode chegar.
+    regua = Rect((WIDTH - 400, HEIGHT - 28), (estatura // 3, 16))
+    screen.draw.filled_rect(regua, COR_DA_REGUA)
+    moldura = Rect((WIDTH - 400, HEIGHT - 28), (386, 16))
+    screen.draw.rect(moldura, COR_DO_TEXTO)
+
+    # As vidas: uma bolinha dourada para cada vida que sobrou
+    for numero in range(vidas):
+        screen.draw.filled_circle((250 + numero * 30, HEIGHT - 20), 9, personagem_cor)
+
+    # Do quadradinho (coluna, linha) para os pixels do centro dele
+    x = personagem_coluna * TILE + TILE // 2
+    y = personagem_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)
+
+    # A tentação: um círculo com dois olhos que olham para onde ela vai
+    x = tentacao_coluna * TILE + TILE // 2
+    y = tentacao_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), TILE // 2 - 4, COR_DA_TENTACAO)
+    olhar_x = tentacao_direcao[0] * 2
+    olhar_y = tentacao_direcao[1] * 2
+    screen.draw.filled_circle((x - 6, y - 4), 5, "white")
+    screen.draw.filled_circle((x + 6, y - 4), 5, "white")
+    screen.draw.filled_circle((x - 6 + olhar_x, y - 4 + olhar_y), 2, "black")
+    screen.draw.filled_circle((x + 6 + olhar_x, y - 4 + olhar_y), 2, "black")
+
+
+def update():
+    global quadros_personagem, personagem_coluna, personagem_linha
+    global direcao, estatura
+    global quadros_tentacao, tentacao_coluna, tentacao_linha, tentacao_direcao
+
+    # Fim de jogo: o return sai do update() na hora, e nada mais anda.
+    if fim_de_jogo:
+        return
+
+    # ---------------- o personagem ----------------
+    quadros_personagem = quadros_personagem + 1
+    if quadros_personagem == ESPERA_PERSONAGEM:
+        quadros_personagem = 0
+
+        # 1. Dá para virar para a direção que você escolheu? Então vira.
+        nova_coluna = corrige_tunel(personagem_coluna + proxima_direcao[0])
+        nova_linha = personagem_linha + proxima_direcao[1]
+        if MAPA[nova_linha][nova_coluna] != "#":
+            direcao = proxima_direcao
+
+        # 2. Anda um quadradinho na direção atual, se lá não for parede
+        nova_coluna = corrige_tunel(personagem_coluna + direcao[0])
+        nova_linha = personagem_linha + direcao[1]
+        if MAPA[nova_linha][nova_coluna] != "#":
+            personagem_coluna = nova_coluna
+            personagem_linha = nova_linha
+
+        # 3. Parou em cima de um bom hábito? Ele sai da lista e você cresce
+        if (personagem_coluna, personagem_linha) in habitos:
+            habitos.remove((personagem_coluna, personagem_linha))
+            estatura = estatura + PONTOS_POR_HABITO
+
+        # 4. Encostou na tentação?
+        verificar_encontro()
+
+    # ---------------- a tentação ----------------
+    quadros_tentacao = quadros_tentacao + 1
+    if quadros_tentacao == ESPERA_TENTACAO:
+        quadros_tentacao = 0
+
+        # 1. Quais caminhos estão livres? Ela nunca dá meia-volta.
+        meia_volta = (-tentacao_direcao[0], -tentacao_direcao[1])
+        livres = []
+        for opcao in DIRECOES:
+            if opcao != meia_volta:
+                nova_coluna = corrige_tunel(tentacao_coluna + opcao[0])
+                nova_linha = tentacao_linha + opcao[1]
+                if MAPA[nova_linha][nova_coluna] != "#":
+                    livres.append(opcao)
+
+        # 2. Sorteia um dos caminhos livres. No corredor só tem um;
+        #    no cruzamento tem dois ou três, e o random escolhe.
+        tentacao_direcao = random.choice(livres)
+
+        # 3. Anda um quadradinho para lá (com túnel)
+        tentacao_coluna = corrige_tunel(tentacao_coluna + tentacao_direcao[0])
+        tentacao_linha = tentacao_linha + tentacao_direcao[1]
+
+        # 4. Encostou em você?
+        verificar_encontro()
+
+
+def on_key_down(key):
+    global proxima_direcao
+
+    if key == keys.SPACE:
+        reiniciar_posicoes()
+
+    # As setas só ESCOLHEM a direção. Quem anda é o update().
+    if key == keys.RIGHT:
+        proxima_direcao = (1, 0)
+    if key == keys.LEFT:
+        proxima_direcao = (-1, 0)
+    if key == keys.DOWN:
+        proxima_direcao = (0, 1)
+    if key == keys.UP:
+        proxima_direcao = (0, -1)
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Função (a sua)</dt><dd>Um pedaço de código com nome, criado com <code>def</code>, que você chama quando quiser.</dd></div>
+    <div><dt>Chamar uma função</dt><dd>Escrever o nome dela com <code>()</code>, como <code>reiniciar_posicoes()</code>.</dd></div>
+    <div><dt>Parâmetro</dt><dd>Um valor que a função recebe entre os parênteses, como o <code>coluna</code> de <code>corrige_tunel(coluna)</code>.</dd></div>
+    <div><dt><code>return</code></dt><dd>Devolve um resultado para quem chamou e sai da função na hora.</dd></div>
+    <div><dt><code>None</code></dt><dd>"Nada": o que uma função devolve quando não tem <code>return</code>.</dd></div>
+    <div><dt>Vidas</dt><dd>Um contador que desce a cada encontro com a tentação.</dd></div>
+    <div><dt>Fim de jogo</dt><dd>Uma variável <code>True</code>/<code>False</code> que faz o jogo parar.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>NameError: name 'corrige_tunel' is not defined</b><span>O nome está diferente no <code>def</code> e na chamada, ou a função ficou <b>depois</b> do <code>pgzrun.go()</code>.</span></div>
+    <div class="err"><b>TypeError: string indices must be integers, not 'NoneType'</b><span>Faltou o último <code>return coluna</code> na <code>corrige_tunel</code>. Sem ele, a função devolve <code>None</code> para as colunas do meio.</span></div>
+    <div class="err"><b>O personagem some pela lateral esquerda</b><span>O primeiro <code>if</code> da <code>corrige_tunel</code> tem que <b>devolver</b> com <code>return COLUNAS - 1</code>, e não guardar numa variável.</span></div>
+    <div class="err"><b>O espaço não faz nada</b><span>Escreveu <code>reiniciar_posicoes</code> sem os <code>()</code>. Sem eles, a função não é chamada.</span></div>
+    <div class="err"><b>UnboundLocalError falando de vidas</b><span>Faltou o <code>global vidas</code> na <code>verificar_encontro</code>.</span></div>
+    <div class="err"><b>A tentação passa por você e nada acontece</b><span>Faltou chamar a <code>verificar_encontro()</code> no <code>update()</code>, ou ela ficou fora do <code>if</code> do relógio (recuo errado).</span></div>
+    <div class="err"><b>Perde várias vidas de uma vez</b><span>A <code>reiniciar_posicoes()</code> não está sendo chamada dentro do <code>if</code> do encontro.</span></div>
+    <div class="err"><b>As vidas acabam e o jogo continua</b><span>Falta o <code>if fim_de_jogo: return</code> no começo do <code>update()</code>, ou o <code>fim_de_jogo = True</code> está fora do <code>if vidas == 0:</code>.</span></div>
+    <div class="err"><b>O labirinto fica parado e a tela de JESUS não aparece</b><span>Falta o <code>return</code> logo depois do <code>desenhar_derrota()</code> na <code>draw()</code>: sem ele, o labirinto é desenhado por cima.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<section class="block">
+  <div class="panel">
+    <span class="tag pixel" style="color: var(--wall); font-size: .85rem;">Próxima fase</span>
+    <h3>A força da oração</h3>
+    <p>Na Fase 9, a 🙏 <b>oração</b> vira um poder especial: por alguns segundos, as tentações fogem de você e podem ser vencidas. Guarde bem o seu <code>jogo.py</code>.</p>
+    <a class="prox-link" href="index.html">Ver o mapa de missões →</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Crescendo como Jesus · curso de programação com Python e Pygame Zero para crianças. Caderno de missões da Fase 8.</p>
+  </div>
+</footer>
+
+<nav class="guia" aria-label="Andar pelo caderno">
+  <button type="button" class="fase-prev" data-go="fase-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 12 12 6 18 12"/><polyline points="6 18 12 12 18 18"/></svg>Fase anterior</button>
+  <button type="button" class="passo passo-prev" data-go="passo-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>Voltar</button>
+  <div class="onde" aria-live="polite"><b>Início</b><span></span></div>
+  <button type="button" class="passo passo-next next" data-go="passo-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>Seguir</button>
+  <button type="button" class="fase-next" data-go="fase-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 6 12 12 18 6"/><polyline points="6 12 12 18 18 12"/></svg>Próxima fase</button>
+</nav>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- destaque de código Python ---------- */
+  var KW = { "import":1, "def":1, "if":1, "elif":1, "else":1, "global":1, "True":1, "False":1, "and":1, "or":1, "not":1, "return":1, "for":1, "in":1 };
+  var PG = { "screen":1, "keyboard":1, "keys":1, "Rect":1, "pgzrun":1, "print":1, "len":1, "range":1, "str":1, "random":1 };
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function highlight(src) {
+    var re = /(#[^\n]*)|("(?:[^"\\\n]|\\.)*")|(\b\d+\b)|([A-Za-z_]\w*)|(\s+|[\s\S])/g;
+    var out = "", m, prev = "";
+    while ((m = re.exec(src))) {
+      if (m[1]) out += '<span class="com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="str">' + esc(m[2]) + "</span>";
+      else if (m[3]) out += '<span class="num">' + m[3] + "</span>";
+      else if (m[4]) {
+        var w = m[4];
+        if (KW[w]) out += '<span class="kw">' + w + "</span>";
+        else if (prev === "def") out += '<span class="fn">' + w + "</span>";
+        else if (PG[w]) out += '<span class="pg">' + w + "</span>";
+        else if (/^[A-Z][A-Z_0-9]+$/.test(w)) out += '<span class="const">' + w + "</span>";
+        else out += esc(w);
+        prev = w;
+        continue;
+      } else out += esc(m[5]);
+      if (m[5] && /\S/.test(m[5])) prev = "";
+    }
+    return out;
+  }
+  function parseRanges(s) {
+    var set = {};
+    (s || "").split(",").forEach(function (p) {
+      if (!p) return;
+      var a = p.split("-"), lo = +a[0], hi = +(a[1] || a[0]);
+      for (var i = lo; i <= hi; i++) set[i] = 1;
+    });
+    return set;
+  }
+  document.querySelectorAll("pre.py").forEach(function (pre) {
+    var src = pre.textContent.replace(/^\n/, "").replace(/\s+$/, "");
+    var nw = parseRanges(pre.getAttribute("data-new"));
+    pre.innerHTML = highlight(src).split("\n").map(function (line, i) {
+      return '<span class="ln' + (nw[i + 1] ? " new" : "") + '">' + (line || " ") + "</span>";
+    }).join("");
+  });
+  function term(lines) {
+    return lines.map(function (l) {
+      var style = l[0] === "err" ? ' style="color:#ff9d8f"' : "";
+      return '<span class="ln' + (l[0] === "cmd" ? "" : " out") + '"' + style + ">" + esc(l[1]) + "</span>";
+    }).join("");
+  }
+
+  /* ---------- o mapa do jogo ---------- */
+  var MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    "
+  ];
+  var TILE = 40, COLUNAS = 20, LINHAS = 15, IC = 9, IL = 12, TC = 9, TL = 8;
+  var DIRECOES = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  function todosHabitos() {
+    var h = [];
+    for (var l = 0; l < LINHAS; l++) for (var c = 0; c < COLUNAS; c++) if (MAPA[l][c] === ".") h.push([c, l]);
+    return h;
+  }
+  function temHabito(h, c, l) { for (var i = 0; i < h.length; i++) if (h[i][0] === c && h[i][1] === l) return i; return -1; }
+  function tunel(c) { return c < 0 ? COLUNAS - 1 : (c >= COLUNAS ? 0 : c); }
+  function livre(c, l) { return MAPA[l][tunel(c)] !== "#"; }
+
+  /* ---------- desenho (igual ao Pygame Zero) ---------- */
+  var PGC = { skyblue:"#87ceeb", navy:"#000080", darkgreen:"#006400", white:"#ffffff", gold:"#ffd700", crimson:"#dc143c", black:"#000000" };
+  function col(c) { return PGC[c] || c; }
+  function txt(ctx, t, x, y, size, anchor) {
+    ctx.font = "bold " + Math.round(size * 0.74) + "px Arial, Helvetica, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    if (anchor === "topleft") { ctx.textAlign = "left"; ctx.textBaseline = "top"; }
+    else if (anchor === "topright") { ctx.textAlign = "right"; ctx.textBaseline = "top"; }
+    else { ctx.textAlign = "center"; ctx.textBaseline = "middle"; }
+    ctx.fillText(t, x, y);
+  }
+  function circ(ctx, x, y, r, c) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = col(c); ctx.fill(); }
+
+  /* ---------- o jogo da Fase 8 (igual ao Python, passo a passo) ---------- */
+  PGC.midnightblue = "#191970";
+  var ORDEM = ["m8p1", "m8p2", "m8p3", "m8p4", "m8p5", "m8p6"];
+  function nivel(m) { return ORDEM.indexOf(m); }
+  var LINHAS_DERROTA = ["Persevere todos os dias:", "oração, Bíblia, culto,", "obediência e ajudar o próximo.", "",
+    "Em todas estas coisas somos mais que vencedores,", "por meio daquele que nos amou. (Romanos 8:37)"];
+  function txtCor(ctx, t, x, y, size, cor) { txt(ctx, t, x, y, size, "center"); if (cor) { ctx.fillStyle = col(cor); ctx.fillText(t, x, y); } }
+  function pintaDerrota(ctx, st) {
+    ctx.fillStyle = col("midnightblue"); ctx.fillRect(0, 0, 800, 600);
+    txtCor(ctx, "JESUS", 400, 110, 90, "gold");
+    txtCor(ctx, "já venceu na cruz.", 400, 185, 34);
+    txtCor(ctx, "O mal nunca tem a última palavra.", 400, 225, 26);
+    var y = 295;
+    LINHAS_DERROTA.forEach(function (l) { txtCor(ctx, l, 400, y, 24); y += 32; });
+    txtCor(ctx, "Estatura alcançada: " + st.est, 400, 520, 30, "gold");
+  }
+  function pinta(ctx, st, modo) {
+    var n = nivel(modo);
+    if (n >= 5 && st.fim) { pintaDerrota(ctx, st); return; }
+    ctx.fillStyle = col("skyblue"); ctx.fillRect(0, 0, 800, 600);
+    ctx.fillStyle = col("navy");
+    for (var l = 0; l < LINHAS; l++) for (var c = 0; c < COLUNAS; c++) if (MAPA[l][c] === "#") ctx.fillRect(c * TILE, l * TILE, TILE, TILE);
+    st.h.forEach(function (h) { circ(ctx, h[0] * TILE + 20, h[1] * TILE + 20, 6, "darkgreen"); });
+    txt(ctx, "Estatura: " + st.est, 10, 8, 28, "topleft");
+    txt(ctx, "Faltam: " + st.h.length, 790, 8, 28, "topright");
+    txt(ctx, st.h.length === 0 ? "Parabéns! Você cresceu!" : "As setas escolhem o caminho!", 400, 20, 24, "center");
+    txt(ctx, "Pecador: Escreva seu nome aqui", 10, 570, 16, "topleft");
+    ctx.fillStyle = col("gold"); ctx.fillRect(400, 572, Math.floor(st.est / 3), 16);
+    ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1; ctx.strokeRect(400.5, 572.5, 385, 15);
+    if (n >= 1) for (var v = 0; v < st.vidas; v++) circ(ctx, 250 + v * 30, 580, 9, "gold");
+    circ(ctx, st.c * TILE + 20, st.l * TILE + 20, 16, "gold");
+    var x = st.tc * TILE + 20, y = st.tl * TILE + 20, ox = st.td[0] * 2, oy = st.td[1] * 2;
+    circ(ctx, x, y, 16, "crimson");
+    circ(ctx, x - 6, y - 4, 5, "white"); circ(ctx, x + 6, y - 4, 5, "white");
+    circ(ctx, x - 6 + ox, y - 4 + oy, 2, "black"); circ(ctx, x + 6 + ox, y - 4 + oy, 2, "black");
+  }
+  function novoEstado() {
+    return { c: IC, l: IL, h: todosHabitos(), est: 0, dir: [0, 0], prox: [0, 0], qp: 0, tc: TC, tl: TL, td: [-1, 0], qt: 0, vidas: 3, fim: false, ultimo: "" };
+  }
+  function reinicia(st) { st.c = IC; st.l = IL; st.dir = [0, 0]; st.prox = [0, 0]; st.tc = TC; st.tl = TL; st.td = [-1, 0]; }
+  function encontro(st, n) {
+    if (n < 3) return;
+    if (st.c === st.tc && st.l === st.tl) {
+      st.vidas--; reinicia(st);
+      st.ultimo = "A tentação te alcançou: vidas = " + st.vidas + ". Os dois voltaram para o começo.";
+      if (n >= 4 && st.vidas === 0) { st.fim = true; st.ultimo = "vidas == 0: fim_de_jogo = True"; }
+    }
+  }
+  var DIR = { right: [1, 0], left: [-1, 0], down: [0, 1], up: [0, -1] };
+  function aperta(st, k, n) {
+    if (k === "space") {
+      if (n >= 2) reinicia(st); else { st.c = IC; st.l = IL; st.dir = [0, 0]; st.prox = [0, 0]; }
+    }
+    if (DIR[k]) st.prox = DIR[k].slice();
+  }
+  function quadro(st, modo) {
+    var n = nivel(modo);
+    if (n >= 4 && st.fim) return;
+    st.qp++;
+    if (st.qp === 12) {
+      st.qp = 0;
+      if (livre(st.c + st.prox[0], st.l + st.prox[1])) st.dir = st.prox.slice();
+      var nc = tunel(st.c + st.dir[0]), nl = st.l + st.dir[1];
+      if (MAPA[nl][nc] !== "#") { st.c = nc; st.l = nl; }
+      var i = temHabito(st.h, st.c, st.l);
+      if (i >= 0) { st.h.splice(i, 1); st.est += 10; }
+      encontro(st, n);
+    }
+    st.qt++;
+    if (st.qt === 16) {
+      st.qt = 0;
+      var volta = [-st.td[0], -st.td[1]], livres = [];
+      DIRECOES.forEach(function (o) {
+        if (o[0] === volta[0] && o[1] === volta[1]) return;
+        if (livre(st.tc + o[0], st.tl + o[1])) livres.push(o);
+      });
+      st.td = livres[Math.floor(Math.random() * livres.length)].slice();
+      st.tc = tunel(st.tc + st.td[0]); st.tl = st.tl + st.td[1];
+      encontro(st, n);
+    }
+  }
+
+  var T = "Crescendo como Jesus", jogos = [];
+  document.querySelectorAll('figure.mock[data-scene="jogo"]').forEach(function (fig) {
+    var modo = fig.getAttribute("data-mode"), n = nivel(modo), cv = fig.querySelector("canvas"), ctx = cv.getContext("2d"), side = fig.closest(".side");
+    fig.querySelector(".mock-title").textContent = T;
+    var st = novoEstado();
+    function mostra() {
+      pinta(ctx, st, modo);
+      var v = side.querySelector(".vars");
+      if (v) v.innerHTML = "<span>vidas</span><span>" + st.vidas + "</span>" + (n >= 4 ? "<span>fim_de_jogo</span><span class=\"" + (st.fim ? "t" : "f") + "\">" + (st.fim ? "True" : "False") + "</span>" : "") +
+        "<span>estatura</span><span>" + st.est + "</span>";
+      var u = side.querySelector(".ultimo"); if (u) u.textContent = st.ultimo || "Deixe a tentação te alcançar (ou use o atalho).";
+    }
+    var KEYMAP = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down", " ": "space" };
+    function vai(k) { aperta(st, k, n); mostra(); }
+    cv.addEventListener("keydown", function (e) { var k = KEYMAP[e.key]; if (!k) return; e.preventDefault(); vai(k); });
+    cv.addEventListener("pointerdown", function () { cv.focus(); });
+    side.querySelectorAll("[data-key]").forEach(function (b) { b.addEventListener("click", function () { vai(b.getAttribute("data-key")); }); });
+    side.querySelectorAll("[data-rerun]").forEach(function (b) { b.addEventListener("click", function () { st = novoEstado(); mostra(); }); });
+    var ch = side.querySelector("[data-chama]");
+    if (ch) ch.addEventListener("click", function () {
+      if (st.fim) return;
+      reinicia(st); st.tc = 10; st.tl = 12; st.td = [-1, 0]; st.qt = 0;
+      st.ultimo = "Atalho: a tentação está em (10, 12), bem ao seu lado. Ali o único caminho é vir até você.";
+      mostra();
+    });
+    var um = side.querySelector("[data-uma]");
+    if (um) um.addEventListener("click", function () { if (!st.fim) { st.vidas = 1; mostra(); } });
+    jogos.push({ passo: function () { quadro(st, modo); }, mostra: mostra, st: function () { return st; } });
+    mostra();
+  });
+  // Só para os testes automáticos (endereço com ?teste): o aluno nunca vê isto.
+  if (location.search.indexOf("teste") >= 0) window.__jogos = jogos;
+
+  var ultimo = 0, acc = 0;
+  function laco(t) {
+    if (window.__pausa) { requestAnimationFrame(laco); return; }
+    var dt = ultimo ? Math.min(t - ultimo, 100) : 16; ultimo = t; acc += dt;
+    var passos = 0;
+    while (acc >= 1000 / 60) { acc -= 1000 / 60; jogos.forEach(function (j) { j.passo(); }); passos++; }
+    if (passos) jogos.forEach(function (j) { j.mostra(); });
+    requestAnimationFrame(laco);
+  }
+  requestAnimationFrame(laco);
+
+  /* ---------- a máquina de funções ---------- */
+  var maqOut = document.getElementById("maq-out"), inDobro = document.getElementById("m-dobro"), inTunel = document.getElementById("m-tunel"), semRet = document.getElementById("m-semreturn");
+  function inteiro(el) { var v = parseInt(el.value, 10); return isNaN(v) ? 0 : v; }
+  document.querySelectorAll("[data-maq]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var op = b.getAttribute("data-maq"), linhas;
+      if (op === "dobro") { var d = inteiro(inDobro); linhas = [["cmd", "print(dobro(" + d + "))"], ["out", semRet.checked ? "None" : String(d * 2)]]; if (semRet.checked) linhas.push(["out", "(sem o return, a função não devolve nada)"]); }
+      else if (op === "tunel") { var c = inteiro(inTunel); linhas = [["cmd", "print(corrige_tunel(" + c + "))"], ["out", String(c < 0 ? 19 : (c >= 20 ? 0 : c))]]; }
+      else if (op === "semparenteses") linhas = [["cmd", "print(dobro)"], ["out", "<function dobro at 0x000001F3A2C4E0>"], ["out", "(sem os (), a função não foi chamada)"]];
+      else if (op === "boas") linhas = [["cmd", "boas_vindas()"], ["out", "Olá!"], ["out", "Vamos crescer como Jesus."]];
+      else linhas = [["cmd", "boas_vindas"], ["out", "(nada aparece: sem os (), a função não roda)"]];
+      maqOut.innerHTML = term(linhas);
+    });
+  });
+
+  /* ---------- quiz ---------- */
+  document.querySelectorAll(".q").forEach(function (q) {
+    var why = q.querySelector(".why");
+    q.querySelectorAll("button[data-opt]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        q.querySelectorAll("button").forEach(function (x) { x.classList.remove("right", "wrong"); });
+        var ok = b.getAttribute("data-opt") === q.getAttribute("data-answer");
+        b.classList.add(ok ? "right" : "wrong");
+        why.textContent = q.getAttribute(ok ? "data-ok" : "data-no");
+        why.className = "why " + (ok ? "ok" : "no");
+      });
+    });
+  });
+
+  /* ---------- missões (progresso salvo neste navegador) ---------- */
+  var KEY = "ccj-missoes-f8", saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+  function refresh(m) {
+    var boxes = m.querySelectorAll("input[type=checkbox]"), n = 0;
+    boxes.forEach(function (b) { if (b.checked) n++; });
+    m.querySelector(".meter i").style.width = (n / boxes.length * 100) + "%";
+    m.querySelector(".done-msg").hidden = n !== boxes.length;
+    var nav = document.querySelector('[data-nav="' + m.getAttribute("data-mission") + '"]');
+    nav.querySelector(".count").textContent = n + "/" + boxes.length;
+    nav.classList.toggle("done", n === boxes.length);
+  }
+  document.querySelectorAll(".mission").forEach(function (m) {
+    m.querySelectorAll("input[type=checkbox]").forEach(function (b) {
+      b.checked = !!saved[b.id];
+      b.addEventListener("change", function () { saved[b.id] = b.checked; save(); refresh(m); });
+    });
+    refresh(m);
+  });
+
+  /* ---------- guia lateral: andar de passo em passo e de fase em fase ---------- */
+  var stops = [{ el: document.getElementById("inicio"), fase: -1, top: "Início", sub: "" }];
+  var faseIni = [];
+  document.querySelectorAll("#antes, section.block[id^='fase-']").forEach(function (sec) {
+    var num = sec.id === "antes" ? "" : sec.id.slice(5);
+    var nome = num ? "Fase " + num : "Antes";
+    var fi = faseIni.length, n = 0;
+    faseIni.push(stops.length);
+    stops.push({ el: sec, fase: fi, top: nome, sub: num ? "Começo" : "de começar" });
+    sec.querySelectorAll("article.step, .mission, .quiz, .challenges, .gloss, .errs").forEach(function (el) {
+      var alvo = el, sub;
+      if (el.matches("article.step")) sub = el.getAttribute("data-sub") || "Passo " + (++n);
+      else if (el.classList.contains("mission")) sub = "Missão";
+      else if (el.classList.contains("quiz")) { alvo = el.closest(".panel"); sub = "Quiz"; }
+      else if (el.classList.contains("challenges")) sub = "Desafios";
+      else { alvo = el.previousElementSibling || el; sub = el.classList.contains("gloss") ? "Palavras" : "Deu erro?"; }
+      stops.push({ el: alvo, fase: fi, top: nome, sub: sub });
+    });
+  });
+  var topo = document.querySelector(".nav"), guia = document.querySelector(".guia");
+  var onde = guia.querySelector(".onde"), btn = {};
+  guia.querySelectorAll("button").forEach(function (b) { btn[b.getAttribute("data-go")] = b; });
+  var atual = 0, fixo = null, pedido = false;
+  function alvos() {
+    var f = stops[atual].fase;
+    return {
+      "passo-prev": atual > 0 ? atual - 1 : null,
+      "passo-next": atual < stops.length - 1 ? atual + 1 : null,
+      "fase-prev": f < 0 ? null : (f === 0 ? 0 : faseIni[f - 1]),
+      "fase-next": f < faseIni.length - 1 ? faseIni[f + 1] : null
+    };
+  }
+  function mostraGuia() {
+    var s = stops[atual], a = alvos();
+    onde.querySelector("b").textContent = s.top;
+    onde.querySelector("span").textContent = s.sub;
+    Object.keys(btn).forEach(function (k) { btn[k].disabled = a[k] === null; });
+  }
+  function calcula() {
+    pedido = false;
+    document.documentElement.style.scrollPaddingTop = (topo.offsetHeight + 12) + "px";
+    if (fixo !== null) { atual = fixo; mostraGuia(); return; }
+    var lim = topo.offsetHeight + 60, i = 0;
+    for (var k = 1; k < stops.length; k++) {
+      if (stops[k].el.getBoundingClientRect().top > lim) break;
+      i = k;
+    }
+    atual = i;
+    mostraGuia();
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(calcula); } }
+  guia.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    var j = alvos()[b.getAttribute("data-go")];
+    if (j === null) return;
+    fixo = atual = j;
+    stops[j].el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    mostraGuia();
+  });
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      var noGuia = !!e.target.nodeType && guia.contains(e.target) && (e.type !== "keydown" || e.key === "Enter" || e.key === " ");
+      if (fixo !== null && !noGuia) { fixo = null; agenda(); }
+    }, { passive: true });
+  });
+  window.addEventListener("scroll", agenda, { passive: true });
+  window.addEventListener("resize", agenda);
+  calcula();
+
+
+  /* ---------- abertura: o jogo da Fase 8 jogando sozinho ---------- */
+  var hc = document.getElementById("hero-maze"), hx = hc.getContext("2d"), hero = novoEstado(), pausa = 0;
+  function escolheHeroi() {
+    var op = [], bons = [];
+    DIRECOES.forEach(function (d) {
+      if (d[0] === -hero.dir[0] && d[1] === -hero.dir[1] && (hero.dir[0] || hero.dir[1])) return;
+      if (!livre(hero.c + d[0], hero.l + d[1])) return;
+      op.push(d);
+      if (temHabito(hero.h, tunel(hero.c + d[0]), hero.l + d[1]) >= 0) bons.push(d);
+    });
+    if (!op.length) return [-hero.dir[0], -hero.dir[1]];
+    var lista = bons.length && Math.random() < 0.85 ? bons : op;
+    return lista[Math.floor(Math.random() * lista.length)];
+  }
+  function passoHeroi() {
+    if (hero.fim || !hero.h.length) { pausa++; if (pausa > 300) { pausa = 0; hero = novoEstado(); } return; }
+    if (hero.qp === 11) hero.prox = escolheHeroi();
+    quadro(hero, "m8p6");
+  }
+  if (reduce) { hero.fim = true; pinta(hx, hero, "m8p6"); }
+  else {
+    var hu = 0, ha = 0;
+    (function heroi(t) {
+      var dt = hu ? Math.min(t - hu, 100) : 16; hu = t; ha += dt;
+      while (ha >= 1000 / 60) { ha -= 1000 / 60; passoHeroi(); }
+      pinta(hx, hero, "m8p6");
+      requestAnimationFrame(heroi);
+    })(performance.now());
+  }
+})();
+</script>

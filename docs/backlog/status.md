@@ -12,9 +12,6 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   aluno): Módulos 1-2 ainda citam `No module named 'pgzero'`, "`screen is not defined` = falta
   import/go" e `UnboundLocalError` no Módulo 2; Módulo 0 diz que `rmdir` "só remove pasta vazia,
   é por segurança" (falso no PowerShell); Módulo 2 diz "Módulo 8" para a estatura (é o 6).
-- **Tabela de módulos × `def`:** a tabela põe "funções (`def`)" no Módulo 8, mas os Módulos 1-3
-  já usam `def draw()`, `on_mouse_down(pos)` e `global`. Registrar que antes do 8 são só as
-  funções especiais chamadas pelo Pygame Zero.
 - **Módulo 2 lista `==` como conceito do dia** sem nenhum código obrigatório que use `==`.
 - Pequenas divergências: comentário `uv run jogo.py` nos `exemplo.py` (o curso roda com
   `python jogo.py`/▶); texto do `VERSICULO` difere entre `exemplo.py` do Módulo 1 e o caderno.
@@ -23,7 +20,7 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   2026-08-27), mas só foi validada headless (sintaxe + conectividade do mapa + simulação de
   lógica). Falta rodar numa máquina com tela para ajustar velocidades, tamanho da janela,
   legibilidade e "sensação" do movimento. Sprites e sons continuam fora (item à parte).
-- **Módulos 8 a 12** ainda não foram escritos — só existem como linha na tabela de
+- **Módulos 9 a 12** ainda não foram escritos — só existem como linha na tabela de
   `docs/crescendo-como-jesus-conteudo-programatico.md` (título + conceitos-chave). **Prioridade
   atual do projeto: revisar e escrever o conteúdo das aulas** (`material-professor.md` +
   `material-aluno.md` + `exemplo.py`).
@@ -42,6 +39,19 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   `docs/crescendo-como-jesus-conteudo-programatico.md` e `/novo-modulo`.
 
 ## Feito
+
+- 2026-11-23 — **Módulo 8 escrito e publicado** (`docs/modulo-08-encostar-na-tentacao/`) +
+  **caderno da Fase 8** (`cadernos/caderno-de-missoes-modulo-8.html`), liberada no mapa (8 de 12).
+  Funções próprias: experimento com `def` sem parâmetro, com parâmetro e `return` (e os erros de
+  propósito: sem `()` e sem `return` → `None`); no jogo, os 4 túneis viram `corrige_tunel(coluna)`
+  (sem `global`, só lê), `reiniciar_posicoes()` serve ao Espaço e ao encontro, e
+  `verificar_encontro()` é chamada depois de **cada** um andar (assim ninguém atravessa ninguém:
+  289 combinações de velocidade testadas, 0 falhas). 3 vidas como bolinhas no rodapé; com 0,
+  `fim_de_jogo` congela o `update()` (`return`) e a `draw()` mostra a tela de derrota com o
+  destaque em **JESUS** ("já venceu na cruz"), o convite a perseverar e Romanos 8:37, como na
+  demo. Jogar de novo com Enter é o desafio extra (`if` dentro de `if`, sem `and`). Tabela de
+  módulos registra que antes do 8 só existiam as funções especiais do Pygame Zero. Validado com
+  o aluno simulado no Pygame Zero sem janela e as janelinhas do caderno contra as telas reais.
 
 - 2026-11-23 — **Módulos 6 e 7 escritos e publicados** (`docs/modulo-06-a-estatura/`,
   `docs/modulo-07-as-tentacoes-entram/`: `material-professor.md`, `material-aluno.md`,

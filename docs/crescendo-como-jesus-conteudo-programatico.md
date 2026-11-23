@@ -95,7 +95,7 @@ O jogo final deve possuir: tela inicial (com o versículo), um **labirinto** com
 | 5 | [Os bons hábitos no mapa](modulo-05-os-bons-habitos-no-mapa/material-professor.md) | reforço de listas e `for`; tirar um item da lista ao coletar | Bons hábitos espalhados pelo mapa; somem quando o jogador passa por cima |
 | 6 | [A estatura](modulo-06-a-estatura/material-professor.md) | contadores, `str()` (número → texto), texto/HUD na tela | Placar de estatura sobe a cada hábito coletado |
 | 7 | [As tentações entram](modulo-07-as-tentacoes-entram/material-professor.md) | `random`, contador de quadros no `update()` (o personagem passa a andar sozinho), direção como par, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
-| 8 | Encostar na tentação | funções (`def`), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar as vidas |
+| 8 | [Encostar na tentação](modulo-08-encostar-na-tentacao/material-professor.md) | funções próprias (`def`, parâmetro, `return`, `None`; antes só havia as funções especiais do Pygame Zero), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar as vidas |
 | 9 | A força da oração | estado com tempo (`dt`/timer), condições compostas | Power-pellet: as tentações fogem e podem ser vencidas |
 | 10 | Tentação mais esperta | perseguição (mover em direção ao jogador), lista de tentações | Várias tentações, misturando andar aleatório e perseguir |
 | 11 | Fases e vitória | estados do jogo, condição de fim de fase | 4 fases temáticas com dificuldade crescente + tela de vitória |
@@ -128,4 +128,4 @@ entregável do curso**: será gerado de uma vez para todos os módulos no fim do
 conteúdo de todas as aulas estiver revisado (ver `docs/backlog/status.md` e issue #12). Não é
 feito módulo a módulo. A prioridade agora é revisar e escrever o conteúdo das aulas.
 
-> Status: módulos 0 a 7 já estão nessa estrutura. Módulos 8–12 ainda não existem.
+> Status: módulos 0 a 8 já estão nessa estrutura. Módulos 9–12 ainda não existem.
