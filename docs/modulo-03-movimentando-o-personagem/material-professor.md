@@ -111,7 +111,7 @@ def draw():
     )
 
     screen.draw.text(
-        "Use as setas para andar. Espaco volta ao meio.",
+        "Use as setas para andar. Espaço volta ao meio.",
         center=(WIDTH // 2, 30),
         fontsize=24,
         color=COR_DO_TEXTO,
@@ -138,7 +138,9 @@ def update():
 
 - `update()` é **especial** como `draw()`: o Pygame Zero chama sozinho, ~60 vezes por segundo,
   **antes** de cada `draw()`.
-- `global` de novo (Módulo 2): sem ele, `update()` cria uma cópia local e a tela nunca muda.
+- `global` de novo (Módulo 2): sem ele, a linha `personagem_x = personagem_x + VELOCIDADE` lê
+  uma variável local que ainda não existe e o jogo fecha com `UnboundLocalError` (no Módulo 2,
+  que só atribuía, a tela simplesmente não mudava).
 - Rodar: a bola **desliza sozinha para a direita** e some pela borda. "Ué, ele fugiu!" — é
   esperado. `VELOCIDADE` pixels por quadro × 60 quadros por segundo = 300 pixels por segundo.
   Mostrar que trocar `VELOCIDADE` pra `1` deixa lento e pra `20` deixa muito rápido.
@@ -223,9 +225,9 @@ empacou.
 ### 5. Desafios (7 min)
 
 - **Missão principal:** personagem anda nas 4 direções com as setas do teclado.
-- **Desafio extra:** impedir que o personagem **saia da tela** — usar `if` pra travar
-  `personagem_x` entre `0` e `WIDTH` e `personagem_y` entre `0` e `HEIGHT` (é uma prévia do
-  Módulo 4, onde entram as paredes).
+- **Desafio extra:** correr segurando o Shift da esquerda — no começo do `update()`,
+  `passo = VELOCIDADE` e `if keyboard.lshift: passo = VELOCIDADE * 2`; as quatro setas passam a
+  usar `passo`. (Impedir de sair da tela exigiria `<`/`>`, que só entram no Módulo 4.)
 - **Desafio criativo:** aceitar também as teclas `W A S D` além das setas; mudar `personagem_cor`
   enquanto anda; deixar o personagem mais rápido ou mais devagar mexendo em `VELOCIDADE`.
 
@@ -265,10 +267,10 @@ Apertar a barra de espaço traz o personagem de volta ao centro.
 
 ## Erros comuns e como ajudar
 
-- **Personagem não anda (ou `UnboundLocalError`):** falta `global personagem_x, personagem_y` no
-  começo de `update()`. É o mesmo erro do Módulo 2 — mostrar sem o `global` (nada acontece) e
-  depois com ele.
-- **`update` escrito errado** (`Update`, `atualizar`, `update(dt)` sem usar `dt`): o Pygame Zero
+- **O jogo fecha com `UnboundLocalError: cannot access local variable 'personagem_x'`:** falta
+  `global personagem_x, personagem_y` no começo de `update()`. Mostrar sem o `global` (o jogo
+  fecha no primeiro quadro) e depois com ele.
+- **`update` escrito errado** (`Update`, `atualizar`): o Pygame Zero
   só chama a função se o nome for **exatamente** `update`. O mesmo vale pra `on_key_down`.
 - **`keyboard.right()` com parênteses:** é `keyboard.right` **sem** parênteses — é um valor
   `True`/`False`, não uma função.

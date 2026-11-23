@@ -85,9 +85,9 @@ def draw():
 
     # A lista ficou vazia? Então todos os hábitos foram coletados!
     if len(habitos) == 0:
-        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+        mensagem = "Parabéns! Você encheu sua vida de bons hábitos!"
     else:
-        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+        mensagem = "Setas: anda. Passe por cima dos bons hábitos."
 
     screen.draw.text(
         mensagem,

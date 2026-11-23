@@ -27,7 +27,7 @@ personagem_cor = "gold"
 respondeu = False
 resposta_foi_sim = False
 
-# Área (retângulo) de cada botão: (x, y, largura, altura)
+# Área (retângulo) de cada botão: (x, y) do canto e (largura, altura)
 botao_sim = Rect((WIDTH // 2 - 160, HEIGHT // 2 + 120), (120, 50))
 botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
 

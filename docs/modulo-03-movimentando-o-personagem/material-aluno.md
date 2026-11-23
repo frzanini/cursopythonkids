@@ -39,6 +39,7 @@ Apague do arquivo:
 - a variável `PERGUNTA`;
 - os `Rect` `botao_sim` e `botao_nao`;
 - as variáveis `respondeu` e `resposta_foi_sim`;
+- os comentários (`# ...`) que explicavam essas variáveis;
 - a função `on_mouse_down` inteira;
 - dentro de `draw()`, as linhas que desenhavam a pergunta, os botões e a mensagem final.
 
@@ -70,7 +71,7 @@ def draw():
     )
 
     screen.draw.text(
-        "Use as setas para andar. Espaco volta ao meio.",
+        "Use as setas para andar. Espaço volta ao meio.",
         center=(WIDTH // 2, 30),
         fontsize=24,
         color=COR_DO_TEXTO,
@@ -86,7 +87,7 @@ canto. Nada se mexe ainda.
 
 ### Passo 2 — a função `update()` e o primeiro movimento
 
-Depois da `draw()` (fora dela), crie a função `update()`:
+Depois da `draw()` (fora dela, sem recuo) e **antes** do `pgzrun.go()`, crie a função `update()`:
 
 ```python
 def update():
@@ -99,7 +100,8 @@ def update():
   cerca de **60 vezes por segundo**, sempre **antes** de desenhar. É aqui que o jogo **muda** as
   coisas de lugar.
 - `global personagem_x, personagem_y` — igual ao Módulo 2: sem isso, a função não consegue mudar
-  as variáveis de fora dela e a tela nunca anda.
+  as variáveis de fora dela. Aqui é ainda pior que no Módulo 2: como a linha **lê** o
+  `personagem_x` antes de mudar, o jogo **fecha na hora** com `UnboundLocalError`.
 - `personagem_x = personagem_x + VELOCIDADE` **não** é uma conta de matemática. É uma ordem:
   "pegue o valor que está em `personagem_x` agora, some `VELOCIDADE`, e guarde de volta". Rodando
   60 vezes por segundo, o número cresce sem parar.
@@ -150,7 +152,7 @@ Acrescente cima e baixo dentro do `update()`:
 
 ### Passo 5 — voltar ao meio com a barra de espaço
 
-Depois do `update()` (fora dele), crie:
+Depois do `update()` (fora dele, sem recuo) e **antes** do `pgzrun.go()`, crie:
 
 ```python
 def on_key_down(key):
@@ -201,9 +203,10 @@ destravar se você empacar.
 
 ## Desafios
 
-- **Desafio extra:** impeça o personagem de **sair da tela** — use `if` pra segurar `personagem_x`
-  entre `0` e `WIDTH`, e `personagem_y` entre `0` e `HEIGHT`. (É uma prévia do Módulo 4, quando
-  entram as paredes.)
+- **Desafio extra:** faça o personagem **correr** enquanto você segura a tecla **Shift** da
+  esquerda (`keyboard.lshift`). Dica: no começo do `update()`, crie `passo = VELOCIDADE` e, se o
+  Shift estiver apertado, `passo = VELOCIDADE * 2` (o `*` é a multiplicação). Depois use `passo`
+  no lugar de `VELOCIDADE` nas quatro setas.
 - **Desafio criativo:** aceite também as teclas `W A S D`; mude a cor do personagem enquanto ele
   anda; deixe o personagem mais rápido ou mais devagar mexendo em `VELOCIDADE`.
 
@@ -221,8 +224,10 @@ destravar se você empacar.
 
 ## Deu erro? Tenta isso primeiro
 
-- **O personagem não anda (ou aparece `UnboundLocalError`):** falta o `global personagem_x,
-  personagem_y` no começo do `update()`. É o mesmo erro do Módulo 2.
+- **O jogo fecha com `UnboundLocalError: cannot access local variable 'personagem_x'`:** falta o
+  `global personagem_x, personagem_y` no começo do `update()`. É o mesmo `global` do Módulo 2.
+- **Nada se mexe e não dá erro:** o `update()` ou o `on_key_down` ficou **depois** do
+  `pgzrun.go()`. Tudo tem que vir antes dele.
 - **Escreveu o nome da função errado:** o Pygame Zero só chama se for **exatamente** `update` e
   `on_key_down` (sem maiúscula, sem erro de digitação).
 - **`keyboard.right()` com parênteses:** é `keyboard.right` **sem** parênteses — é um valor

@@ -105,6 +105,8 @@ code {
 }
 /* Sem ligaduras: a fonte de código juntaria != em ≠ e >= em ≥, e a criança copiaria o símbolo errado. */
 code, pre, kbd, .vars, .coord, .mapa-letras { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+/* Código no meio do texto pode quebrar a linha: no celular, um nome comprido não empurra a página para o lado. */
+p code, li code, dd code { overflow-wrap: anywhere; }
 kbd {
   font-family: var(--f-code); font-size: .82em; font-weight: 700;
   border: 1px solid var(--line); border-bottom-width: 3px;
@@ -412,7 +414,13 @@ footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
   .badge b { font-size: 1.9rem; }
   .step, .panel, .mission { padding: 18px; }
   .err { grid-template-columns: 1fr; gap: 4px; }
-  .nav .brand { flex: 1 1 60%; }
+  /* No celular a barra de cima fica numa linha só: o Mapa e, de cada fase, só o número e a contagem.
+     A guia de baixo faz o resto da navegação. */
+  .nav .brand { display: none; }
+  .nav .wrap { flex-wrap: nowrap; gap: 8px; }
+  .nav a.lvl { font-size: 0; gap: 6px; padding: 3px 10px 3px 4px; }
+  .nav a.lvl .dot, .nav a.lvl .count { font-size: .82rem; }
+  .nav a.mapa { margin-right: auto; }
   pre { font-size: 13.5px; }
 }
 </style>
@@ -466,7 +474,7 @@ footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
       </ul>
       <div class="note idea">
         <span class="tag pixel">Confira</span>
-        <p>No canto inferior direito do VS Code deve aparecer algo como <code>3.12.x ('.venv')</code>. Se não aparecer: aperte <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>, digite <b>Python: Select Interpreter</b> e escolha a opção que tem <code>.venv</code> (costuma vir marcada como "Recommended").</p>
+        <p>No canto inferior direito do VS Code deve aparecer a versão <code>3.12</code> junto com <code>.venv</code>. Se não aparecer: aperte <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>, digite <b>Python: Select Interpreter</b> e escolha a opção que tem <code>.venv</code> (costuma vir marcada como "Recommended").</p>
       </div>
     </div>
 
@@ -492,6 +500,7 @@ footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
         <li>Abrir o terminal (menu <b>Terminal &gt; New Terminal</b>) e digitar:</li>
       </ul>
       <pre class="term"><span class="ln">python jogo.py</span></pre>
+      <p>O começo da linha do terminal tem que mostrar <code>(.venv)</code>. Se não mostrar, ou se aparecer "Python não foi encontrado", feche o terminal na lixeira 🗑 e abra um novo com <kbd>Ctrl</kbd>+<kbd>`</kbd>.</p>
       <div class="note run">
         <span class="tag pixel">Se deu certo</span>
         <p>Abre uma janela com o seu jogo. Enquanto ela estiver aberta, o terminal fica "ocupado". Para parar, feche a janela do jogo no X.</p>
@@ -570,6 +579,10 @@ pgzrun.go()</pre>
         <span class="tag pixel">Rode!</span>
         <p>Abre uma <b>janela preta</b>. Já é um jogo de verdade, só que vazio. Feche a janela para continuar.</p>
       </div>
+      <div class="note gold">
+        <span class="tag pixel">Regra de ouro</span>
+        <p>O <code>import pgzrun</code> fica sempre na <b>primeira</b> linha e o <code>pgzrun.go()</code> na <b>última</b>. <b>Tudo</b> o que você criar daqui para a frente entra <b>entre</b> os dois. O que ficar escrito depois do <code>pgzrun.go()</code> não chega ao jogo.</p>
+      </div>
     </div>
     <div class="side">
       <figure class="mock" data-scene="f1s1"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
@@ -598,7 +611,7 @@ pgzrun.go()</pre>
         <li><code>TITLE</code> é um <b>texto</b>, por isso fica entre aspas. Ele aparece na barra de cima da janela.</li>
         <li>O Pygame Zero reconhece esses três nomes sozinho. Por isso eles precisam ser escritos assim mesmo, em letras MAIÚSCULAS.</li>
       </ul>
-      <div class="note run"><span class="tag pixel">Rode!</span><p>A janela aparece com <b>800 × 600</b> pixels e "Crescendo como Jesus" escrito na barra.</p></div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A janela aparece com <b>800 × 600</b> pixels e "Crescendo como Jesus" escrito na barra. O tamanho parece igual porque 800 × 600 já é o tamanho padrão. Troque para <code>WIDTH = 400</code>, rode e veja a janela ficar estreita. Depois volte para 800.</p></div>
     </div>
     <div class="side">
       <figure class="mock" data-scene="f1s2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
@@ -632,7 +645,11 @@ pgzrun.go()</pre>
       </div>
       <div class="note gold">
         <span class="tag pixel">Atenção ao recuo</span>
-        <p>A linha <code>screen.fill(...)</code> começa um pouco para dentro. Esse espaço se chama <b>indentação</b>, e no Python ele é <b>regra</b>: é ele que diz "esta linha faz parte da função <code>draw</code>". Se faltar, dá <code>IndentationError</code>. Depois de uma linha que termina em <code>:</code>, o VS Code recua a próxima sozinho quando você aperta <kbd>Enter</kbd>.</p>
+        <p>A linha <code>screen.fill(...)</code> começa <b>4 espaços</b> para dentro (a tecla <kbd>Tab</kbd> do VS Code já coloca os 4). Esse espaço se chama <b>indentação</b>, e no Python ele é <b>regra</b>: é ele que diz "esta linha faz parte da função <code>draw</code>". Se faltar, dá <code>IndentationError</code>. Depois de uma linha que termina em <code>:</code>, o VS Code recua a próxima sozinho quando você aperta <kbd>Enter</kbd>.</p>
+      </div>
+      <div class="note idea">
+        <span class="tag pixel">O screen sublinhado</span>
+        <p>O VS Code pode sublinhar o <code>screen</code> e dizer <code>"screen" is not defined</code>. É normal: o <code>screen</code> só passa a existir quando o jogo liga. Pode rodar assim mesmo.</p>
       </div>
       <p><code>screen.fill(COR_DE_FUNDO)</code> pinta a tela inteira com a cor guardada na variável.</p>
       <div class="note run"><span class="tag pixel">Rode!</span><p>A janela aparece pintada de <b>azul-céu</b>. Depois troque <code>"skyblue"</code> por <code>"darkgreen"</code>, <code>"purple"</code> ou <code>"orange"</code> e rode de novo. Também dá para usar números de cor, como <code>(255, 0, 0)</code> para vermelho.</p></div>
@@ -858,8 +875,11 @@ pgzrun.go()</pre></div>
 
   <h3>Deu erro? Tente isto primeiro</h3>
   <div class="errs">
-    <div class="err"><b>screen is not defined</b><span>Confira se o arquivo <b>começa</b> com <code>import pgzrun</code> e <b>termina</b> com <code>pgzrun.go()</code>.</span></div>
-    <div class="err"><b>ModuleNotFoundError: No module named 'pgzero'</b><span>O VS Code não está usando o Python do projeto. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Python: Select Interpreter</b> → escolha o que tem <code>.venv</code>. Não precisa instalar nada.</span></div>
+    <div class="err"><b>Nenhuma janela abre e nenhum erro aparece</b><span>Falta o <code>pgzrun.go()</code> na <b>última</b> linha.</span></div>
+    <div class="err"><b>NameError: name 'pgzrun' is not defined</b><span>Falta o <code>import pgzrun</code> na <b>primeira</b> linha.</span></div>
+    <div class="err"><b>NameError: name 'screen' is not defined</b><span>Alguma linha com <code>screen...</code> ficou <b>sem recuo</b>, fora da <code>draw()</code>. Coloque os 4 espaços na frente dela.</span></div>
+    <div class="err"><b>Mudei o código e a tela não mudou</b><span>Salve com <kbd>Ctrl</kbd>+<kbd>S</kbd>. E confira se o que você escreveu ficou <b>antes</b> do <code>pgzrun.go()</code>.</span></div>
+    <div class="err"><b>ModuleNotFoundError: No module named 'pgzrun'</b><span>O VS Code não está usando o Python do projeto. <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> → <b>Python: Select Interpreter</b> → escolha o que tem <code>.venv</code>. Não precisa instalar nada.</span></div>
     <div class="err"><b>IndentationError</b><span>Alguma linha dentro de <code>draw()</code> está sem recuo ou com recuo diferente das outras. Deixe todas alinhadas.</span></div>
     <div class="err"><b>SyntaxError</b><span>Falta alguma coisa: aspas, parênteses, vírgula ou os <code>:</code> depois de <code>def draw()</code>. Olhe a linha que a mensagem aponta e a linha de cima.</span></div>
     <div class="err"><b>A cor não funciona</b><span>Confira se o nome está escrito certo e entre aspas, ou use números como <code>(255, 0, 0)</code>.</span></div>
@@ -1012,7 +1032,7 @@ botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))</pre>
   <article class="step">
     <div class="step-body">
       <div class="step-title"><span class="step-num">4</span><h3>Descobrindo o clique</h3></div>
-      <p>Depois de <code>draw()</code> (fora dela, sem recuo), crie uma nova função:</p>
+      <p>Depois de <code>draw()</code> (fora dela, sem recuo) e <b>antes</b> do <code>pgzrun.go()</code>, crie uma nova função:</p>
       <pre class="py">def on_mouse_down(pos):
     if botao_sim.collidepoint(pos):
         print("clicou no Sim")
@@ -1153,7 +1173,7 @@ resposta_foi_sim = False</pre>
       </div>
       <div class="q" data-answer="c" data-ok="Exato. Sem o global, a função não consegue mudar as variáveis de fora." data-no="Não é isso. Sem o global, a função não muda as variáveis lá de cima, e a tela fica igual.">
         <p>4. O que acontece se você esquecer o <code>global</code> na <code>on_mouse_down</code>?</p>
-        <div class="opts"><button data-opt="a">O jogo fecha</button><button data-opt="b">Os botões somem</button><button data-opt="c">O personagem não muda (ou aparece UnboundLocalError)</button></div>
+        <div class="opts"><button data-opt="a">O jogo fecha</button><button data-opt="b">Os botões somem</button><button data-opt="c">O clique não muda o personagem</button></div>
         <p class="why" aria-live="polite"></p>
       </div>
     </div>
@@ -1301,8 +1321,8 @@ pgzrun.go()</pre></div>
   <h3>Deu erro? Tente isto primeiro</h3>
   <div class="errs">
     <div class="err"><b>SyntaxError perto de if / elif / else</b><span>Faltam os dois pontos <code>:</code> no fim da linha.</span></div>
-    <div class="err"><b>O clique não faz nada</b><span>A função precisa se chamar <b>exatamente</b> <code>on_mouse_down</code> e ter <code>pos</code> entre os parênteses. Ela também precisa estar fora de <code>draw()</code>, sem recuo.</span></div>
-    <div class="err"><b>UnboundLocalError, ou a tela não muda</b><span>Falta o <code>global</code> na primeira linha de <code>on_mouse_down</code>, com todas as variáveis que ela muda.</span></div>
+    <div class="err"><b>O clique não faz nada</b><span>A função precisa se chamar <b>exatamente</b> <code>on_mouse_down</code> e ter <code>pos</code> entre os parênteses. Ela também precisa estar fora de <code>draw()</code>, sem recuo, e <b>antes</b> do <code>pgzrun.go()</code>.</span></div>
+    <div class="err"><b>O clique aparece no terminal, mas a tela não muda</b><span>Falta o <code>global</code> na primeira linha de <code>on_mouse_down</code>, com todas as variáveis que ela muda.</span></div>
     <div class="err"><b>NameError: name 'Rect' is not defined</b><span>Os botões foram criados antes do <code>import pgzrun</code>. O <code>import</code> precisa ser a primeira linha.</span></div>
     <div class="err"><b>Usou = em vez de ==</b><span><code>=</code> guarda um valor; <code>==</code> compara. Dentro de um <code>if</code>, para comparar, use <code>==</code>.</span></div>
     <div class="err"><b>Botão no lugar errado</b><span>Confira os números do <code>Rect</code>: o primeiro par é a posição, o segundo é o tamanho.</span></div>
@@ -1344,6 +1364,7 @@ pgzrun.go()</pre></div>
         <li>a variável <code>PERGUNTA</code>;</li>
         <li>os botões <code>botao_sim</code> e <code>botao_nao</code>;</li>
         <li>as variáveis <code>respondeu</code> e <code>resposta_foi_sim</code>;</li>
+        <li>os comentários (<code># ...</code>) que explicavam essas coisas;</li>
         <li>a função <code>on_mouse_down</code> inteira;</li>
         <li>dentro de <code>draw()</code>: a pergunta, os botões e a mensagem final.</li>
       </ul>
@@ -1404,14 +1425,14 @@ pgzrun.go()</pre>
   <article class="step">
     <div class="step-body">
       <div class="step-title"><span class="step-num">2</span><h3>A função update() e o primeiro movimento</h3></div>
-      <p>Depois de <code>draw()</code> (fora dela, sem recuo), crie:</p>
+      <p>Depois de <code>draw()</code> (fora dela, sem recuo) e <b>antes</b> do <code>pgzrun.go()</code>, crie:</p>
       <pre class="py">def update():
     global personagem_x, personagem_y
 
     personagem_x = personagem_x + VELOCIDADE</pre>
       <ul>
         <li><code>update()</code> é outra função especial. O Pygame Zero chama ela sozinho, umas <b>60 vezes por segundo</b>, sempre <b>antes</b> de desenhar.</li>
-        <li>O <code>global</code> é o mesmo da Fase 2: sem ele, a função não consegue mudar as variáveis de fora.</li>
+        <li>O <code>global</code> é o mesmo da Fase 2: sem ele, a função não consegue mudar as variáveis de fora. Aqui, como a linha <b>lê</b> o <code>personagem_x</code> antes de mudar, sem o <code>global</code> o jogo <b>fecha na hora</b> com <code>UnboundLocalError</code>.</li>
       </ul>
       <div class="note idea">
         <span class="tag pixel">Ideia nova · x = x + 5</span>
@@ -1422,6 +1443,7 @@ pgzrun.go()</pre>
     <div class="side">
       <figure class="mock" data-scene="f3slide"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600"></canvas></figure>
       <p class="coord" id="slide-out">personagem_x = 400</p>
+      <p class="mock-cap">Aqui a bola volta ao meio para a animação recomeçar. No seu jogo ela vai embora de vez.</p>
     </div>
   </article>
 
@@ -1488,7 +1510,7 @@ pgzrun.go()</pre>
   <article class="step">
     <div class="step-body">
       <div class="step-title"><span class="step-num">5</span><h3>Voltar ao meio com a barra de espaço</h3></div>
-      <p>Depois do <code>update()</code> (fora dele, sem recuo), crie:</p>
+      <p>Depois do <code>update()</code> (fora dele, sem recuo) e <b>antes</b> do <code>pgzrun.go()</code>, crie:</p>
       <pre class="py">def on_key_down(key):
     global personagem_x, personagem_y
 
@@ -1552,23 +1574,28 @@ pgzrun.go()</pre>
 
   <div class="challenges">
     <div class="panel challenge">
-      <span class="tag pixel">Desafio extra · prévia da Fase 4</span>
-      <h4>Não deixe o personagem fugir da tela</h4>
-      <p>Hoje, se você segurar a seta, o personagem some pela borda. Faça ele parar na beirada.</p>
+      <span class="tag pixel">Desafio extra</span>
+      <h4>Correr com o Shift</h4>
+      <p>Faça o personagem andar com o <b>dobro</b> da velocidade enquanto você segura a tecla <kbd>Shift</kbd> da esquerda.</p>
       <details><summary>Ver uma dica</summary><div class="in">
-        <p>O Python sabe comparar números: <code>&lt;</code> quer dizer "menor que" e <code>&gt;</code> quer dizer "maior que". Você vai aprender isso com calma na Fase 4. No fim do <code>update()</code>, pergunte: "o <code>personagem_x</code> ficou menor que 0?" Se sim, coloque ele de volta em 0. Faça o mesmo para a borda da direita (<code>WIDTH</code>), de cima e de baixo.</p>
+        <p>O Shift da esquerda se chama <code>keyboard.lshift</code>. No começo do <code>update()</code>, crie <code>passo = VELOCIDADE</code>. Se o Shift estiver apertado, troque para <code>passo = VELOCIDADE * 2</code> (o <code>*</code> é a multiplicação). Depois use <code>passo</code> no lugar de <code>VELOCIDADE</code> nas quatro setas.</p>
       </div></details>
       <details><summary>Ver uma solução</summary><div class="in">
-        <pre class="py">    # no fim do update():
-    if personagem_x &lt; 0:
-        personagem_x = 0
-    if personagem_x &gt; WIDTH:
-        personagem_x = WIDTH
-    if personagem_y &lt; 0:
-        personagem_y = 0
-    if personagem_y &gt; HEIGHT:
-        personagem_y = HEIGHT</pre>
-        <p>Repare que metade da bola ainda sai da tela, porque o <code>x</code> e o <code>y</code> são o <b>centro</b> dela. Quer que a bola inteira fique dentro? Troque <code>0</code> por <code>personagem_raio</code> e <code>WIDTH</code> por <code>WIDTH - personagem_raio</code>.</p>
+        <pre class="py">def update():
+    global personagem_x, personagem_y
+
+    passo = VELOCIDADE
+    if keyboard.lshift:
+        passo = VELOCIDADE * 2
+
+    if keyboard.right:
+        personagem_x = personagem_x + passo
+    if keyboard.left:
+        personagem_x = personagem_x - passo
+    if keyboard.down:
+        personagem_y = personagem_y + passo
+    if keyboard.up:
+        personagem_y = personagem_y - passo</pre>
       </div></details>
     </div>
     <div class="panel challenge">
@@ -1667,7 +1694,7 @@ pgzrun.go()</pre></div>
 
   <h3>Deu erro? Tente isto primeiro</h3>
   <div class="errs">
-    <div class="err"><b>O personagem não anda, ou UnboundLocalError</b><span>Falta <code>global personagem_x, personagem_y</code> na primeira linha do <code>update()</code>. É o mesmo erro da Fase 2.</span></div>
+    <div class="err"><b>UnboundLocalError: cannot access local variable 'personagem_x'</b><span>Falta <code>global personagem_x, personagem_y</code> na primeira linha do <code>update()</code>. É o mesmo <code>global</code> da Fase 2.</span></div>
     <div class="err"><b>Nada acontece de jeito nenhum</b><span>O nome da função precisa ser <b>exatamente</b> <code>update</code> e <code>on_key_down</code>, em letras minúsculas. E clique na janela do jogo antes de apertar as setas.</span></div>
     <div class="err"><b>keyboard.right()</b><span>É <code>keyboard.right</code>, sem parênteses. É um valor, não uma função.</span></div>
     <div class="err"><b>Aperto para baixo e ele sobe</b><span>Os sinais estão trocados. Descer é <code>+ VELOCIDADE</code>; subir é <code>- VELOCIDADE</code>.</span></div>
@@ -1919,7 +1946,7 @@ pgzrun.go()</pre></div>
       else { slide.x += 5; if (slide.x > 860) pause = 40; }
       render(slideFig);
       slideOut.textContent = "personagem_x = " + slide.x;
-    }, 1000 / 30);
+    }, 1000 / 60);
   } else {
     slide.x = 560; slideOut.textContent = "personagem_x = 560 (e continua crescendo)";
   }

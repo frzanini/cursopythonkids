@@ -136,7 +136,7 @@ escreveram e deixaram disponível para todo mundo usar — assim você não prec
   janela do jogo.
 - Quando o Python lê `import pgzrun`, ele vai **procurar** essa peça nas bibliotecas do `.venv`.
   Se acha, o seu programa ganha o `screen`, o `draw()`, o `screen.fill()` e o resto. Se não acha
-  (interpretador errado), aparece `ModuleNotFoundError: No module named 'pgzero'`.
+  (interpretador errado), aparece `ModuleNotFoundError: No module named 'pgzrun'`.
 
 ```mermaid
 flowchart TB
@@ -152,9 +152,14 @@ flowchart TB
 **Rode.** Deve abrir uma **janelinha preta**, do tamanho padrão — já é um jogo Pygame Zero de
 verdade, só que vazio. Feche a janela para continuar.
 
-> Se aparecer o erro `screen is not defined`, é porque falta uma dessas duas linhas (`import
-> pgzrun` ou `pgzrun.go()`). Se aparecer `ModuleNotFoundError`, é o interpretador `.venv` que não
-> está selecionado.
+> Se **nenhuma janela abrir e nenhum erro aparecer**, falta o `pgzrun.go()` no fim. Se aparecer
+> `NameError: name 'pgzrun' is not defined`, falta o `import pgzrun` no começo. Se aparecer
+> `ModuleNotFoundError`, é o interpretador `.venv` que não está selecionado.
+
+> **Regra de ouro do arquivo:** o `import pgzrun` fica sempre na **primeira** linha e o
+> `pgzrun.go()` na **última**. **Tudo** o que você criar daqui para a frente (variáveis e
+> funções) entra **entre** os dois. O que ficar escrito **depois** do `pgzrun.go()` não chega ao
+> jogo.
 
 ### Passo 2 — tamanho e título da janela
 
@@ -174,16 +179,29 @@ TITLE = "Crescendo como Jesus"
 - O Pygame Zero reconhece **esses três nomes sozinho** — por isso eles precisam ser escritos
   assim mesmo, em letras maiúsculas.
 
-**Rode de novo.** A janela nasce do tamanho `800 x 600` e com o título na barra.
+**Rode de novo.** A janela nasce do tamanho `800 x 600` e com o título na barra. O tamanho
+parece igual ao de antes porque `800 x 600` já é o tamanho padrão do Pygame Zero — troque
+`WIDTH = 800` por `WIDTH = 400`, rode e veja a janela ficar estreita. Depois volte para `800`.
 
 ### Passo 3 — pintar o fundo
 
+Coloque as linhas novas **entre** o `TITLE` e o `pgzrun.go()`. O arquivo inteiro fica assim:
+
 ```python
+import pgzrun
+
+WIDTH = 800
+HEIGHT = 600
+TITLE = "Crescendo como Jesus"
+
 COR_DE_FUNDO = "skyblue"
 
 
 def draw():
     screen.fill(COR_DE_FUNDO)
+
+
+pgzrun.go()
 ```
 
 Antes de rodar, repare em duas coisas novas:
@@ -194,10 +212,13 @@ Antes de rodar, repare em duas coisas novas:
   várias vezes por segundo, sempre que precisa redesenhar a tela. Você só escreve **o que**
   desenhar dentro dela.
 - **Indentação (o recuo):** a linha `screen.fill(...)` **não começa colada na margem** — está
-  recuada (um "tab" para dentro). No Python, esse recuo **não é enfeite, é regra**: é ele que
-  diz "esta linha faz parte da função `draw`". Se faltar ou ficar torto, dá um erro chamado
-  `IndentationError`. O VS Code ajuda: depois de uma linha que termina em `:`, ele recua a
-  próxima sozinho quando você aperta Enter.
+  recuada (**4 espaços** para dentro — a tecla Tab do VS Code já coloca os 4). No Python, esse
+  recuo **não é enfeite, é regra**: é ele que diz "esta linha faz parte da função `draw`". Se
+  faltar ou ficar torto, dá um erro chamado `IndentationError`. O VS Code ajuda: depois de uma
+  linha que termina em `:`, ele recua a próxima sozinho quando você aperta Enter.
+- **O VS Code sublinhou o `screen`?** Ele pode mostrar `"screen" is not defined` com um
+  sublinhado amarelo. É normal: o `screen` só passa a existir quando o jogo liga. Pode rodar
+  assim mesmo.
 
 `screen.fill(COR_DE_FUNDO)` **pinta a tela inteira** com a cor. `COR_DE_FUNDO` é só uma variável
 com um texto dentro.
@@ -210,7 +231,9 @@ também dá para usar um valor RGB, como `(255, 0, 0)` para vermelho.
 
 ### Passo 4 — a mensagem de boas-vindas
 
-Dentro de `draw()`, **depois** do `screen.fill`, use `screen.draw.text(...)`:
+Crie a variável `COR_DO_TEXTO` **junto das outras**, logo abaixo do `COR_DE_FUNDO`. Depois
+**troque a sua `draw()` inteira** por esta, que acrescenta um `screen.draw.text(...)` **depois**
+do `screen.fill`:
 
 ```python
 COR_DO_TEXTO = "white"
@@ -239,7 +262,9 @@ Cada parte de `screen.draw.text(...)`:
 
 ### Passo 5 — o seu nome como pecador
 
-Mais uma chamada de `screen.draw.text`, um pouco **mais abaixo** na tela — repare no `+ 60`:
+Crie a variável `NOME_DO_PECADOR` junto das outras (abaixo do `COR_DO_TEXTO`) e **troque a sua
+`draw()` inteira** por esta, com mais uma chamada de `screen.draw.text`, um pouco **mais abaixo**
+na tela — repare no `+ 60`:
 
 ```python
 NOME_DO_PECADOR = "Escreva seu nome aqui"
@@ -312,9 +337,13 @@ comparar no fim ou para destravar se você empacar.
 
 ## Deu erro? Tenta isso primeiro
 
-- **`screen is not defined`:** confira se o arquivo **começa** com `import pgzrun` e **termina**
-  com `pgzrun.go()`.
-- **`ModuleNotFoundError: No module named 'pgzero'`:** o interpretador certo não está
+- **Nenhuma janela abre e nenhum erro aparece:** falta o `pgzrun.go()` na **última** linha.
+- **`NameError: name 'pgzrun' is not defined`:** falta o `import pgzrun` na **primeira** linha.
+- **`NameError: name 'screen' is not defined`:** alguma linha com `screen...` ficou **sem
+  recuo**, fora da `draw()`. Coloque os 4 espaços na frente dela.
+- **Mudei o código e a tela não mudou:** o que você escreveu ficou **depois** do `pgzrun.go()`.
+  Tudo tem que ficar **antes** dele. E salve com `Ctrl+S` antes de rodar.
+- **`ModuleNotFoundError: No module named 'pgzrun'`:** o interpretador certo não está
   selecionado — `Ctrl+Shift+P` → **Python: Select Interpreter** → o que tem `.venv`. (Você não
   precisa instalar nada; isso já foi feito no Módulo 0.)
 - **`IndentationError`:** alguma linha dentro de `draw()` não está recuada igual às outras —

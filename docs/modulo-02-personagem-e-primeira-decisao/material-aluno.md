@@ -100,17 +100,25 @@ um pouco acima do centro, aparece uma **bola dourada**, sobre o fundo azul-claro
 
 ### Passo 2 — a pergunta na tela
 
-Junto das outras variáveis, no topo do arquivo:
+Junto das outras variáveis (logo abaixo do `NOME_DO_PECADOR`, antes do `def draw()`):
 
 ```python
 PERGUNTA = "Você orou hoje?"
 ```
 
-Dentro de `draw()`, **antes** do círculo, desenhe o texto da pergunta:
+Dentro de `draw()`, **depois** do nome e **antes** do círculo, desenhe o texto da pergunta. A sua
+`draw()` inteira fica assim:
 
 ```python
 def draw():
     screen.fill(COR_DE_FUNDO)
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
 
     screen.draw.text(
         PERGUNTA,
@@ -131,10 +139,10 @@ acima do personagem).
 
 ### Passo 3 — os botões Sim e Não
 
-Junto das outras variáveis, no topo:
+Junto das outras variáveis (abaixo das do personagem, antes do `def draw()`):
 
 ```python
-# Área (retângulo) de cada botão: (x, y, largura, altura)
+# Área (retângulo) de cada botão: (x, y) do canto e (largura, altura)
 botao_sim = Rect((WIDTH // 2 - 160, HEIGHT // 2 + 120), (120, 50))
 botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
 ```
@@ -142,7 +150,7 @@ botao_nao = Rect((WIDTH // 2 + 40, HEIGHT // 2 + 120), (120, 50))
 - `Rect((x, y), (largura, altura))` é um **retângulo**: `(x, y)` é o canto **superior esquerdo**,
   e `(largura, altura)` é o tamanho. O Pygame Zero já sabe o que é `Rect` — não precisa de
   `import` extra.
-- Cada botão é só uma **área invisível** por enquanto — o próximo passo desenha ela.
+- Cada botão é só uma **área invisível** por enquanto — agora vamos pintá-la.
 
 Dentro de `draw()`, depois do personagem, desenhe os dois botões:
 
@@ -163,7 +171,7 @@ Clicar ainda não faz nada — isso é o próximo passo.
 
 ### Passo 4 — detectando o clique
 
-Depois de `draw()` (fora dela), crie uma nova função:
+Depois de `draw()` (fora dela, sem recuo) e **antes** do `pgzrun.go()`, crie uma nova função:
 
 ```python
 def on_mouse_down(pos):
@@ -181,6 +189,7 @@ def on_mouse_down(pos):
 - `if` / `elif` compara: **se** o clique caiu dentro de `botao_sim`, faz uma coisa; **senão, se**
   caiu dentro de `botao_nao`, faz outra. Repare no `==` que não aparece aqui — `collidepoint` já
   devolve `True`/`False` pronto, então o `if` testa ele direto.
+- `print(...)` escreve uma mensagem no **terminal** do VS Code, não na janela do jogo.
 
 **Rode e clique nos dois botões.** Nada muda **na tela**, mas abra o **terminal integrado**
 (`` Ctrl+` ``): a cada clique dentro de um botão aparece a mensagem `clicou no Sim` ou `clicou no
@@ -189,7 +198,7 @@ Não`. Clicar **fora** dos dois botões não imprime nada. Feche a janela para c
 ### Passo 5 — guardando a resposta e fazendo o personagem reagir
 
 Troque os `print(...)` do passo anterior por código que **muda o personagem de verdade**. Junto
-das outras variáveis, no topo do arquivo:
+das outras variáveis (antes do `def draw()`):
 
 ```python
 # Estado da resposta: começa sem nenhuma resposta ainda
@@ -312,9 +321,13 @@ comparar no fim ou para destravar se você empacar.
 - **Esqueceu os dois pontos (`:`) depois do `if`/`elif`/`else`:** confira se colocou `:` no final
   da linha.
 - **O clique não faz nada:** confira se a função se chama **exatamente** `on_mouse_down` (com
-  esse nome, sem erro de digitação) e se recebe `pos` entre os parênteses.
-- **`UnboundLocalError` ou a tela não muda depois do clique:** falta o `global` no começo de
-  `on_mouse_down`, listando as variáveis que a função precisa mudar.
+  esse nome, sem erro de digitação), se recebe `pos` entre os parênteses e se ela está
+  **antes** do `pgzrun.go()` — o que fica depois dele não chega ao jogo.
+- **O clique funciona (aparece no terminal), mas a tela não muda:** falta o `global` no começo
+  de `on_mouse_down`, listando as variáveis que a função precisa mudar.
+- **`NameError: name 'Rect' is not defined` ou `name 'WIDTH' is not defined`:** os botões
+  ficaram **acima** do `import pgzrun` ou do `WIDTH`. Ponha-os junto das outras variáveis,
+  depois do `TITLE`.
 - **Usou `=` em vez de `==`:** `=` guarda um valor; `==` compara dois valores — são diferentes!
 - **Botão no lugar errado:** confira os números do `Rect` — o primeiro par é a posição, o segundo
   é o tamanho.

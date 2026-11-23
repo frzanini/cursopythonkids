@@ -6,6 +6,19 @@ uma entrega/decisão acontece ou uma pendência é identificada.
 
 ## Pendente
 
+- **Módulo 0 não está no site.** O "Antes de começar" do mapa só diz "isto foi feito no Módulo
+  0"; a instalação (uv, Python 3.12, VS Code, `.venv`) não tem caderno publicado.
+- **Sobras da revisão de 2026-11-23 no `material-professor.md`** (o foco foi o material do
+  aluno): Módulos 1-2 ainda citam `No module named 'pgzero'`, "`screen is not defined` = falta
+  import/go" e `UnboundLocalError` no Módulo 2; Módulo 0 diz que `rmdir` "só remove pasta vazia,
+  é por segurança" (falso no PowerShell); Módulo 2 diz "Módulo 8" para a estatura (é o 6).
+- **Tabela de módulos × `def`:** a tabela põe "funções (`def`)" no Módulo 8, mas os Módulos 1-3
+  já usam `def draw()`, `on_mouse_down(pos)` e `global`. Registrar que antes do 8 são só as
+  funções especiais chamadas pelo Pygame Zero.
+- **Módulo 2 lista `==` como conceito do dia** sem nenhum código obrigatório que use `==`.
+- Pequenas divergências: comentário `uv run jogo.py` nos `exemplo.py` (o curso roda com
+  `python jogo.py`/▶); texto do `VERSICULO` difere entre `exemplo.py` do Módulo 1 e o caderno.
+
 - **`jogo/jogo.py` — playtest visual pendente.** A 1ª versão completa está escrita (ver Feito
   2026-08-27), mas só foi validada headless (sintaxe + conectividade do mapa + simulação de
   lógica). Falta rodar numa máquina com tela para ajustar velocidades, tamanho da janela,
@@ -29,6 +42,32 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   `docs/crescendo-como-jesus-conteudo-programatico.md` e `/novo-modulo`.
 
 ## Feito
+
+- 2026-11-23 — **Revisão e validação dos Módulos 0-5 (material do aluno + cadernos do site).**
+  O `jogo.py` do aluno foi reconstruído passo a passo a partir do `material-aluno.md` (33
+  cenários) e rodado no Pygame Zero sem janela, com cliques e teclas simulados; os experimentos
+  `listas.py`/`mochila.py` também. Tudo chega no resultado prometido. As janelinhas dos dois
+  cadernos foram comparadas no Chrome, quadro a quadro, com as telas reais; quiz, missões, mapa,
+  guia lateral, links e layout de celular testados no site publicado. Corrigido:
+  - **Módulo 0:** `mkdir` no Windows mostra uma tabela; `rmdir` no PowerShell **pergunta se apaga
+    tudo** numa pasta cheia (aviso: responder N); terminal novo com `(.venv)` antes do
+    `python aula-01/teste.py`; aviso da Microsoft Store; `winget` com aceite dos termos; pasta do
+    curso na pasta do usuário (fora do OneDrive); checklist sem `python --version`.
+  - **Onde pôr o código:** regra de ouro "tudo entre o `import pgzrun` e o `pgzrun.go()`" e
+    "antes do `pgzrun.go()`" nos passos que criam função (Módulos 1-3 e caderno).
+  - **Mensagens de erro reais:** `No module named 'pgzrun'` (não `'pgzero'`); `screen is not
+    defined` = linha sem recuo; sem `go()` nada abre; sem `global` no Módulo 2 a tela só não
+    muda, mas nos Módulos 3 e 4 o jogo fecha com `UnboundLocalError`; desafio R do Módulo 5 quebra
+    na seta, não no R; erros de recuo/`habitos` do Módulo 5.
+  - **Módulo 4, passo 3:** trocar as **3 linhas** do `filled_circle` e o `personagem_raio`
+    (antes não dito; a bola de raio 40 cobria as paredes).
+  - **Acentos nos textos de tela** dos Módulos 3-5 (`Espaço`, `início`, `Parabéns! Você...
+    hábitos!`): testado que a fonte do Pygame Zero desenha acentos.
+  - **Conceito vazado:** desafio extra do Módulo 3 usava `<`/`>` (Módulo 4); trocado por "correr
+    com o Shift" (`keyboard.lshift`, testado).
+  - **Cadernos:** segurar a seta não repete o passo (como no Pygame Zero); trecho de código não
+    vaza no celular; barra de cima numa linha só no celular; legenda da bola deslizando; mochila
+    deixa claro que a recusa é brincadeira.
 
 - 2026-11-23 — **Caderno de missões das Fases 4 e 5 publicado**
   (`cadernos/caderno-de-missoes-modulos-4-5.html`), no mesmo padrão do caderno das Fases 1-3:

@@ -17,7 +17,7 @@ Módulo 5.
 - **`len(...)`**: quantos itens tem uma lista (ou quantas letras tem um texto)
 - **`for`**: repetir alguma coisa **para cada** item de uma lista
 - **`range(n)`**: a fila de números `0, 1, 2, …` para usar no `for`
-- **Comparar números**: `<`, `>`, `<=`, `>=`, `!=`
+- **Comparar valores**: `<`, `>`, `<=`, `>=`, `!=`
 
 ## O que você já tem pronto (do Módulo 3)
 
@@ -178,7 +178,9 @@ paredes. Isso muda agora.
 
 ### Passo 3 — o personagem mora num quadradinho
 
-Troque as variáveis `personagem_x`, `personagem_y` e `VELOCIDADE` por estas:
+Troque as variáveis `personagem_x`, `personagem_y`, `personagem_raio` e `VELOCIDADE` (e o
+comentário `# Quantos pixels...` dela) por estas. Repare que o **raio** também muda: a bola
+precisa caber num quadradinho de 40.
 
 ```python
 INICIO_COLUNA = 9
@@ -190,7 +192,8 @@ personagem_raio = TILE // 2 - 4
 personagem_cor = "gold"
 ```
 
-Na `draw()`, troque a linha que desenha o personagem por:
+Na `draw()`, troque as **3 linhas** do `screen.draw.filled_circle(` que desenha o personagem
+(até o `)` que fecha) por:
 
 ```python
     x = personagem_coluna * TILE + TILE // 2
@@ -205,7 +208,7 @@ E ainda:
 - No `on_key_down`, troque `personagem_x` e `personagem_y` por `personagem_coluna` e
   `personagem_linha` (no `global` também), e troque `WIDTH // 2` e `HEIGHT // 2` por
   `INICIO_COLUNA` e `INICIO_LINHA`.
-- Mude a dica do topo para `"Setas: anda um quadradinho. Espaco: volta ao inicio."` e a posição
+- Mude a dica do topo para `"Setas: anda um quadradinho. Espaço: volta ao início."` e a posição
   dela para `center=(WIDTH // 2, TILE // 2)`, a faixa vazia de cima.
 
 Por que `+ TILE // 2`? `coluna * TILE` é o **canto** do quadradinho; somando meio quadradinho, a
@@ -344,11 +347,12 @@ destravar se você empacar.
   **depois** do `if` da parede. Ele tem que vir antes.
 - **O labirinto sai torto:** alguma linha do mapa não tem 20 letras, ou falta uma **vírgula** no
   fim de alguma linha do mapa. Confira a linha suspeita.
-- **Só aparece um pedaço das paredes:** confira o **recuo**: o segundo `for` fica dentro do
-  primeiro, o `if` dentro do segundo, e o desenho dentro do `if`.
+- **`IndentationError` ou `UnboundLocalError` falando de `parede`:** confira o **recuo** dos
+  dois `for`: o segundo `for` fica dentro do primeiro, o `if` dentro do segundo, e as duas linhas
+  do desenho dentro do `if`.
 - **O personagem aparece dentro da parede:** o `INICIO_COLUNA` ou o `INICIO_LINHA` aponta para um
   `#`. Lembre que a contagem começa do 0.
-- **O personagem não anda:** o `global` do `on_key_down` tem que ser
+- **`UnboundLocalError` quando aperta uma seta:** o `global` do `on_key_down` tem que ser
   `global personagem_coluna, personagem_linha`.
 - **`NameError: name 'personagem_x' is not defined`:** sobrou algum `personagem_x` ou
   `personagem_y` do Módulo 3. Troque pelo jeito novo. Se o erro aparece quando você **segura** uma

@@ -69,7 +69,7 @@ def draw():
                 screen.draw.filled_rect(parede, COR_DA_PAREDE)
 
     screen.draw.text(
-        "Setas: anda um quadradinho. Espaco: volta ao inicio.",
+        "Setas: anda um quadradinho. Espaço: volta ao início.",
         center=(WIDTH // 2, TILE // 2),
         fontsize=24,
         color=COR_DO_TEXTO,

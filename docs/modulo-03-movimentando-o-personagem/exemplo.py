@@ -8,7 +8,6 @@ import pgzrun
 
 WIDTH = 800
 HEIGHT = 600
-
 TITLE = "Crescendo como Jesus"
 
 COR_DE_FUNDO = "skyblue"
@@ -36,7 +35,7 @@ def draw():
     )
 
     screen.draw.text(
-        "Use as setas para andar. Espaco volta ao meio.",
+        "Use as setas para andar. Espaço volta ao meio.",
         center=(WIDTH // 2, 30),
         fontsize=24,
         color=COR_DO_TEXTO,

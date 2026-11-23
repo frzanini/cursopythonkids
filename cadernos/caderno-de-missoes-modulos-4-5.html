@@ -105,6 +105,8 @@ code {
 }
 /* Sem ligaduras: a fonte de código juntaria != em ≠ e >= em ≥, e a criança copiaria o símbolo errado. */
 code, pre, kbd, .vars, .coord, .mapa-letras { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+/* Código no meio do texto pode quebrar a linha: no celular, um nome comprido não empurra a página para o lado. */
+p code, li code, dd code { overflow-wrap: anywhere; }
 kbd {
   font-family: var(--f-code); font-size: .82em; font-weight: 700;
   border: 1px solid var(--line); border-bottom-width: 3px;
@@ -412,7 +414,13 @@ footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
   .badge b { font-size: 1.9rem; }
   .step, .panel, .mission { padding: 18px; }
   .err { grid-template-columns: 1fr; gap: 4px; }
-  .nav .brand { flex: 1 1 60%; }
+  /* No celular a barra de cima fica numa linha só: o Mapa e, de cada fase, só o número e a contagem.
+     A guia de baixo faz o resto da navegação. */
+  .nav .brand { display: none; }
+  .nav .wrap { flex-wrap: nowrap; gap: 8px; }
+  .nav a.lvl { font-size: 0; gap: 6px; padding: 3px 10px 3px 4px; }
+  .nav a.lvl .dot, .nav a.lvl .count { font-size: .82rem; }
+  .nav a.mapa { margin-right: auto; }
   pre { font-size: 13.5px; }
 }
 </style>
@@ -702,15 +710,15 @@ TITLE = "Crescendo como Jesus"</pre>
   <article class="step">
     <div class="step-body">
       <div class="step-title"><span class="step-num">3</span><h3>O personagem mora num quadradinho</h3></div>
-      <p>Troque as variáveis <code>personagem_x</code>, <code>personagem_y</code> e <code>VELOCIDADE</code> por estas:</p>
-      <pre class="py" data-new="1-5">INICIO_COLUNA = 9
+      <p>Troque as variáveis <code>personagem_x</code>, <code>personagem_y</code>, <code>personagem_raio</code> e <code>VELOCIDADE</code> (e o comentário <code># Quantos pixels...</code> dela) por estas. Repare que o <b>raio</b> também muda: a bola precisa caber num quadradinho de 40.</p>
+      <pre class="py" data-new="1-2,4-6">INICIO_COLUNA = 9
 INICIO_LINHA = 12
 
 personagem_coluna = INICIO_COLUNA
 personagem_linha = INICIO_LINHA
 personagem_raio = TILE // 2 - 4
 personagem_cor = "gold"</pre>
-      <p>Na <code>draw()</code>, troque a linha que desenha o personagem por:</p>
+      <p>Na <code>draw()</code>, troque as <b>3 linhas</b> do <code>screen.draw.filled_circle(</code> que desenha o personagem (até o <code>)</code> que fecha) por:</p>
       <pre class="py" data-new="1-3">    x = personagem_coluna * TILE + TILE // 2
     y = personagem_linha * TILE + TILE // 2
     screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)</pre>
@@ -729,7 +737,7 @@ personagem_cor = "gold"</pre>
         <li>Mude a dica do topo para a faixa vazia de cima:</li>
       </ul>
       <pre class="py" data-new="2-3">    screen.draw.text(
-        "Setas: anda um quadradinho. Espaco: volta ao inicio.",
+        "Setas: anda um quadradinho. Espaço: volta ao início.",
         center=(WIDTH // 2, TILE // 2),
         fontsize=24,
         color=COR_DO_TEXTO,
@@ -1069,7 +1077,7 @@ def draw():
                 screen.draw.filled_rect(parede, COR_DA_PAREDE)
 
     screen.draw.text(
-        "Setas: anda um quadradinho. Espaco: volta ao inicio.",
+        "Setas: anda um quadradinho. Espaço: volta ao início.",
         center=(WIDTH // 2, TILE // 2),
         fontsize=24,
         color=COR_DO_TEXTO,
@@ -1143,9 +1151,9 @@ pgzrun.go()</pre></div>
   <div class="errs">
     <div class="err"><b>IndexError: string index out of range</b><span>Falta o túnel (Passo 6), ou ele está <b>depois</b> do <code>if</code> da parede. Ele tem que vir antes.</span></div>
     <div class="err"><b>O labirinto sai torto</b><span>Alguma linha do mapa não tem 20 letras, ou falta uma <b>vírgula</b> no fim de alguma linha do mapa.</span></div>
-    <div class="err"><b>Só aparece um pedaço das paredes</b><span>Confira o <b>recuo</b>: o segundo <code>for</code> dentro do primeiro, o <code>if</code> dentro do segundo, e o desenho dentro do <code>if</code>.</span></div>
+    <div class="err"><b>IndentationError, ou UnboundLocalError falando de parede</b><span>Confira o <b>recuo</b> dos dois <code>for</code>: o segundo <code>for</code> dentro do primeiro, o <code>if</code> dentro do segundo, e as duas linhas do desenho dentro do <code>if</code>.</span></div>
     <div class="err"><b>O personagem aparece dentro da parede</b><span>O <code>INICIO_COLUNA</code> ou o <code>INICIO_LINHA</code> aponta para um <code>#</code>. Lembre que a contagem começa do 0.</span></div>
-    <div class="err"><b>O personagem não anda</b><span>O <code>global</code> do <code>on_key_down</code> tem que ser <code>global personagem_coluna, personagem_linha</code>.</span></div>
+    <div class="err"><b>UnboundLocalError quando aperta uma seta</b><span>O <code>global</code> do <code>on_key_down</code> tem que ser <code>global personagem_coluna, personagem_linha</code>.</span></div>
     <div class="err"><b>NameError: name 'personagem_x' is not defined</b><span>Sobrou algum <code>personagem_x</code> ou <code>personagem_y</code> da Fase 3. Se o erro aparece quando você <b>segura</b> uma seta, sobrou o <code>update()</code>: apague a função inteira.</span></div>
     <div class="err"><b>keys.right</b><span>É <code>keys.RIGHT</code>, em letras maiúsculas.</span></div>
   </div>
@@ -1352,9 +1360,9 @@ print(len(habitos))</pre>
       <div class="step-title"><span class="step-num">4</span><h3>A mensagem de parabéns</h3></div>
       <p>Na <code>draw()</code>, troque o texto fixo da dica do topo por isto:</p>
       <pre class="py" data-new="1-11">    if len(habitos) == 0:
-        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+        mensagem = "Parabéns! Você encheu sua vida de bons hábitos!"
     else:
-        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+        mensagem = "Setas: anda. Passe por cima dos bons hábitos."
 
     screen.draw.text(
         mensagem,
@@ -1366,7 +1374,7 @@ print(len(habitos))</pre>
         <li><code>len(habitos) == 0</code> quer dizer "a lista ficou <b>vazia</b>": não sobrou nenhum hábito no mapa.</li>
         <li>A variável <code>mensagem</code> guarda <b>qual</b> texto vai aparecer.</li>
       </ul>
-      <div class="note run"><span class="tag pixel">Rode e jogue até o fim!</span><p>Colete todos os hábitos. Quando você pegar o último, a dica do topo vira <b>"Parabens! Voce encheu sua vida de bons habitos!"</b></p></div>
+      <div class="note run"><span class="tag pixel">Rode e jogue até o fim!</span><p>Colete todos os hábitos. Quando você pegar o último, a dica do topo vira <b>"Parabéns! Você encheu sua vida de bons hábitos!"</b></p></div>
     </div>
     <div class="side">
       <figure class="mock" data-scene="f5play" data-mode="parabens"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
@@ -1472,7 +1480,7 @@ print(len(habitos))</pre>
       <ul>
         <li>Mude a cor e o tamanho das bolinhas.</li>
         <li>Desenhe os hábitos como quadradinhos, com <code>Rect</code> e <code>filled_rect</code>.</li>
-        <li>Coloque hábitos também no corredor do túnel, trocando os espaços do mapa por <code>.</code>. O número no terminal muda?</li>
+        <li>Coloque hábitos também no corredor do túnel, trocando os espaços do mapa por <code>.</code>. Ponha o <code>print(len(habitos))</code> de volta e rode: o número muda?</li>
       </ul>
       <details><summary>Ver uma dica dos quadradinhos</summary><div class="in">
         <p>O canto do quadradinho pequeno fica um pouco depois do canto do quadradinho do mapa. Algo assim, dentro do <code>for habito in habitos:</code>:</p>
@@ -1566,9 +1574,9 @@ def draw():
 
     # A lista ficou vazia? Então todos os hábitos foram coletados!
     if len(habitos) == 0:
-        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+        mensagem = "Parabéns! Você encheu sua vida de bons hábitos!"
     else:
-        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+        mensagem = "Setas: anda. Passe por cima dos bons hábitos."
 
     screen.draw.text(
         mensagem,
@@ -1642,11 +1650,13 @@ pgzrun.go()</pre></div>
   <h3>Deu erro? Tente isto primeiro</h3>
   <div class="errs">
     <div class="err"><b>ValueError: list.remove(x): x not in list</b><span>Falta o <code>if ... in habitos:</code> antes do <code>remove</code>. Ou a ordem ficou trocada: é sempre <b>coluna primeiro, linha depois</b>.</span></div>
-    <div class="err"><b>As bolinhas não somem</b><span>Confira se é <code>(coluna, linha)</code> em todo lugar (no <code>append</code> e no <code>in</code>), e se o <code>if</code> da coleta não ficou recuado dentro de outro <code>if</code>.</span></div>
+    <div class="err"><b>As bolinhas não somem</b><span>Confira se é <code>(coluna, linha)</code> em todo lugar (no <code>append</code> e no <code>in</code>), e se o <code>if</code> da coleta não ficou recuado dentro do <code>if</code> do espaço.</span></div>
     <div class="err"><b>TypeError: list.append() takes exactly one argument (2 given)</b><span>Faltaram os parênteses de dentro. É <code>habitos.append((coluna, linha))</code>, com <b>dois</b> pares de parênteses.</span></div>
-    <div class="err"><b>Nenhuma bolinha aparece</b><span>O <code>for</code> que desenha tem que estar dentro da <code>draw()</code> e <b>depois</b> do <code>screen.fill(...)</code>. E o <code>if</code> que monta a lista procura <code>"."</code>, não <code>"#"</code>.</span></div>
-    <div class="err"><b>O parabéns aparece logo no começo</b><span>A lista ficou vazia. Confira se o <code>habitos = []</code> está <b>antes</b> do <code>for</code> que enche a lista, e não depois.</span></div>
-    <div class="err"><b>UnboundLocalError quando aperta R</b><span>No desafio extra, faltou <code>habitos</code> no <code>global</code>.</span></div>
+    <div class="err"><b>Nenhuma bolinha aparece</b><span>O <code>for</code> que desenha tem que estar dentro da <code>draw()</code> e <b>depois</b> do <code>screen.fill(...)</code>.</span></div>
+    <div class="err"><b>As bolinhas aparecem em cima das paredes</b><span>O <code>if</code> que monta a lista tem que procurar <code>"."</code>, não <code>"#"</code>.</span></div>
+    <div class="err"><b>NameError: name 'habitos' is not defined</b><span>O <code>habitos = []</code> tem que vir <b>antes</b> do <code>for</code> que enche a lista.</span></div>
+    <div class="err"><b>O parabéns aparece logo no começo</b><span>A lista ficou vazia. Confira se não sobrou um segundo <code>habitos = []</code> <b>depois</b> do <code>for</code>, apagando tudo.</span></div>
+    <div class="err"><b>UnboundLocalError falando de habitos quando aperta uma seta</b><span>No desafio extra, depois de criar o <code>if key == keys.R:</code>, faltou pôr <code>habitos</code> no <code>global</code>.</span></div>
   </div>
 </section>
 
@@ -1788,9 +1798,9 @@ pgzrun.go()</pre></div>
   var T = "Crescendo como Jesus";
   var PEC = txt("Pecador: Escreva seu nome aqui", 10, 570, 16, "white", "topleft");
   var DICA3 = txt("Use as setas para andar. Espaço volta ao meio.", 400, 30, 24);
-  var DICA4 = "Setas: anda um quadradinho. Espaco: volta ao inicio.";
-  var DICA5 = "Setas: anda. Passe por cima dos bons habitos.";
-  var PARABENS = "Parabens! Voce encheu sua vida de bons habitos!";
+  var DICA4 = "Setas: anda um quadradinho. Espaço: volta ao início.";
+  var DICA5 = "Setas: anda. Passe por cima dos bons hábitos.";
+  var PARABENS = "Parabéns! Você encheu sua vida de bons hábitos!";
   function bola(c, l) { return { k:"circle", x:c * TILE + 20, y:l * TILE + 20, r:16, color:"gold" }; }
   var wallAnim = { ate: undefined };
   var TODOS = todosHabitos();
@@ -1960,7 +1970,7 @@ pgzrun.go()</pre></div>
     catch (e) {
       st.crash = true;
       var box = fig.querySelector(".crash");
-      box.querySelector("pre").textContent = 'Traceback (most recent call last):\n  File "jogo.py", in on_key_down\n    if MAPA[nova_linha][nova_coluna] != "#":\n' + e;
+      box.querySelector("pre").textContent = 'Traceback (most recent call last):   (resumido)\n  File "jogo.py", in on_key_down\n    if MAPA[nova_linha][nova_coluna] != "#":\n' + e;
       box.hidden = false;
       st.ultimo = "Tentou olhar a coluna " + nc + ", que não existe.";
       return;
@@ -1992,6 +2002,8 @@ pgzrun.go()</pre></div>
     function vai(k) { aperta(fig, k); render(fig); mostraVars(fig); }
     function reinicia() { fig._st = novoEstado(fig); var b = fig.querySelector(".crash"); if (b) b.hidden = true; render(fig); mostraVars(fig); }
     cv.addEventListener("keydown", function (e) {
+      // Segurar a tecla não repete: no Pygame Zero o on_key_down roda uma vez por aperto.
+      if (e.repeat) { if (KEYMAP[e.key]) e.preventDefault(); return; }
       var k = KEYMAP[e.key];
       if (k) { e.preventDefault(); vai(k); }
     });
@@ -2022,7 +2034,7 @@ pgzrun.go()</pre></div>
     b.addEventListener("click", function () {
       var op = b.getAttribute("data-moch"), it = mItem.value, q = '"' + it + '"', linhas;
       if (op === "append") {
-        if (RUINS[it]) { linhas = [["cmd", "mochila.append(" + q + ")"], ["out", "Hmm... esse não é um bom hábito para carregar! 😉 Escolha outro."]]; desenhaMochila(); }
+        if (RUINS[it]) { linhas = [["cmd", "mochila.append(" + q + ")"], ["out", "No Python de verdade daria certo, mas esta mochila é só de bons hábitos! 😉 Escolha outro."]]; desenhaMochila(); }
         else { mochila.push(it); desenhaMochila(mochila.length - 1); linhas = [["cmd", "mochila.append(" + q + ")"], ["cmd", "print(mochila)"], ["out", pyLista(mochila)]]; }
       } else if (op === "in") {
         var i = mochila.indexOf(it); desenhaMochila(i);

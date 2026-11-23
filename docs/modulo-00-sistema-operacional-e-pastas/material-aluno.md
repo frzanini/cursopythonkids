@@ -62,11 +62,15 @@ Além de clicar nos ícones, dá pra usar o computador **digitando comandos**. I
 | Ver o que tem dentro da pasta atual | `dir` (Windows) ou `ls` (Linux) | a lista de arquivos e pastas dali |
 | Entrar numa pasta | `cd nome-da-pasta` | nada; confira com `pwd` |
 | Voltar uma pasta | `cd ..` | nada; confira com `pwd` |
-| Criar uma pasta nova | `mkdir nome-da-pasta` | nada; a pasta aparece no `dir`/`ls` |
+| Criar uma pasta nova | `mkdir nome-da-pasta` | **Windows:** uma tabelinha (`Mode`, `LastWriteTime`, `Name`) com o nome da pasta nova. **Linux:** nada. Nos dois, a pasta aparece no `dir`/`ls` |
 | Remover uma pasta vazia | `rmdir nome-da-pasta` | nada; a pasta some do `dir`/`ls` |
 
 No terminal, **"deu certo" quase sempre é "não apareceu nada"** — a gente confere o efeito com
 `pwd` ou `dir`/`ls`. Se aparecer uma linha de erro, leia o que ela diz.
+
+> **Cuidado com o `rmdir` no Windows:** se a pasta **não** estiver vazia, ele não dá erro — ele
+> **pergunta** se pode apagar tudo o que tem dentro (`[S] Sim  [A] Sim para Todos  [N] Não...`).
+> Responda **`N`** e confira com `dir` o que tem lá dentro. Só use o `rmdir` em pasta vazia.
 
 ## As ferramentas do curso
 
@@ -93,6 +97,11 @@ code --version
 `Python 3.12.4`). Para o que falta, um erro tipo `'python' não é reconhecido` /
 `command not found` — normal, é só instalar abaixo.
 
+> No Windows 10/11, no lugar do erro do `python` pode aparecer: *"Python não foi encontrado;
+> execute sem argumentos para instalar a partir da Microsoft Store..."*. É só um atalho do
+> Windows: **não** instale o Python pela Microsoft Store. Quem instala o Python do curso é o
+> `uv`, no passo 2.
+
 ### 2. Instalar o Python 3.12 (com o `uv`)
 
 O curso é de Python — mas quem instala o Python pra gente é o `uv`, então ele vem primeiro.
@@ -103,8 +112,8 @@ O curso é de Python — mas quem instala o Python pra gente é o `uv`, então e
     um erro de "execução de scripts desabilitada")
   - **Linux:** `curl -LsSf https://astral.sh/uv/install.sh | sh`
   - Deve terminar com uma mensagem de sucesso do instalador.
-- **Feche e abra o terminal de novo** e confirme: `uv --version` → deve imprimir algo como
-  `uv 0.4.20`.
+- **Feche e abra o terminal de novo** e confirme: `uv --version` → deve imprimir uma linha
+  começando com `uv` e um número de versão (algo como `uv 0.9.5 (...)`).
 - Instalar o Python 3.12: `uv python install 3.12` → baixa (barra de progresso) e termina com
   `Installed Python 3.12.x`, sem erro.
 - Confirmar: `uv python list` → deve ter uma linha com `3.12` e um caminho ao lado.
@@ -119,7 +128,9 @@ O curso é de Python — mas quem instala o Python pra gente é o `uv`, então e
 ### 3. Instalar o VS Code e a extensão Python
 
 - Instalar o VS Code:
-  - **Windows:** `winget install -e --id Microsoft.VisualStudioCode`
+  - **Windows:** `winget install -e --id Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements`
+    (as duas últimas partes já aceitam os termos do `winget`; sem elas, na primeira vez ele para
+    e pergunta `Você concorda com todos os termos...? [Y] Sim [N] Não` — aí é só responder `Y`)
   - **Linux:** `sudo snap install code --classic`
   - Deve mostrar o progresso e terminar com sucesso.
 - **Feche e abra o terminal de novo** e confirme: `code --version` → responde com três linhas.
@@ -142,7 +153,8 @@ O curso é de Python — mas quem instala o Python pra gente é o `uv`, então e
 
 ### 4. Criar a pasta do curso
 
-No terminal, vá até onde a pasta vai ficar (ex.: a Área de Trabalho) e crie a estrutura:
+O terminal já abre na **sua pasta de usuário** (no Windows, algo como `C:\Users\seu-nome`;
+confira com `pwd`). Crie a pasta do curso **aí mesmo**:
 
 ```
 mkdir crescendo-como-jesus
@@ -151,9 +163,13 @@ mkdir aula-01
 pwd
 ```
 
-**O que deve aparecer:** os três primeiros comandos não respondem nada (normal); o `pwd` no fim
-mostra o caminho completo terminando em `crescendo-como-jesus`. Um `dir`/`ls` mostra a `aula-01`
-lá dentro.
+**O que deve aparecer:** no Windows, cada `mkdir` mostra uma tabelinha com o nome da pasta nova
+(no Linux, não aparece nada); o `cd` não responde nada; o `pwd` no fim mostra o caminho completo
+terminando em `crescendo-como-jesus`. Um `dir`/`ls` mostra a `aula-01` lá dentro.
+
+> Evite criar a pasta na **Área de Trabalho** ou em **Documentos**: no Windows elas costumam
+> ficar dentro do **OneDrive**, que tenta copiar para a nuvem os milhares de arquivos do `.venv`
+> e deixa tudo lento.
 
 - `crescendo-como-jesus/` é a **pasta principal** do curso — é aqui que tudo vai acontecer.
 - `aula-01/` guarda os testes soltos da primeira aula. Cada aula terá a sua (`aula-02`, ...).
@@ -198,7 +214,8 @@ uv pip freeze > requirements.txt
 
 **O que deve aparecer:**
 
-- `uv venv ...` → `Creating virtual environment at: .venv`; a pasta `.venv` surge no explorador.
+- `uv venv ...` → algumas linhas, entre elas `Creating virtual environment at: .venv`; a pasta
+  `.venv` surge no explorador.
 - `uv pip install pgzero` → a lista dos pacotes (`pgzero`, `pygame`, `numpy`...) e `Installed N
   packages`, sem linha vermelha.
 - `uv pip freeze > requirements.txt` → nada no terminal; o arquivo `requirements.txt` aparece no
@@ -206,7 +223,13 @@ uv pip freeze > requirements.txt
 
 Depois selecione o interpretador: `Ctrl+Shift+P` → **Python: Select Interpreter** → escolha o
 que tem `.venv` (costuma vir como "Recommended") → o canto inferior direito do VS Code passa a
-mostrar `3.12.x ('.venv')`.
+mostrar a versão `3.12` junto com `.venv` (algo como `3.12.x ('.venv': venv)`).
+
+Agora **troque de terminal**: clique na lixeira 🗑 do terminal integrado para fechá-lo e abra um
+novo com `` Ctrl+` ``. **O que deve aparecer:** o começo da linha do terminal passa a mostrar
+**`(.venv)`** — quer dizer que o terminal está usando a caixa do projeto. Se em vez disso aparecer
+um erro de **"execução de scripts desabilitada"**, rode o `Set-ExecutionPolicy` do passo 3 e abra
+outro terminal novo.
 
 ### 6. Testar se está tudo pronto
 
@@ -216,8 +239,8 @@ Isto **não é** aula de Python — é só pra ver se tudo liga.
   ```python
   print("ambiente pronto para a aula")
   ```
-- Clique no botão ▶ **Run Python File** (canto superior direito) — ou, no terminal integrado, com
-  o venv ativo, digite:
+- Clique no botão ▶ **Run Python File** (canto superior direito) — ou, no terminal integrado
+  que mostra `(.venv)` no começo da linha (passo 5), digite:
   ```
   python aula-01/teste.py
   ```
@@ -226,8 +249,7 @@ Isto **não é** aula de Python — é só pra ver se tudo liga.
 
 ## Checklist final
 
-- [ ] `python --version` (ou `uv python list` com `3.12`), `uv --version` e `code --version`
-      respondem
+- [ ] `uv python list` mostra o `3.12`; `uv --version` e `code --version` respondem
 - [ ] extensão **Python** instalada no VS Code
 - [ ] pasta `crescendo-como-jesus/` criada, com `aula-01/` dentro
 - [ ] `.venv` criado na raiz de `crescendo-como-jesus/`, `pgzero` instalado, `requirements.txt`
@@ -272,7 +294,11 @@ começa.
 - **`python --version` continua com erro depois de instalar com `uv`:** normal — o `uv` não
   registra o Python como o `python` global. Confira com `uv python list`.
 - **Me perdi entre as pastas:** use `pwd`, e a barra de endereço do gerenciador de arquivos.
-- **`rmdir` deu erro:** a pasta não está vazia (confira com `dir`/`ls`).
+- **`rmdir` perguntou se pode apagar tudo (Windows) ou deu erro (Linux):** a pasta não está
+  vazia. Responda **`N`** e confira com `dir`/`ls` o que tem lá dentro.
+- **`python aula-01/teste.py` diz que o Python não foi encontrado:** o terminal não está usando o
+  `.venv` — feche-o na lixeira 🗑 e abra um novo (`` Ctrl+` ``); o começo da linha tem que
+  mostrar `(.venv)`. Ou use o botão ▶.
 - **VS Code não mostra o `.venv`:** confirme que a pasta `.venv` está **dentro** de
   `crescendo-como-jesus/` e recarregue a janela (`Ctrl+Shift+P` → "Developer: Reload Window").
 - **`teste.py` deu erro:** repita o passo 5 (Select Interpreter → `.venv`) e confira o

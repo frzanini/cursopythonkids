@@ -177,9 +177,9 @@ Na `draw()`, troque o texto fixo da dica do topo por isto:
 
 ```python
     if len(habitos) == 0:
-        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+        mensagem = "Parabéns! Você encheu sua vida de bons hábitos!"
     else:
-        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+        mensagem = "Setas: anda. Passe por cima dos bons hábitos."
 
     screen.draw.text(
         mensagem,
@@ -193,7 +193,7 @@ Na `draw()`, troque o texto fixo da dica do topo por isto:
 - A variável `mensagem` guarda **qual** texto vai aparecer.
 
 **Rode e jogue até o fim.** Colete todos os hábitos. Quando você pegar o último, a dica do topo
-vira: **"Parabens! Voce encheu sua vida de bons habitos!"**
+vira: **"Parabéns! Você encheu sua vida de bons hábitos!"**
 
 ## O que acontece quando o personagem anda
 
@@ -250,13 +250,18 @@ destravar se você empacar.
 - **`ValueError: list.remove(x): x not in list`:** falta o `if ... in habitos:` antes do `remove`.
   Ou a ordem ficou trocada em algum lugar: é sempre **coluna primeiro, linha depois**.
 - **As bolinhas não somem:** confira se é `(coluna, linha)` em todo lugar (no `append` e no `in`),
-  e se o `if` da coleta não ficou recuado dentro de outro `if`.
+  e se o `if` da coleta não ficou recuado dentro do `if` do espaço.
 - **`TypeError: list.append() takes exactly one argument (2 given)`:** faltaram os parênteses de
   dentro. É `habitos.append((coluna, linha))`, com **dois** pares de parênteses.
 - **Nenhuma bolinha aparece:** o `for` que desenha tem que estar dentro da `draw()` e **depois** do
-  `screen.fill(...)`. E o `if` que monta a lista procura `"."`, não `"#"`.
-- **A mensagem de parabéns aparece logo no começo:** a lista ficou vazia. Confira se o
-  `habitos = []` está **antes** do `for` que enche a lista, e não depois.
-- **`UnboundLocalError` quando aperta `R` (desafio extra):** faltou `habitos` no `global`.
+  `screen.fill(...)`.
+- **As bolinhas aparecem em cima das paredes:** o `if` que monta a lista tem que procurar `"."`,
+  não `"#"`.
+- **`NameError: name 'habitos' is not defined`:** o `habitos = []` tem que vir **antes** do `for`
+  que enche a lista.
+- **A mensagem de parabéns aparece logo no começo:** a lista ficou vazia. Confira se não sobrou
+  um segundo `habitos = []` **depois** do `for`, apagando tudo.
+- **`UnboundLocalError` falando de `habitos` quando aperta uma seta (desafio extra):** depois de
+  criar o `if key == keys.R:`, faltou pôr `habitos` no `global`.
 
 Ao final, **salve** o `jogo.py` (na raiz de `crescendo-como-jesus/`) e o `aula-05/mochila.py`.

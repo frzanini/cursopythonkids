@@ -191,9 +191,9 @@ com `if`/`else`:
 
 ```python
     if len(habitos) == 0:
-        mensagem = "Parabens! Voce encheu sua vida de bons habitos!"
+        mensagem = "Parabéns! Você encheu sua vida de bons hábitos!"
     else:
-        mensagem = "Setas: anda. Passe por cima dos bons habitos."
+        mensagem = "Setas: anda. Passe por cima dos bons hábitos."
 
     screen.draw.text(
         mensagem,
@@ -271,7 +271,7 @@ empacou.
 O labirinto do Módulo 4 agora tem bolinhas verdes em todos os corredores marcados com `.`. Cada
 bolinha some quando o personagem para em cima dela, deixando o caminho limpo para trás. O túnel e
 o espaço vazio do começo não têm hábito. Quando o último hábito é coletado, a dica do topo vira
-"Parabens! Voce encheu sua vida de bons habitos!".
+"Parabéns! Você encheu sua vida de bons hábitos!".
 
 ## Vocabulário novo para os alunos
 
@@ -300,5 +300,8 @@ o espaço vazio do começo não têm hábito. Quando o último hábito é coleta
 - **O terminal mostra `0`:** o `if` do Passo 1 compara com a letra errada, ou o mapa não tem
   pontinhos.
 - **A mensagem de parabéns aparece logo no começo:** a lista ficou vazia. Geralmente o
-  `habitos = []` foi escrito **depois** do `for` que enche a lista (e esvaziou tudo de novo).
-- **`UnboundLocalError` ao apertar `R` (desafio extra):** faltou `habitos` no `global`.
+  sobrou um segundo `habitos = []` **depois** do `for` que enche a lista (e esvaziou tudo de
+  novo). Se o único `habitos = []` está depois do `for`, o erro é outro: `NameError`.
+- **`UnboundLocalError` ao apertar uma seta (desafio extra):** faltou `habitos` no `global`.
+  Com o `habitos = []` dentro da função, `habitos` vira local na função inteira: o R não faz
+  nada visível e a primeira seta quebra na linha do `in habitos`.

@@ -208,8 +208,8 @@ HEIGHT = LINHAS * TILE
 - Rodar: o **labirinto azul-escuro** aparece. O personagem do Módulo 3 continua lá, por cima das
   paredes, andando livre. Isso muda agora.
 
-**Passo 3 — o personagem mora num quadradinho.** Trocar `personagem_x`/`personagem_y` e a
-`VELOCIDADE` por:
+**Passo 3 — o personagem mora num quadradinho.** Trocar `personagem_x`/`personagem_y`, o
+`personagem_raio` (que encolhe para caber no quadradinho) e a `VELOCIDADE` por:
 
 ```python
 INICIO_COLUNA = 9
@@ -221,8 +221,8 @@ personagem_raio = TILE // 2 - 4
 personagem_cor = "gold"
 ```
 
-Na `draw()`, o personagem passa a ser desenhado a partir do quadradinho (trocar a linha do
-`filled_circle`):
+Na `draw()`, o personagem passa a ser desenhado a partir do quadradinho (trocar as 3 linhas do
+`filled_circle(...)`, até o `)` que fecha):
 
 ```python
     x = personagem_coluna * TILE + TILE // 2
@@ -233,8 +233,8 @@ Na `draw()`, o personagem passa a ser desenhado a partir do quadradinho (trocar 
 **Apagar a função `update()` inteira** e, dentro do `on_key_down`, trocar `personagem_x` /
 `personagem_y` por `personagem_coluna` / `personagem_linha` (e `WIDTH // 2` / `HEIGHT // 2` por
 `INICIO_COLUNA` / `INICIO_LINHA`). Mover o texto da dica para a linha vazia de cima:
-`center=(WIDTH // 2, TILE // 2)`, com o texto `"Setas: anda um quadradinho. Espaco: volta ao
-inicio."`.
+`center=(WIDTH // 2, TILE // 2)`, com o texto `"Setas: anda um quadradinho. Espaço: volta ao
+início."`.
 
 - `+ TILE // 2` leva do canto do quadradinho para o **centro** dele. O raio é um pouco menor que
   meio quadradinho, para caber no corredor.
@@ -392,8 +392,8 @@ espaço traz o personagem de volta ao começo.
   estar recuado dentro do primeiro, e o desenho dentro do `if`.
 - **O personagem aparece dentro da parede:** `INICIO_COLUNA`/`INICIO_LINHA` apontam para um `#`.
   Lembrar que a contagem começa do 0.
-- **O personagem não anda:** o `global` do `on_key_down` ainda cita `personagem_x`,
-  `personagem_y`; tem que ser `global personagem_coluna, personagem_linha`.
+- **`UnboundLocalError` no primeiro aperto de seta:** o `global` do `on_key_down` ainda cita
+  `personagem_x`, `personagem_y`; tem que ser `global personagem_coluna, personagem_linha`.
 - **`NameError: name 'personagem_x' is not defined`:** sobrou algum `personagem_x`/`personagem_y`
   do Módulo 3 (na `draw()` ou no `on_key_down`). Se o erro só aparece ao **segurar** uma seta,
   sobrou o `update()` do Módulo 3: apagar a função inteira.
