@@ -1,0 +1,2217 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Crescendo como Jesus · Fases 6 e 7</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Lexend:wght@400;600&family=JetBrains+Mono:wght@400;700&family=Pixelify+Sans:wght@500;700&display=swap">
+<style>
+/* Layout: uma trilha de fases, como o mapa de um labirinto. Coluna de leitura larga,
+   e cada passo traz ao lado uma "janela do jogo" mostrando o que deve aparecer quando você rodar. */
+:root {
+  --ground: #eef6fb;
+  --surface: #ffffff;
+  --ink: #18264a;
+  --ink-soft: #4b5b7e;
+  --line: #cbd9ea;
+  --wall: #2446c9;
+  --gold: #f2b705;
+  --gold-ink: #5c4300;
+  --gold-soft: #fff4cc;
+  --leaf: #17835a;
+  --leaf-soft: #e1f5ea;
+  --coral: #cc3f33;
+  --coral-soft: #fde9e7;
+  --idea-soft: #e5ecff;
+  --code-bg: #131d3b;
+  --code-ink: #e6ecfb;
+  --code-dim: #8a98bf;
+  --code-new: rgba(242, 183, 5, .16);
+  --syn-kw: #ff8fb1;
+  --syn-str: #9be39b;
+  --syn-num: #ffc861;
+  --syn-pg: #7fd3ff;
+  --syn-const: #ffd96b;
+  --syn-fn: #c6a8ff;
+  --f-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --f-body: "Lexend", "Segoe UI", system-ui, sans-serif;
+  --f-code: "JetBrains Mono", Consolas, "Courier New", monospace;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0d1530;
+    --surface: #152042;
+    --ink: #eaf0ff;
+    --ink-soft: #a8b5d6;
+    --line: #2a3a66;
+    --wall: #6d8bff;
+    --gold: #f7c533;
+    --gold-ink: #ffe28a;
+    --gold-soft: #2d2811;
+    --leaf: #52cf95;
+    --leaf-soft: #10302a;
+    --coral: #ff8474;
+    --coral-soft: #3a1b22;
+    --idea-soft: #1b2958;
+    --code-bg: #0a1126;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0d1530;
+  --surface: #152042;
+  --ink: #eaf0ff;
+  --ink-soft: #a8b5d6;
+  --line: #2a3a66;
+  --wall: #6d8bff;
+  --gold: #f7c533;
+  --gold-ink: #ffe28a;
+  --gold-soft: #2d2811;
+  --leaf: #52cf95;
+  --leaf-soft: #10302a;
+  --coral: #ff8474;
+  --coral-soft: #3a1b22;
+  --idea-soft: #1b2958;
+  --code-bg: #0a1126;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 18px;
+  line-height: 1.65;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; }
+h1, h2, h3, h4 { font-family: var(--f-display); line-height: 1.15; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; letter-spacing: -.01em; }
+h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 800; }
+h3 { font-size: 1.5rem; font-weight: 800; }
+h4 { font-size: 1.2rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+a { color: var(--wall); }
+code {
+  font-family: var(--f-code); font-size: .86em;
+  background: var(--idea-soft); color: var(--ink);
+  padding: .08em .35em; border-radius: 6px;
+}
+/* Sem ligaduras: a fonte de código juntaria != em ≠ e >= em ≥, e a criança copiaria o símbolo errado. */
+code, pre, kbd, .vars, .coord, .mapa-letras { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
+/* Código no meio do texto pode quebrar a linha: no celular, um nome comprido não empurra a página para o lado. */
+p code, li code, dd code { overflow-wrap: anywhere; }
+kbd {
+  font-family: var(--f-code); font-size: .82em; font-weight: 700;
+  border: 1px solid var(--line); border-bottom-width: 3px;
+  background: var(--surface); color: var(--ink);
+  padding: .05em .45em; border-radius: 7px; white-space: nowrap;
+}
+ul, ol { margin: 0; padding-left: 1.3em; max-width: 66ch; }
+li + li { margin-top: .35em; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+.pixel { font-family: var(--f-pixel); letter-spacing: .06em; text-transform: uppercase; font-weight: 700; }
+.stack { display: flex; flex-direction: column; gap: 18px; }
+
+/* ---------- barra de navegação ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10;
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav .wrap { display: flex; align-items: center; gap: 12px; padding-block: 10px; flex-wrap: wrap; }
+.nav .brand { font-family: var(--f-display); font-weight: 800; font-size: 1.1rem; margin-right: auto; color: var(--ink); text-decoration: none; }
+.nav a.lvl {
+  display: inline-flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--ink);
+  border: 2px solid var(--line); background: var(--surface);
+  border-radius: 999px; padding: 4px 12px 4px 6px; font-size: .88rem; font-weight: 600;
+}
+.nav a.lvl:hover { border-color: var(--wall); }
+.nav a.mapa {
+  text-decoration: none; color: var(--wall); font-weight: 600; font-size: .9rem;
+  border: 2px solid var(--wall); border-radius: 999px; padding: 3px 12px;
+}
+.nav a.mapa:hover { background: var(--wall); color: var(--surface); }
+.nav .dot {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
+  display: grid; place-items: center; font-family: var(--f-display); font-size: .9rem; font-weight: 800;
+}
+:root .nav .dot { color: #3d2d00; }
+.nav .count { color: var(--ink-soft); font-variant-numeric: tabular-nums; font-weight: 400; }
+.nav a.lvl.done { border-color: var(--leaf); }
+.nav a.lvl.done .count { color: var(--leaf); font-weight: 600; }
+
+/* ---------- abertura ---------- */
+.hero { padding-block: 48px 28px; }
+.hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+.eyebrow { color: var(--wall); font-size: .95rem; }
+.hero h1 { margin-top: 10px; }
+.hero h1 .gold { color: var(--gold); -webkit-text-stroke: 0; }
+.verse {
+  margin: 20px 0 0; padding: 14px 18px; border-left: 5px solid var(--gold);
+  background: var(--surface); border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 1.08rem; max-width: 60ch;
+}
+.verse cite { display: block; font-style: normal; color: var(--ink-soft); font-size: .9rem; margin-top: 4px; }
+.hero .lead { margin-top: 18px; font-size: 1.08rem; }
+.demo {
+  background: #0b1433; border-radius: 18px; padding: 12px; margin: 0;
+  box-shadow: 0 18px 40px -22px rgba(10, 20, 60, .6);
+}
+.demo canvas { display: block; width: 100%; height: auto; border-radius: 10px; }
+.demo figcaption { color: #cdd7f5; font-size: .9rem; padding: 10px 6px 2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; font-size: .85rem;
+  border-radius: 999px; padding: 3px 10px; border: 1px solid var(--line); background: var(--surface);
+}
+.chip.good { border-color: var(--leaf); }
+.chip.bad { border-color: var(--coral); }
+
+/* ---------- parede de labirinto (divisória) ---------- */
+.maze-wall {
+  height: 14px; margin-block: 44px; border: 3px solid var(--wall); border-radius: 999px;
+  position: relative; opacity: .8;
+}
+.maze-wall::after {
+  content: ""; position: absolute; left: 50%; top: 50%; width: 10px; height: 10px;
+  background: var(--gold); border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: -60px 0 0 -2px var(--gold), 60px 0 0 -2px var(--gold), -120px 0 0 -2px var(--gold), 120px 0 0 -2px var(--gold);
+}
+
+/* ---------- seções ---------- */
+section.block { display: flex; flex-direction: column; gap: 22px; }
+.phase-head { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+.badge {
+  width: 96px; height: 96px; border-radius: 50%; background: var(--gold);
+  display: grid; place-items: center; text-align: center; color: #3d2d00;
+  font-family: var(--f-pixel); font-weight: 700; line-height: 1;
+  box-shadow: inset 0 -6px 0 rgba(0,0,0,.14);
+}
+.badge small { display: block; font-size: .72rem; letter-spacing: .1em; }
+.badge b { display: block; font-family: var(--f-display); font-weight: 800; font-size: 2.6rem; margin-top: 2px; }
+.phase-head p { color: var(--ink-soft); margin-top: 6px; font-size: 1.05rem; }
+.learn { display: flex; flex-wrap: wrap; gap: 8px; }
+.learn span {
+  font-size: .88rem; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 4px 10px;
+}
+.panel {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;
+}
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.two > * { min-width: 0; }
+
+/* passos */
+.step {
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 26px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px;
+}
+.step.solo { grid-template-columns: minmax(0, 1fr); }
+.step-body { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.step-title { display: flex; align-items: center; gap: 12px; }
+.step-num {
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--gold); color: #3d2d00; display: grid; place-items: center;
+  font-family: var(--f-display); font-weight: 800; font-size: 1.2rem;
+}
+.side { display: flex; flex-direction: column; gap: 14px; position: sticky; top: 90px; }
+
+/* avisos */
+.note { border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.note .tag { font-size: .8rem; }
+.note.run { background: var(--leaf-soft); }
+.note.run .tag { color: var(--leaf); }
+.note.idea { background: var(--idea-soft); }
+.note.idea .tag { color: var(--wall); }
+.note.oops { background: var(--coral-soft); }
+.note.oops .tag { color: var(--coral); }
+.note.gold { background: var(--gold-soft); }
+.note.gold .tag { color: var(--gold-ink); }
+
+/* código */
+pre {
+  margin: 0; background: var(--code-bg); color: var(--code-ink);
+  border-radius: 12px; padding: 14px 0; overflow-x: auto;
+  font-family: var(--f-code); font-size: 15px; line-height: 1.6;
+}
+pre .ln { display: block; padding-inline: 16px; min-height: 1.6em; white-space: pre; }
+pre .ln.new { background: var(--code-new); box-shadow: inset 4px 0 0 #f2b705; }
+pre .kw { color: var(--syn-kw); font-weight: 700; }
+pre .str { color: var(--syn-str); }
+pre .num { color: var(--syn-num); }
+pre .pg { color: var(--syn-pg); }
+pre .const { color: var(--syn-const); }
+pre .fn { color: var(--syn-fn); font-weight: 700; }
+pre .com { color: var(--code-dim); font-style: italic; }
+pre.term .ln::before { content: "> "; color: var(--syn-str); }
+pre.term .ln.out::before { content: ""; }
+pre.term .ln.out { color: var(--code-dim); }
+.code-label { font-size: .8rem; color: var(--ink-soft); margin-bottom: -6px; }
+.legend-new { font-size: .85rem; color: var(--ink-soft); }
+.legend-new i { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; background: var(--code-new); box-shadow: inset 3px 0 0 #f2b705; border-radius: 3px; }
+
+/* janela do jogo (simulação) */
+.mock { margin: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--line); background: #1d2433; }
+.mock-bar {
+  display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+  background: #e9edf5; color: #26304a; font-size: .78rem; font-family: "Segoe UI", system-ui, sans-serif;
+}
+.mock-bar i { width: 10px; height: 10px; border-radius: 50%; background: #c3cad8; }
+.mock-bar i:first-child { margin-left: auto; order: 3; }
+.mock-bar .mock-title { order: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mock canvas { display: block; width: 100%; height: auto; touch-action: manipulation; }
+.mock-cap { font-size: .82rem; color: var(--ink-soft); }
+.coord {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 8px; padding: 6px 10px;
+}
+
+/* laboratório / controles */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.controls label { font-size: .88rem; color: var(--ink-soft); display: flex; flex-direction: column; gap: 4px; }
+select, input[type="text"] {
+  font: inherit; font-size: .95rem; padding: 6px 10px; border-radius: 10px;
+  border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+}
+button {
+  font: inherit; font-size: .92rem; font-weight: 600; cursor: pointer;
+  border-radius: 10px; border: 2px solid var(--line); background: var(--surface); color: var(--ink);
+  padding: 6px 14px;
+}
+button:hover { border-color: var(--wall); }
+.pad { display: grid; grid-template-columns: repeat(3, 48px); grid-template-rows: repeat(2, 44px); gap: 6px; }
+.pad button { padding: 0; font-size: 1.2rem; }
+.pad .u { grid-column: 2; grid-row: 1; }
+.pad .l { grid-column: 1; grid-row: 2; }
+.pad .d { grid-column: 2; grid-row: 2; }
+.pad .r { grid-column: 3; grid-row: 2; }
+.pad button.on { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.vars {
+  font-family: var(--f-code); font-size: .85rem; font-variant-numeric: tabular-nums;
+  background: var(--code-bg); color: var(--code-ink); border-radius: 10px; padding: 10px 14px;
+  display: grid; grid-template-columns: auto auto; gap: 2px 14px; justify-content: start;
+}
+.vars .t { color: var(--syn-str); font-weight: 700; }
+.vars .f { color: var(--code-dim); }
+
+/* árvore de pastas */
+.tree { font-family: var(--f-code); font-size: .92rem; background: var(--surface); border: 1px dashed var(--line); border-radius: 12px; padding: 12px 16px; line-height: 1.8; }
+.tree .hl { background: var(--gold-soft); color: var(--gold-ink); border-radius: 6px; padding: 0 6px; font-weight: 700; }
+.tree .dim { color: var(--ink-soft); font-family: var(--f-body); font-size: .85rem; }
+
+/* laço do jogo */
+.loop { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.loop .box { border: 2px solid var(--wall); border-radius: 12px; padding: 10px 14px; background: var(--surface); }
+.loop .box b { font-family: var(--f-code); }
+.loop .arrow { font-family: var(--f-pixel); color: var(--wall); font-size: 1.1rem; }
+
+/* missão */
+.mission { border: 3px solid var(--gold); background: var(--surface); border-radius: var(--radius); padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+.mission ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.mission li { margin: 0; }
+.mission label { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.mission input { width: 22px; height: 22px; margin-top: 4px; accent-color: var(--leaf); flex: none; }
+.mission input:checked + span { color: var(--ink-soft); text-decoration: line-through; text-decoration-color: var(--leaf); }
+.meter { height: 12px; border-radius: 999px; background: var(--ground); border: 1px solid var(--line); overflow: hidden; }
+.meter i { display: block; height: 100%; width: 0; background: var(--leaf); transition: width .3s; }
+.mission .done-msg { color: var(--leaf); font-weight: 600; }
+
+/* desafios e segredos */
+details { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+details > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; align-items: center; gap: 10px; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::before { content: "+"; font-family: var(--f-pixel); color: var(--wall); font-size: 1.2rem; width: 14px; }
+details[open] > summary::before { content: "−"; }
+details > .in { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+.challenges { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.challenge { display: flex; flex-direction: column; gap: 12px; }
+.challenge .tag { font-size: .8rem; color: var(--wall); }
+
+/* quiz */
+.quiz { display: flex; flex-direction: column; gap: 16px; }
+.q { display: flex; flex-direction: column; gap: 8px; }
+.q p { font-weight: 600; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opts button.right { background: var(--leaf-soft); border-color: var(--leaf); }
+.opts button.wrong { background: var(--coral-soft); border-color: var(--coral); }
+.why { font-size: .95rem; min-height: 1.5em; }
+.why.ok { color: var(--leaf); }
+.why.no { color: var(--coral); }
+
+/* glossário */
+.gloss { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.gloss div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: .95rem; }
+.gloss dt { font-weight: 600; }
+.gloss dd { margin: 4px 0 0; color: var(--ink-soft); }
+
+.errs { display: flex; flex-direction: column; gap: 10px; }
+.err { display: grid; grid-template-columns: minmax(0, 14rem) 1fr; gap: 16px; padding: 12px 16px; background: var(--surface); border: 1px solid var(--line); border-left: 5px solid var(--coral); border-radius: 10px; font-size: .95rem; }
+.err b { font-family: var(--f-code); font-size: .85rem; overflow-wrap: anywhere; }
+
+footer { padding-block: 30px 60px; color: var(--ink-soft); font-size: .95rem; }
+
+/* ---------- guia lateral: passo anterior/próximo e fase anterior/próxima ---------- */
+.guia {
+  position: fixed; z-index: 20; right: 12px; top: 50%; transform: translateY(-50%);
+  width: 76px; display: flex; flex-direction: column; align-items: stretch; gap: 6px;
+  padding: 8px 6px; border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 2px solid var(--line); box-shadow: 0 6px 20px rgba(10, 20, 50, .14);
+  backdrop-filter: blur(8px);
+}
+.guia button {
+  display: flex; flex-direction: column; align-items: center; gap: 0;
+  padding: 6px 2px 4px; border-radius: 12px; font-size: .72rem; line-height: 1.15;
+}
+.guia button svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.guia button.passo { font-size: .8rem; }
+.guia button.next { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.guia button.next:hover { border-color: var(--wall); }
+.guia button:disabled { opacity: .35; cursor: default; border-color: var(--line); }
+.guia button.next:disabled { background: var(--surface); color: var(--ink); }
+.guia .onde { text-align: center; padding: 4px 0; line-height: 1.2; }
+.guia .onde b {
+  display: block; font-family: var(--f-display); font-weight: 800; font-size: 1rem; color: var(--wall);
+  letter-spacing: .04em; text-transform: uppercase;
+}
+.guia .onde span { display: block; font-size: .78rem; color: var(--ink-soft); font-weight: 600; }
+@media (min-width: 721px) and (max-width: 1299px) {
+  .wrap { padding-right: 104px; }
+}
+@media (max-width: 720px) {
+  .guia {
+    top: auto; transform: none; left: 0; right: 0; bottom: 0; width: auto;
+    flex-direction: row; justify-content: center; gap: 6px;
+    border-radius: 16px 16px 0 0; border-width: 2px 0 0;
+    padding: 6px 10px calc(6px + env(safe-area-inset-bottom, 0px));
+  }
+  .guia button { flex: 1 1 0; max-width: 84px; }
+  .guia .onde { flex: 1 1 0; max-width: 92px; align-self: center; }
+  footer { padding-bottom: 110px; }
+}
+
+@media (max-width: 980px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .step { grid-template-columns: minmax(0, 1fr); }
+  .side { position: static; max-width: 460px; }
+}
+@media (max-width: 700px) {
+  body { font-size: 17px; }
+  .two, .challenges { grid-template-columns: 1fr; }
+  .phase-head { grid-template-columns: 1fr; }
+  .badge { width: 76px; height: 76px; }
+  .badge b { font-size: 1.9rem; }
+  .step, .panel, .mission { padding: 18px; }
+  .err { grid-template-columns: 1fr; gap: 4px; }
+  /* No celular a barra de cima fica numa linha só: o Mapa e, de cada fase, só o número e a contagem.
+     A guia de baixo faz o resto da navegação. */
+  .nav .brand { display: none; }
+  .nav .wrap { flex-wrap: nowrap; gap: 8px; }
+  .nav a.lvl { font-size: 0; gap: 6px; padding: 3px 10px 3px 4px; }
+  .nav a.lvl .dot, .nav a.lvl .count { font-size: .82rem; }
+  .nav a.mapa { margin-right: auto; }
+  pre { font-size: 13.5px; }
+}
+</style>
+
+<style>
+/* ---------- extras do caderno das Fases 4 e 5 ---------- */
+.mock { position: relative; }
+.mock canvas:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+.crash {
+  position: absolute; left: 0; right: 0; bottom: 0; top: 28px;
+  background: rgba(10, 15, 35, .94); color: #ffc2b8; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 10px; justify-content: center;
+}
+.crash[hidden] { display: none; }
+.crash pre { background: transparent; padding: 0; font-size: 12px; color: #ffc2b8; white-space: pre-wrap; }
+.crash p { color: #fff; font-size: .9rem; }
+.crash button { align-self: flex-start; }
+.cells { display: flex; flex-wrap: wrap; gap: 6px; }
+.cell {
+  min-width: 52px; text-align: center; border: 2px solid var(--line); border-radius: 10px;
+  background: var(--surface); padding: 4px 8px; font-size: .88rem; line-height: 1.3;
+  transition: border-color .15s, background .15s;
+}
+.cell small { display: block; font-family: var(--f-code); color: var(--ink-soft); font-size: .75rem; }
+.cell.hit { border-color: var(--gold); background: var(--gold-soft); }
+.cell.letra { min-width: 40px; font-family: var(--f-code); font-weight: 700; }
+.cells .vazia { color: var(--ink-soft); font-size: .9rem; padding: 6px 2px; }
+.lab-out { min-height: 4.8em; }
+.side pre.term .ln { white-space: pre-wrap; overflow-wrap: anywhere; }
+.lab-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.lab-btns button { font-family: var(--f-code); font-size: .82rem; padding: 4px 10px; }
+.lab-btns button.bad { border-color: var(--coral); }
+.ultimo { font-size: .85rem; color: var(--ink-soft); min-height: 2.6em; }
+.ultimo b { font-family: var(--f-code); color: var(--ink); font-weight: 700; }
+.mapa-letras { font-family: var(--f-code); font-size: 13px; line-height: 1.25; background: var(--code-bg); color: var(--code-ink); border-radius: 12px; padding: 12px 14px; overflow-x: auto; white-space: pre; margin: 0; }
+.mapa-letras .w { color: #7f9bff; }
+.mapa-letras .d { color: var(--syn-str); }
+.mapa-letras .i { color: var(--code-dim); }
+.vazio-cap { color: var(--ink-soft); font-size: .85rem; }
+.hero-placar { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px; }
+.hero-placar span { font-family: var(--f-code); font-size: .82rem; background: #17224a; color: #e6ecfb; border-radius: 8px; padding: 3px 10px; }
+.prox-link { display: inline-flex; align-self: flex-start; text-decoration: none; font-weight: 600; border: 2px solid var(--wall); border-radius: 999px; padding: 6px 16px; }
+.prox-link:hover { background: var(--wall); color: var(--surface); }
+</style>
+
+<style>
+/* ---------- extras do caderno das Fases 6 e 7 ---------- */
+.contador-grande { font-family: var(--f-code); font-size: 1.6rem; font-weight: 700; text-align: center; padding: 10px; border-radius: 12px; background: var(--code-bg); color: var(--syn-num); }
+.dado { display: flex; gap: 12px; align-items: center; }
+.dado b { width: 64px; height: 64px; border-radius: 14px; background: var(--surface); border: 3px solid var(--wall); display: grid; place-items: center; font-family: var(--f-display); font-size: 2rem; color: var(--ink); }
+.barras { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; align-items: end; height: 90px; }
+.barras div { background: var(--leaf); border-radius: 6px 6px 0 0; min-height: 2px; position: relative; }
+.barras span { position: absolute; bottom: -20px; left: 0; right: 0; text-align: center; font-size: .78rem; color: var(--ink-soft); font-family: var(--f-code); }
+.rosa { display: grid; grid-template-columns: repeat(3, 56px); grid-template-rows: repeat(3, 44px); gap: 6px; justify-content: center; }
+.rosa button { padding: 0; font-family: var(--f-code); font-size: .75rem; }
+.rosa .n { grid-column: 2; grid-row: 1; } .rosa .o { grid-column: 1; grid-row: 2; } .rosa .c { grid-column: 2; grid-row: 2; font-size: 1.3rem; }
+.rosa .l { grid-column: 3; grid-row: 2; } .rosa .s { grid-column: 2; grid-row: 3; }
+.rosa button.on { background: var(--gold); border-color: var(--gold); color: #3d2d00; }
+.rosa button.volta { background: var(--coral-soft); border-color: var(--coral); }
+.relogio { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.relogio .bolinhas { display: flex; gap: 3px; }
+.relogio .bolinhas i { width: 12px; height: 12px; border-radius: 50%; background: var(--line); display: block; }
+.relogio .bolinhas i.on { background: var(--gold); }
+</style>
+
+<nav class="nav" aria-label="Fases do caderno">
+  <div class="wrap">
+    <a class="mapa" href="index.html">← Mapa</a>
+    <a class="brand" href="#inicio">Crescendo como Jesus</a>
+    <a class="lvl" href="#fase-6" data-nav="f6"><span class="dot">6</span>Estatura <span class="count">0/5</span></a>
+    <a class="lvl" href="#fase-7" data-nav="f7"><span class="dot">7</span>Tentações <span class="count">0/6</span></a>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow pixel">Caderno de missões · Fases 6 e 7</div>
+      <h1>Crescendo como <span class="gold">Jesus</span></h1>
+      <blockquote class="verse">
+        "E crescia Jesus em sabedoria, e em estatura, e em graça, para com Deus e os homens."
+        <cite>Lucas 2:52</cite>
+      </blockquote>
+      <p class="lead">Seu jogo vai <b>contar</b> o quanto você cresce: um placar de <b>estatura</b> que sobe a cada bom hábito. E depois entra a primeira <b>tentação</b>, que anda sozinha pelos corredores e sorteia o caminho nos cruzamentos.</p>
+      <div class="legend" aria-label="Itens do jogo">
+        <span class="chip good">🙏 Oração</span><span class="chip good">📖 Bíblia</span><span class="chip good">⛪ Culto</span><span class="chip good">❤️ Obedecer aos pais</span><span class="chip good">🤝 Ajudar o próximo</span>
+        <span class="chip bad">😡 Desobediência</span>
+      </div>
+    </div>
+    <figure class="demo">
+      <canvas id="hero-maze" width="800" height="600" aria-label="Animação: a bola dourada anda sozinha coletando bons hábitos, o placar de estatura sobe e uma tentação vermelha com olhos passeia pelo labirinto"></canvas>
+      <figcaption>É assim que o seu jogo vai ficar no fim da Fase 7: o placar no topo, a régua da estatura no rodapé e a tentação vermelha sorteando o caminho.</figcaption>
+    </figure>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ================= ANTES DE COMEÇAR ================= -->
+<section class="block" id="antes">
+  <h2>Antes de começar</h2>
+  <div class="two">
+    <div class="panel">
+      <h3>Você vem da Fase 5</h3>
+      <p>Este caderno continua o mesmo <code>jogo.py</code>, na raiz da pasta <code>crescendo-como-jesus</code>. Ele precisa estar assim:</p>
+      <ul>
+        <li>o labirinto aparece e o personagem anda um quadradinho por aperto, sem atravessar parede;</li>
+        <li>o túnel do meio funciona;</li>
+        <li>as bolinhas verdes somem quando você passa por cima, e no fim aparece o parabéns.</li>
+      </ul>
+      <p>Ainda não chegou lá? Termine primeiro no <a href="caderno-de-missoes-modulos-4-5.html#fase-5">caderno das Fases 4 e 5</a>.</p>
+      <div class="tree" aria-label="Estrutura de pastas">
+        📁 crescendo-como-jesus<br>
+        &nbsp;&nbsp;&nbsp;📄 <span class="hl">jogo.py</span> <span class="dim">← o mesmo de sempre</span><br>
+        &nbsp;&nbsp;&nbsp;📁 aula-06 <span class="dim">← contador.py (Fase 6)</span><br>
+        &nbsp;&nbsp;&nbsp;📁 aula-07 <span class="dim">← sorteio.py (Fase 7)</span><br>
+        &nbsp;&nbsp;&nbsp;📦 .venv
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Como usar este caderno</h3>
+      <ol>
+        <li>Cada fase começa com um <b>experimento</b> num arquivo separado. O resultado aparece no <b>terminal</b>.</li>
+        <li>Depois vêm os <b>passos</b> do jogo. Leia o passo inteiro, <b>digite</b>, <b>rode</b> e <b>compare</b> com a janelinha ao lado.</li>
+        <li>Muitas janelinhas são de <b>brincar</b>: clique nelas e use as setas do teclado (ou os botões).</li>
+      </ol>
+      <p class="legend-new"><i></i> As linhas marcadas assim no código são as <b>novas</b> daquele passo.</p>
+      <div class="note gold">
+        <span class="tag pixel">Regra de ouro</span>
+        <p>Tudo o que você criar fica <b>antes</b> do <code>pgzrun.go()</code>, que continua sendo a última linha do arquivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 6 ================= -->
+<section class="block" id="fase-6">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>6</b></div></div>
+    <div>
+      <h2>A estatura</h2>
+      <p>O jogo passa a <b>contar</b>: a sua estatura sobe <b>10</b> a cada bom hábito, um placar mostra quanto você cresceu e quantos hábitos faltam, e uma régua dourada vai enchendo no rodapé.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span>contador</span><span><code>str(...)</code></span><span>número × texto</span><span>placar (HUD)</span><span><code>topright</code></span><span><code>screen.draw.rect</code></span>
+  </div>
+
+  <!-- experimento -->
+  <article class="step" data-sub="Experimento">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">🧪</span><h3>Experimente: o contador</h3></div>
+      <p>Crie o arquivo <code>contador.py</code> <b>dentro da pasta <code>aula-06</code></b> (não no <code>jogo.py</code>). Digite e rode com <b>▶ Run Python File</b>:</p>
+      <pre class="py">estatura = 0
+print(estatura)
+
+estatura = estatura + 10
+estatura = estatura + 10
+estatura = estatura + 10
+print(estatura)
+
+for numero in range(5):
+    estatura = estatura + 10
+print(estatura)</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · contador</span>
+        <p><code>estatura = estatura + 10</code> é a mesma ordem do <code>x = x + 5</code> da Fase 3: "pegue o valor de agora, some 10 e guarde de volta". Uma variável que vai somando assim se chama <b>contador</b>. Dentro do <code>for</code>, a soma acontece 5 vezes.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No terminal aparece:</p>
+        <pre class="term"><span class="ln out">0</span><span class="ln out">30</span><span class="ln out">80</span></pre>
+      </div>
+      <p>Agora acrescente, embaixo:</p>
+      <pre class="py">print(10 + 10)
+print("10" + "10")
+print("Estatura: " + estatura)</pre>
+      <div class="note oops">
+        <span class="tag pixel">Erre de propósito</span>
+        <p>Aparecem <code>20</code> e <code>1010</code>, e depois o programa para com <code>TypeError: can only concatenate str (not "int") to str</code>.</p>
+        <p><code>10 + 10</code> soma <b>números</b>. <code>"10" + "10"</code> junta <b>textos</b>. O erro quer dizer: "eu só sei juntar texto com texto, e <code>estatura</code> é um número".</p>
+      </div>
+      <p>Troque a última linha por esta e rode de novo:</p>
+      <pre class="py">print("Estatura: " + str(estatura))</pre>
+      <div class="note run"><span class="tag pixel">Rode!</span><p><code>str(estatura)</code> transforma o número <code>80</code> no texto <code>"80"</code>. As últimas linhas ficam <code>20</code>, <code>1010</code> e <b><code>Estatura: 80</code></b>, sem erro.</p></div>
+    </div>
+    <div class="side">
+      <div class="panel" style="padding:16px">
+        <h4>Laboratório do contador</h4>
+        <p class="contador-grande" id="cont-valor" aria-live="polite">estatura = 0</p>
+        <div class="lab-btns">
+          <button type="button" data-cont="mais">estatura = estatura + 10</button>
+          <button type="button" data-cont="for">for numero in range(5): ...</button>
+          <button type="button" data-cont="zera">estatura = 0</button>
+        </div>
+        <div class="lab-btns">
+          <button type="button" data-cont="print">print(estatura)</button>
+          <button type="button" data-cont="soma">print(10 + 10)</button>
+          <button type="button" data-cont="junta">print("10" + "10")</button>
+          <button type="button" data-cont="erro" class="bad">print("Estatura: " + estatura)</button>
+          <button type="button" data-cont="str">print("Estatura: " + str(estatura))</button>
+        </div>
+        <pre class="term lab-out" id="cont-out" aria-live="polite"><span class="ln out">Clique nos botões para "rodar".</span></pre>
+      </div>
+    </div>
+  </article>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>O contador de estatura</h3></div>
+      <p>Volte para o <code>jogo.py</code>. Logo <b>depois</b> das variáveis do personagem (e antes do <code>habitos = []</code>), crie:</p>
+      <pre class="py" data-new="1-5"># Quanto cada bom hábito faz você crescer
+PONTOS_POR_HABITO = 10
+
+# A estatura: um contador. Começa em 0 e cresce a cada bom hábito.
+estatura = 0</pre>
+      <p>No <code>on_key_down</code>, ponha <code>estatura</code> no <code>global</code> e, lá no fim, dentro do <code>if</code> que coleta, acrescente duas linhas <b>embaixo</b> do <code>remove</code>:</p>
+      <pre class="py" data-new="2,7-8">def on_key_down(key):
+    global personagem_coluna, personagem_linha, estatura
+
+    # ... (o espaço, as setas, o túnel e a parede continuam iguais)
+
+    if (personagem_coluna, personagem_linha) in habitos:
+        habitos.remove((personagem_coluna, personagem_linha))
+        estatura = estatura + PONTOS_POR_HABITO
+        print(estatura)</pre>
+      <ul>
+        <li>O <code>global</code> precisa do <code>estatura</code> porque a função <b>muda</b> o valor dele. Sem isso, o jogo fecha com <code>UnboundLocalError</code> no primeiro hábito.</li>
+        <li>O <code>print</code> é só para conferir: o número aparece no <b>terminal</b>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Colete alguns hábitos. A cada bolinha, aparece no terminal o número novo: <code>10</code>, <code>20</code>, <code>30</code>... Andar por onde não tem hábito não imprime nada.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m6p1"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <pre class="term lab-out" data-terminal aria-live="polite"><span class="ln out">(o terminal aparece aqui)</span></pre>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>A estatura na tela</h3></div>
+      <p>Agora o número vai para a janela. <b>Apague a linha do <code>print(estatura)</code></b>. Na <code>draw()</code>, logo depois do <code>for</code> que desenha os hábitos, acrescente:</p>
+      <pre class="py" data-new="1-6">    screen.draw.text(
+        "Estatura: " + str(estatura),
+        topleft=(10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )</pre>
+      <p>O topo vai ficar apertado com a dica comprida. Na mesma <code>draw()</code>, troque os dois textos da <code>mensagem</code> por estes, mais curtos:</p>
+      <pre class="py" data-new="2,4">    if len(habitos) == 0:
+        mensagem = "Parabéns! Você cresceu!"
+    else:
+        mensagem = "Colete os bons hábitos!"</pre>
+      <ul>
+        <li><code>topleft=(10, 8)</code> prende o canto de cima, à esquerda, do texto bem no canto da janela.</li>
+        <li><code>str(estatura)</code> é o truque do experimento: sem ele, dá aquele <code>TypeError</code>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No canto de cima, à esquerda, aparece <b>Estatura: 0</b>. A cada bom hábito, o número sobe de 10 em 10.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m6p2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>Quantos faltam</h3></div>
+      <p>Logo depois do texto da estatura, acrescente outro texto, agora no canto <b>direito</b>:</p>
+      <pre class="py" data-new="1-6">    screen.draw.text(
+        "Faltam: " + str(len(habitos)),
+        topright=(WIDTH - 10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )</pre>
+      <ul>
+        <li><code>topright</code> prende o canto de cima, à <b>direita</b>, do texto. <code>WIDTH - 10</code> é 10 pixels antes da borda direita.</li>
+        <li><code>len(habitos)</code> é um número, por isso também precisa do <code>str</code>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No canto direito aparece <b>Faltam: 116</b>. Esse número <b>desce</b> enquanto a estatura <b>sobe</b>.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m6p3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>A régua da estatura</h3></div>
+      <p>Junto das outras cores, crie:</p>
+      <pre class="py">COR_DA_REGUA = "gold"</pre>
+      <p>Na <code>draw()</code>, depois do texto do pecador (e antes do personagem), acrescente:</p>
+      <pre class="py" data-new="1-4">    regua = Rect((WIDTH - 400, HEIGHT - 28), (estatura // 3, 16))
+    screen.draw.filled_rect(regua, COR_DA_REGUA)
+    moldura = Rect((WIDTH - 400, HEIGHT - 28), (386, 16))
+    screen.draw.rect(moldura, COR_DO_TEXTO)</pre>
+      <ul>
+        <li>A <b>largura</b> da régua é <code>estatura // 3</code>: começa em <code>0</code> e fica mais comprida a cada hábito.</li>
+        <li>A estatura máxima é <code>116 × 10 = 1160</code>, e <code>1160 // 3</code> dá <code>386</code>. Por isso a moldura tem <code>386</code> de largura.</li>
+        <li><code>screen.draw.rect</code> (sem o <code>filled_</code>) desenha <b>só a borda</b>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>No rodapé, à direita, aparece uma <b>moldura branca vazia</b>, e a régua dourada cresce a cada bom hábito. Colete todos: a régua enche a moldura, o placar mostra <b>Estatura: 1160</b>, <b>Faltam: 0</b> e "Parabéns! Você cresceu!".</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m6p4"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-rerun>Rodar de novo</button>
+        <button type="button" data-atalho>Atalho: deixar só 1 hábito</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="mock-cap">O atalho deixa só o hábito ao lado do começo, com a estatura em 1150. É só para ver a régua cheia: no seu jogo, colete todos!</p>
+    </div>
+  </article>
+
+  <div class="panel">
+    <h3>O que acontece quando você pega um bom hábito</h3>
+    <div class="loop" aria-label="Fluxo da estatura">
+      <div class="box"><b>on_key_down</b><br>parou em cima de um hábito</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>habitos.remove(...)</b><br>"Faltam" diminui</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>estatura = estatura + 10</b><br>o contador sobe</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>draw()</b> escreve <b>str(estatura)</b><br>e a régua cresce</div>
+    </div>
+  </div>
+
+  <div class="mission" data-mission="f6">
+    <h3>Sua missão da Fase 6</h3>
+    <ul>
+      <li><label><input type="checkbox" id="f6-a"><span>Rodei o <code>aula-06/contador.py</code>, vi o <code>TypeError</code> e consertei com <code>str(...)</code>.</span></label></li>
+      <li><label><input type="checkbox" id="f6-b"><span>A estatura sobe 10 a cada bom hábito (conferi no terminal).</span></label></li>
+      <li><label><input type="checkbox" id="f6-c"><span>A estatura aparece no canto de cima, à esquerda.</span></label></li>
+      <li><label><input type="checkbox" id="f6-d"><span>Quantos hábitos faltam aparece no canto de cima, à direita.</span></label></li>
+      <li><label><input type="checkbox" id="f6-e"><span>A régua da estatura cresce dentro da moldura.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 6 completa! Agora o jogo sabe o quanto você cresceu. Salve o <code>jogo.py</code> e o <code>aula-06/contador.py</code>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="b" data-ok="Isso! 0 + 10 + 10 = 20." data-no="Não. Começa em 0, soma 10, depois mais 10: dá 20.">
+        <p>1. <code>estatura = 0</code> e depois <code>estatura = estatura + 10</code> duas vezes. Quanto vale a estatura?</p>
+        <div class="opts"><button data-opt="a">10</button><button data-opt="b">20</button><button data-opt="c">0</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Certo! Com aspas são textos, e o + junta." data-no="Não. Com aspas, são textos: o + junta um texto no outro e dá 1010.">
+        <p>2. O que <code>"10" + "10"</code> dá?</p>
+        <div class="opts"><button data-opt="a"><code>20</code></button><button data-opt="b"><code>"1010"</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Exato! O str transforma o número em texto para poder juntar." data-no="Não. O str(...) transforma o número em texto, para juntar com o + sem dar TypeError.">
+        <p>3. Para que serve o <code>str(...)</code> em <code>"Estatura: " + str(estatura)</code>?</p>
+        <div class="opts"><button data-opt="a">Para juntar o número com o texto</button><button data-opt="b">Para deixar o número maior</button><button data-opt="c">Para apagar a estatura</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Isso! A função muda a estatura, então precisa do global." data-no="Não é isso. O global é preciso porque a função MUDA a variável estatura.">
+        <p>4. Por que <code>estatura</code> entra no <code>global</code> do <code>on_key_down</code>?</p>
+        <div class="opts"><button data-opt="a">Porque a função muda o valor dela</button><button data-opt="b">Porque ela é um número</button><button data-opt="c">Não precisa</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>Um segundo contador: passos</h4>
+      <p>Crie um contador <code>passos</code> que conta quantos quadradinhos você andou, e mostre <code>"Passos: "</code> com o número no rodapé, entre o seu nome e a régua.</p>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>O <code>passos = passos + 1</code> fica <b>dentro</b> do <code>if</code> da parede, junto com o <code>personagem_coluna = nova_coluna</code>: assim só conta quando anda de verdade. Não esqueça o <code>passos</code> no <code>global</code>. Para o texto, use <code>center=(310, HEIGHT - 20)</code> e <code>fontsize=16</code>.</p>
+      </div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">passos = 0
+
+# no on_key_down:
+    global personagem_coluna, personagem_linha, estatura, passos
+
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha
+        passos = passos + 1
+
+# na draw(), antes da régua:
+    screen.draw.text(
+        "Passos: " + str(passos),
+        center=(310, HEIGHT - 20),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>O placar do seu jeito</h4>
+      <ul>
+        <li>Mude o <code>PONTOS_POR_HABITO</code> para <code>20</code>. O que acontece com a régua? Por quê?</li>
+        <li>Troque a cor e a altura da régua.</li>
+        <li>Mude o tamanho e a cor das letras do placar.</li>
+      </ul>
+      <details><summary>Ver a resposta da régua</summary><div class="in">
+        <p>Com 20 pontos, a estatura máxima vira <code>116 × 20 = 2320</code>, e <code>2320 // 3</code> dá <code>773</code>: a régua passa muito da moldura. Para caber de novo, troque o <code>// 3</code> por <code>// 6</code>.</p>
+      </div></details>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 6 (só para conferir no final)</summary>
+    <div class="in"><p>Use para comparar com o seu, ou para destravar se empacar. No seu, o texto do pecador pode estar antes da mensagem do topo: tanto faz a ordem desses dois.</p>
+    <pre class="py">import pgzrun
+
+# O labirinto: uma LISTA de textos. Cada texto é uma linha do mapa.
+#   "#" = parede
+#   "." = caminho com um bom hábito para coletar
+#   " " = caminho vazio
+# A primeira e a última linha ficam vazias: é o espaço dos textos.
+# A linha do meio é aberta nas pontas: é o túnel.
+MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    ",
+]
+
+# Tamanho de cada quadradinho do mapa, em pixels
+TILE = 40
+
+COLUNAS = len(MAPA[0])  # quantas letras tem uma linha do mapa (20)
+LINHAS = len(MAPA)      # quantas linhas tem o mapa (15)
+
+WIDTH = COLUNAS * TILE  # 20 x 40 = 800
+HEIGHT = LINHAS * TILE  # 15 x 40 = 600
+
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+COR_DA_PAREDE = "navy"
+COR_DO_HABITO = "darkgreen"
+COR_DA_REGUA = "gold"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Onde o personagem começa: coluna e linha do mapa (contando a partir do 0)
+INICIO_COLUNA = 9
+INICIO_LINHA = 12
+
+# O personagem agora mora num quadradinho do mapa
+personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"
+
+# Quanto cada bom hábito faz você crescer
+PONTOS_POR_HABITO = 10
+
+# A estatura: um contador. Começa em 0 e cresce a cada bom hábito.
+estatura = 0
+
+# Os bons hábitos: uma lista com a posição (coluna, linha) de cada um.
+# Ela começa vazia e é enchida olhando o mapa: cada "." vira um hábito.
+habitos = []
+for linha in range(LINHAS):
+    for coluna in range(COLUNAS):
+        if MAPA[linha][coluna] == ".":
+            habitos.append((coluna, linha))
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    # As paredes: passa por todas as linhas e, em cada linha, por todas as
+    # colunas. Onde o mapa tem "#", desenha um quadrado.
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    # Os bons hábitos: uma bolinha no centro de cada quadradinho da lista
+    for habito in habitos:
+        x = habito[0] * TILE + TILE // 2
+        y = habito[1] * TILE + TILE // 2
+        screen.draw.filled_circle((x, y), 6, COR_DO_HABITO)
+
+    # O placar (HUD): a estatura à esquerda e quantos hábitos faltam à direita.
+    # str() transforma o número em texto, para poder juntar com o +.
+    screen.draw.text(
+        "Estatura: " + str(estatura),
+        topleft=(10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        "Faltam: " + str(len(habitos)),
+        topright=(WIDTH - 10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )
+
+    # A lista ficou vazia? Então todos os hábitos foram coletados!
+    if len(habitos) == 0:
+        mensagem = "Parabéns! Você cresceu!"
+    else:
+        mensagem = "Colete os bons hábitos!"
+
+    screen.draw.text(
+        mensagem,
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    # A régua da estatura: um retângulo que fica mais comprido quanto mais
+    # você cresce. A estatura máxima é 1160, e 1160 // 3 dá 386 pixels.
+    # A moldura (só a borda) mostra até onde a régua pode chegar.
+    regua = Rect((WIDTH - 400, HEIGHT - 28), (estatura // 3, 16))
+    screen.draw.filled_rect(regua, COR_DA_REGUA)
+    moldura = Rect((WIDTH - 400, HEIGHT - 28), (386, 16))
+    screen.draw.rect(moldura, COR_DO_TEXTO)
+
+    # Do quadradinho (coluna, linha) para os pixels do centro dele
+    x = personagem_coluna * TILE + TILE // 2
+    y = personagem_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)
+
+
+def on_key_down(key):
+    global personagem_coluna, personagem_linha, estatura
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+
+    # 1. Para onde o personagem QUER ir?
+    nova_coluna = personagem_coluna
+    nova_linha = personagem_linha
+
+    if key == keys.RIGHT:
+        nova_coluna = personagem_coluna + 1
+    if key == keys.LEFT:
+        nova_coluna = personagem_coluna - 1
+    if key == keys.DOWN:
+        nova_linha = personagem_linha + 1
+    if key == keys.UP:
+        nova_linha = personagem_linha - 1
+
+    # 2. O túnel: saiu por um lado, entra pelo outro
+    if nova_coluna &lt; 0:
+        nova_coluna = COLUNAS - 1
+    if nova_coluna &gt;= COLUNAS:
+        nova_coluna = 0
+
+    # 3. Só anda se lá não for parede
+    if MAPA[nova_linha][nova_coluna] != "#":
+        personagem_coluna = nova_coluna
+        personagem_linha = nova_linha
+
+    # 4. Parou em cima de um bom hábito? Ele sai da lista e você cresce
+    if (personagem_coluna, personagem_linha) in habitos:
+        habitos.remove((personagem_coluna, personagem_linha))
+        estatura = estatura + PONTOS_POR_HABITO
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt>Contador</dt><dd>Uma variável que começa num número (quase sempre <code>0</code>) e vai somando.</dd></div>
+    <div><dt><code>str(...)</code></dt><dd>Transforma um número em texto: <code>str(80)</code> dá <code>"80"</code>.</dd></div>
+    <div><dt><code>TypeError</code></dt><dd>Erro de quando você mistura tipos que não combinam, como juntar texto com número.</dd></div>
+    <div><dt>Placar (HUD)</dt><dd>Os textos fixos que mostram como está o jogo: estatura, quantos faltam...</dd></div>
+    <div><dt><code>topright=(x, y)</code></dt><dd>Prende o canto de cima, à direita, do texto naquele ponto.</dd></div>
+    <div><dt><code>screen.draw.rect(...)</code></dt><dd>Desenha só a borda de um retângulo (o <code>filled_rect</code> pinta ele inteiro).</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>TypeError: can only concatenate str (not "int") to str</b><span>Faltou o <code>str(...)</code> em volta do número. É <code>"Estatura: " + str(estatura)</code>.</span></div>
+    <div class="err"><b>UnboundLocalError falando de estatura quando pega um hábito</b><span>Faltou <code>estatura</code> no <code>global</code> do <code>on_key_down</code>.</span></div>
+    <div class="err"><b>A estatura não sobe</b><span>A soma tem que ficar <b>dentro</b> do <code>if</code> que coleta, com o mesmo recuo do <code>remove</code>.</span></div>
+    <div class="err"><b>A estatura sobe mesmo sem pegar hábito</b><span>A soma ficou <b>fora</b> do <code>if</code> que coleta (com menos recuo).</span></div>
+    <div class="err"><b>O texto da direita sai cortado</b><span>Confira se é <code>topright</code> (e não <code>topleft</code>) com <code>WIDTH - 10</code>.</span></div>
+    <div class="err"><b>A régua passa da moldura</b><span>Confira o <code>// 3</code> na largura da régua e o <code>386</code> da moldura. Se mudou o <code>PONTOS_POR_HABITO</code>, a conta muda.</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<!-- ================= FASE 7 ================= -->
+<section class="block" id="fase-7">
+  <div class="phase-head">
+    <div class="badge"><div><small>Fase</small><b>7</b></div></div>
+    <div>
+      <h2>As tentações entram</h2>
+      <p>Entra a primeira tentação, a 😡 <b>desobediência</b>: uma bolinha vermelha com olhos que <b>anda sozinha</b> e <b>sorteia</b> o caminho nos cruzamentos. E o seu personagem também passa a andar sozinho: as setas só escolhem o caminho, como no Pac-Man. Encostar nela ainda não faz nada: isso é da Fase 8.</p>
+    </div>
+  </div>
+  <div class="learn" aria-label="O que você vai aprender">
+    <span><code>import random</code></span><span><code>random.randint</code></span><span><code>random.choice</code></span><span>o relógio do jogo</span><span>direção como par</span><span>meia-volta</span>
+  </div>
+
+  <div class="panel">
+    <h3>Hoje tem muita coisa</h3>
+    <p>Esta fase tem duas novidades grandes: o personagem anda sozinho (Passos 1 a 3) e a tentação (Passos 4 e 5). Se não der tempo, pare depois do Passo 3: o jogo fica funcionando, e você continua do Passo 4 na próxima aula.</p>
+  </div>
+
+  <!-- experimento -->
+  <article class="step" data-sub="Experimento">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">🧪</span><h3>Experimente: o sorteio</h3></div>
+      <p>Crie o arquivo <code>sorteio.py</code> <b>dentro da pasta <code>aula-07</code></b>. Digite e rode com <b>▶ Run Python File</b>:</p>
+      <pre class="py">import random
+
+print(random.randint(1, 6))
+print(random.randint(1, 6))
+print(random.randint(1, 6))
+
+caminhos = ["direita", "esquerda", "cima", "baixo"]
+for vez in range(5):
+    print(random.choice(caminhos))</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · o acaso</span>
+        <p><code>import random</code> traz a biblioteca de <b>sortear</b>. Ela já vem com o Python: não precisa instalar.</p>
+        <p><code>random.randint(1, 6)</code> sorteia um número inteiro de 1 a 6, como um dado. <code>random.choice(caminhos)</code> escolhe <b>um item</b> da lista, ao acaso.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aparecem três números de 1 a 6 e cinco caminhos. <b>Rode de novo</b>: os resultados mudam! Cada vez sai um sorteio diferente.</p></div>
+      <p>Agora acrescente, embaixo:</p>
+      <pre class="py">direcao = (1, 0)
+meia_volta = (-direcao[0], -direcao[1])
+print(meia_volta)
+print(meia_volta != direcao)</pre>
+      <div class="note idea">
+        <span class="tag pixel">Ideia nova · direção como par</span>
+        <p>No jogo, a direção vai ser um <b>par</b>: <code>(1, 0)</code> quer dizer "uma coluna para a direita, nenhuma linha". O <code>-</code> na frente troca o sinal, então <code>(-direcao[0], -direcao[1])</code> é a direção <b>contrária</b>: a meia-volta.</p>
+      </div>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>As duas últimas linhas são <code>(-1, 0)</code> (a esquerda, o contrário da direita) e <code>True</code>.</p></div>
+      <div class="note oops">
+        <span class="tag pixel">Erre de propósito</span>
+        <p>Apague o <code>import random</code> da primeira linha e rode: <code>NameError: name 'random' is not defined. Did you forget to import 'random'?</code>. O próprio Python pergunta se você esqueceu o <code>import</code>. Ponha a linha de volta.</p>
+      </div>
+    </div>
+    <div class="side">
+      <div class="panel" style="padding:16px">
+        <h4>Laboratório do sorteio</h4>
+        <div class="dado"><b id="dado-face" aria-live="polite">?</b><div class="lab-btns"><button type="button" id="dado-1">random.randint(1, 6)</button><button type="button" id="dado-600">sortear 600 vezes</button></div></div>
+        <div class="barras" id="dado-barras" aria-label="Quantas vezes saiu cada número"></div>
+        <p class="vazio-cap" style="margin-top:22px">Depois de muitos sorteios, cada número sai mais ou menos o mesmo tanto de vezes.</p>
+        <div class="lab-btns"><button type="button" id="caminho-btn">random.choice(caminhos)</button></div>
+        <pre class="term lab-out" id="sorteio-out" aria-live="polite"><span class="ln out">Clique para sortear.</span></pre>
+      </div>
+      <div class="panel" style="padding:16px">
+        <h4>A rosa dos ventos</h4>
+        <div class="rosa" id="rosa">
+          <button type="button" class="n" data-d="0,-1">(0, -1)</button>
+          <button type="button" class="o" data-d="-1,0">(-1, 0)</button>
+          <button type="button" class="c" disabled aria-hidden="true">✦</button>
+          <button type="button" class="l" data-d="1,0">(1, 0)</button>
+          <button type="button" class="s" data-d="0,1">(0, 1)</button>
+        </div>
+        <pre class="term" id="rosa-out" aria-live="polite"><span class="ln out">Clique numa direção.</span></pre>
+      </div>
+    </div>
+  </article>
+
+  <!-- passo 1 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">1</span><h3>O relógio do jogo</h3></div>
+      <p>O <code>update()</code> volta! Junto das outras variáveis, logo <b>depois</b> da <code>estatura = 0</code> (e antes do <code>habitos = []</code>), crie:</p>
+      <pre class="py" data-new="1-3"># O relógio do jogo: a cada ESPERA_PERSONAGEM voltas do update(), o personagem anda
+ESPERA_PERSONAGEM = 12
+quadros_personagem = 0</pre>
+      <p>Depois da <code>draw()</code> (fora dela, sem recuo) e <b>antes</b> do <code>pgzrun.go()</code>, crie a função:</p>
+      <pre class="py" data-new="1-7">def update():
+    global quadros_personagem
+
+    quadros_personagem = quadros_personagem + 1
+    if quadros_personagem == ESPERA_PERSONAGEM:
+        quadros_personagem = 0
+        print("tic")</pre>
+      <ul>
+        <li>O Pygame Zero chama o <code>update()</code> sozinho, <b>60 vezes por segundo</b> (você viu isso na Fase 3).</li>
+        <li><code>quadros_personagem</code> é um <b>contador</b>, igual à estatura: soma 1 a cada volta. Quando chega em 12, volta para 0 e faz alguma coisa. 60 voltas ÷ 12 = <b>5 vezes por segundo</b>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>O jogo continua igual, mas o <b>terminal</b> se enche de <code>tic</code>, uns 5 por segundo. Esse é o "relógio" que vai fazer as coisas andarem sozinhas.</p></div>
+    </div>
+    <div class="side">
+      <div class="relogio" aria-label="O contador de quadros">
+        <span class="coord" id="relogio-n">quadros_personagem = 0</span>
+        <span class="bolinhas" id="relogio-bolinhas"></span>
+      </div>
+      <pre class="term lab-out" id="relogio-out" aria-live="off"></pre>
+      <p class="mock-cap">O contador vai de 1 a 12. Quando chega em 12, aparece um <code>tic</code> e ele volta para 0.</p>
+    </div>
+  </article>
+
+  <!-- passo 2 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">2</span><h3>O personagem anda sozinho</h3></div>
+      <p>Logo abaixo das variáveis do relógio, crie:</p>
+      <pre class="py" data-new="1-3"># A direção é um par: (1, 0) direita, (-1, 0) esquerda, (0, 1) baixo, (0, -1) cima
+direcao = (0, 0)           # (0, 0) = parado
+proxima_direcao = (0, 0)</pre>
+      <p>Agora as setas <b>não andam mais</b>: elas só <b>escolhem</b> a direção. Troque o seu <code>on_key_down</code> <b>inteiro</b> por este (o andar, o túnel, a parede e a coleta saem daqui e vão para o <code>update()</code>):</p>
+      <pre class="py" data-new="2,7-8,10-17">def on_key_down(key):
+    global personagem_coluna, personagem_linha, direcao, proxima_direcao
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+        direcao = (0, 0)
+        proxima_direcao = (0, 0)
+
+    if key == keys.RIGHT:
+        proxima_direcao = (1, 0)
+    if key == keys.LEFT:
+        proxima_direcao = (-1, 0)
+    if key == keys.DOWN:
+        proxima_direcao = (0, 1)
+    if key == keys.UP:
+        proxima_direcao = (0, -1)</pre>
+      <p>E troque o <code>update()</code> inteiro por este:</p>
+      <pre class="py" data-new="2-3,9-22">def update():
+    global quadros_personagem, personagem_coluna, personagem_linha
+    global direcao, estatura
+
+    quadros_personagem = quadros_personagem + 1
+    if quadros_personagem == ESPERA_PERSONAGEM:
+        quadros_personagem = 0
+
+        direcao = proxima_direcao
+
+        nova_coluna = personagem_coluna + direcao[0]
+        nova_linha = personagem_linha + direcao[1]
+        if nova_coluna &lt; 0:
+            nova_coluna = COLUNAS - 1
+        if nova_coluna &gt;= COLUNAS:
+            nova_coluna = 0
+        if MAPA[nova_linha][nova_coluna] != "#":
+            personagem_coluna = nova_coluna
+            personagem_linha = nova_linha
+
+        if (personagem_coluna, personagem_linha) in habitos:
+            habitos.remove((personagem_coluna, personagem_linha))
+            estatura = estatura + PONTOS_POR_HABITO</pre>
+      <ul>
+        <li>Você já conhece quase tudo: é o túnel, a parede e a coleta da Fase 6, só que agora dentro do relógio. O <code>print("tic")</code> saiu.</li>
+        <li><code>personagem_coluna + direcao[0]</code>: com <code>direcao = (1, 0)</code>, soma 1 na coluna e 0 na linha. Um par no lugar de quatro <code>if</code>!</li>
+        <li>Para a dica combinar, troque o <code>"Colete os bons hábitos!"</code> da <code>draw()</code> por <code>"As setas escolhem o caminho!"</code>.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aperte → <b>uma vez só</b>: o personagem anda sozinho, pega os hábitos pelo caminho e para na parede.</p></div>
+      <div class="note oops">
+        <span class="tag pixel">Agora teste isto</span>
+        <p>Andando pelo corredor de baixo, aperte ↑ <b>antes</b> de chegar num cruzamento. O personagem <b>para</b>, de cara para a parede! Vamos consertar.</p>
+      </div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m7p2"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="mock-cap">Aperte ←, e logo depois ↑: ele para de cara para a parede.</p>
+    </div>
+  </article>
+
+  <!-- passo 3 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">3</span><h3>Virar na hora certa</h3></div>
+      <p>O problema: a seta troca a direção <b>na hora</b>, mesmo quando ali é parede. O certo é <b>guardar</b> a seta e só virar quando der. No <code>update()</code>, troque a linha <code>direcao = proxima_direcao</code> por:</p>
+      <pre class="py" data-new="1-7">        nova_coluna = personagem_coluna + proxima_direcao[0]
+        nova_linha = personagem_linha + proxima_direcao[1]
+        if nova_coluna &lt; 0:
+            nova_coluna = COLUNAS - 1
+        if nova_coluna &gt;= COLUNAS:
+            nova_coluna = 0
+        if MAPA[nova_linha][nova_coluna] != "#":
+            direcao = proxima_direcao</pre>
+      <p>Leia assim: "olhe o quadradinho para onde você <b>quer</b> virar. Se lá <b>não</b> é parede, vira. Se é parede, continua na direção de antes". A seta fica guardada em <code>proxima_direcao</code> até dar para virar.</p>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Aperte ↑ antes do cruzamento: o personagem <b>continua</b> em frente e <b>vira sozinho</b> no primeiro caminho para cima. Agora dá para jogar de verdade!</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m7p3"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="mock-cap">Faça o mesmo teste: ←, e logo depois ↑. Agora ele espera o cruzamento.</p>
+    </div>
+  </article>
+
+  <!-- passo 4 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">4</span><h3>A tentação aparece</h3></div>
+      <p>Junto das outras cores, crie <code>COR_DA_TENTACAO = "crimson"</code>. Logo abaixo da <code>proxima_direcao</code>, crie:</p>
+      <pre class="py" data-new="1-6"># A tentação (desobediência) começa no meio do labirinto, olhando para a esquerda
+TENTACAO_INICIO_COLUNA = 9
+TENTACAO_INICIO_LINHA = 8
+tentacao_coluna = TENTACAO_INICIO_COLUNA
+tentacao_linha = TENTACAO_INICIO_LINHA
+tentacao_direcao = (-1, 0)</pre>
+      <p>No <b>fim</b> da <code>draw()</code>, depois do personagem, desenhe a tentação com dois olhos:</p>
+      <pre class="py" data-new="1-9">    x = tentacao_coluna * TILE + TILE // 2
+    y = tentacao_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), TILE // 2 - 4, COR_DA_TENTACAO)
+    olhar_x = tentacao_direcao[0] * 2
+    olhar_y = tentacao_direcao[1] * 2
+    screen.draw.filled_circle((x - 6, y - 4), 5, "white")
+    screen.draw.filled_circle((x + 6, y - 4), 5, "white")
+    screen.draw.filled_circle((x - 6 + olhar_x, y - 4 + olhar_y), 2, "black")
+    screen.draw.filled_circle((x + 6 + olhar_x, y - 4 + olhar_y), 2, "black")</pre>
+      <ul>
+        <li>O corpo é o mesmo <code>filled_circle</code> do personagem, em vermelho.</li>
+        <li>Os olhos são dois círculos brancos, e as <b>pupilas</b> andam 2 pixels para o lado da direção: assim a tentação <b>olha</b> para onde vai.</li>
+      </ul>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>Uma bolinha <b>vermelha com olhos</b> aparece parada no corredor do meio, olhando para a esquerda.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m7p4"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <p class="mock-cap">A tentação ainda está parada, no quadradinho (9, 8).</p>
+    </div>
+  </article>
+
+  <!-- passo 5 -->
+  <article class="step">
+    <div class="step-body">
+      <div class="step-title"><span class="step-num">5</span><h3>A tentação anda e sorteia o caminho</h3></div>
+      <p>Na <b>segunda linha</b> do arquivo, logo abaixo do <code>import pgzrun</code>, escreva <code>import random</code>. Logo abaixo das variáveis da tentação (depois da <code>tentacao_direcao</code>), crie:</p>
+      <pre class="py" data-new="1-6"># As quatro direções que a tentação pode tentar
+DIRECOES = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+# A tentação tem o relógio dela: é um pouco mais lenta que você
+ESPERA_TENTACAO = 16
+quadros_tentacao = 0</pre>
+      <p>No <code>update()</code>, acrescente uma terceira linha de <code>global</code> logo abaixo das outras duas:</p>
+      <pre class="py" data-new="3">    global quadros_personagem, personagem_coluna, personagem_linha
+    global direcao, estatura
+    global quadros_tentacao, tentacao_coluna, tentacao_linha, tentacao_direcao</pre>
+      <p>E, no <b>fim</b> do <code>update()</code>, <b>fora</b> do <code>if</code> do personagem (com o mesmo recuo do <code>quadros_personagem = quadros_personagem + 1</code>), acrescente:</p>
+      <pre class="py" data-new="1-24">    quadros_tentacao = quadros_tentacao + 1
+    if quadros_tentacao == ESPERA_TENTACAO:
+        quadros_tentacao = 0
+
+        meia_volta = (-tentacao_direcao[0], -tentacao_direcao[1])
+        livres = []
+        for opcao in DIRECOES:
+            if opcao != meia_volta:
+                nova_coluna = tentacao_coluna + opcao[0]
+                nova_linha = tentacao_linha + opcao[1]
+                if nova_coluna &lt; 0:
+                    nova_coluna = COLUNAS - 1
+                if nova_coluna &gt;= COLUNAS:
+                    nova_coluna = 0
+                if MAPA[nova_linha][nova_coluna] != "#":
+                    livres.append(opcao)
+
+        tentacao_direcao = random.choice(livres)
+
+        tentacao_coluna = tentacao_coluna + tentacao_direcao[0]
+        tentacao_linha = tentacao_linha + tentacao_direcao[1]
+        if tentacao_coluna &lt; 0:
+            tentacao_coluna = COLUNAS - 1
+        if tentacao_coluna &gt;= COLUNAS:
+            tentacao_coluna = 0</pre>
+      <ol>
+        <li><b>Quais caminhos estão livres?</b> Para cada uma das 4 direções (menos a meia-volta), olha o quadradinho vizinho. Se não é parede, guarda a direção na lista <code>livres</code>.</li>
+        <li><b>Sorteia.</b> <code>random.choice(livres)</code> escolhe um dos caminhos. Num corredor só tem <b>um</b>; num <b>cruzamento</b> tem dois ou três, e aí é sorteio de verdade.</li>
+        <li><b>Anda</b> um quadradinho para lá, com o túnel.</li>
+      </ol>
+      <div class="note run"><span class="tag pixel">Rode!</span><p>A tentação <b>anda sozinha</b>! Ela segue os corredores, sorteia o caminho nos cruzamentos, nunca dá meia-volta e às vezes atravessa o túnel. Rode de novo: ela faz outro caminho. Se ela passar por você, nada acontece por enquanto.</p></div>
+    </div>
+    <div class="side">
+      <figure class="mock" data-scene="jogo" data-mode="m7p5"><div class="mock-bar"><span class="mock-title"></span><i></i><i></i><i></i></div><canvas width="800" height="600" tabindex="0" aria-label="Janela de teste: clique e use as setas do teclado"></canvas></figure>
+      <div class="controls">
+        <div class="pad" aria-label="Setas na tela">
+          <button type="button" class="u" data-key="up" aria-label="Seta para cima">↑</button>
+          <button type="button" class="l" data-key="left" aria-label="Seta para a esquerda">←</button>
+          <button type="button" class="d" data-key="down" aria-label="Seta para baixo">↓</button>
+          <button type="button" class="r" data-key="right" aria-label="Seta para a direita">→</button>
+        </div>
+        <button type="button" data-key="space">Espaço</button>
+        <button type="button" data-rerun>Rodar de novo</button>
+      </div>
+      <div class="vars" aria-live="off"></div>
+      <p class="ultimo" aria-live="polite"></p>
+    </div>
+  </article>
+
+  <div class="panel">
+    <h3>Como a tentação decide para onde ir</h3>
+    <div class="loop" aria-label="Fluxo da tentação">
+      <div class="box"><b>update()</b><br>o relógio da tentação bateu</div>
+      <span class="arrow">→</span>
+      <div class="box">olha as 4 direções<br>(menos a <b>meia-volta</b>)</div>
+      <span class="arrow">→</span>
+      <div class="box">guarda em <b>livres</b><br>as que não são parede</div>
+      <span class="arrow">→</span>
+      <div class="box"><b>random.choice(livres)</b><br>sorteia e anda</div>
+    </div>
+  </div>
+
+  <div class="mission" data-mission="f7">
+    <h3>Sua missão da Fase 7</h3>
+    <ul>
+      <li><label><input type="checkbox" id="f7-a"><span>Rodei o <code>aula-07/sorteio.py</code> e vi o sorteio mudar a cada vez.</span></label></li>
+      <li><label><input type="checkbox" id="f7-b"><span>O relógio do <code>update()</code> imprime <code>tic</code> no terminal.</span></label></li>
+      <li><label><input type="checkbox" id="f7-c"><span>O personagem anda sozinho e as setas só escolhem a direção.</span></label></li>
+      <li><label><input type="checkbox" id="f7-d"><span>A seta fica guardada até dar para virar.</span></label></li>
+      <li><label><input type="checkbox" id="f7-e"><span>A tentação aparece com olhos.</span></label></li>
+      <li><label><input type="checkbox" id="f7-f"><span>A tentação anda sozinha e sorteia o caminho nos cruzamentos.</span></label></li>
+    </ul>
+    <div class="meter" aria-hidden="true"><i></i></div>
+    <p class="done-msg" hidden>Fase 7 completa! O labirinto ganhou vida. Salve o <code>jogo.py</code> e o <code>aula-07/sorteio.py</code>.</p>
+  </div>
+
+  <div class="panel">
+    <h3>Quiz rápido</h3>
+    <div class="quiz">
+      <div class="q" data-answer="b" data-ok="Isso! Qualquer inteiro de 1 a 6, os dois incluídos." data-no="Não. randint(1, 6) sorteia qualquer número inteiro de 1 a 6, como um dado.">
+        <p>1. O que <code>random.randint(1, 6)</code> pode dar?</p>
+        <div class="opts"><button data-opt="a">Só 1 ou 6</button><button data-opt="b">Qualquer inteiro de 1 a 6</button><button data-opt="c">De 0 a 6</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Certo! 60 ÷ 12 = 5 passos por segundo." data-no="Não. O update() roda 60 vezes por segundo; a cada 12, um passo: 60 ÷ 12 = 5.">
+        <p>2. Com <code>ESPERA_PERSONAGEM = 12</code>, quantos quadradinhos o personagem anda por segundo?</p>
+        <div class="opts"><button data-opt="a">12</button><button data-opt="b">5</button><button data-opt="c">60</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="a" data-ok="Exato! O contrário de cima é baixo: (0, 1)." data-no="Não. A meia-volta troca o sinal dos dois números: (0, -1) vira (0, 1), que é baixo.">
+        <p>3. Qual é a meia-volta de <code>(0, -1)</code> (cima)?</p>
+        <div class="opts"><button data-opt="a"><code>(0, 1)</code></button><button data-opt="b"><code>(1, 0)</code></button><button data-opt="c"><code>(0, -1)</code></button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+      <div class="q" data-answer="b" data-ok="Isso! No corredor, só dá para seguir em frente. O sorteio só aparece nos cruzamentos." data-no="Não. Num corredor, as paredes dos lados e a meia-volta ficam de fora: sobra só seguir em frente.">
+        <p>4. Num corredor reto, quantas direções ficam na lista <code>livres</code>?</p>
+        <div class="opts"><button data-opt="a">Nenhuma</button><button data-opt="b">Uma</button><button data-opt="c">Quatro</button></div>
+        <p class="why" aria-live="polite"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="challenges">
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio extra</span>
+      <h4>Cuidado com a tentação!</h4>
+      <p>Quando o personagem e a tentação estiverem no <b>mesmo quadradinho</b>, troque a mensagem do topo por <code>"Cuidado com a tentação!"</code>.</p>
+      <details><summary>Ver uma dica</summary><div class="in">
+        <p>Na <code>draw()</code>, depois do <code>if</code>/<code>else</code> da mensagem, compare os dois pares com <code>==</code>: <code>(personagem_coluna, personagem_linha) == (tentacao_coluna, tentacao_linha)</code>.</p>
+      </div></details>
+      <details><summary>Ver uma solução</summary><div class="in">
+        <pre class="py">    if len(habitos) == 0:
+        mensagem = "Parabéns! Você cresceu!"
+    else:
+        mensagem = "As setas escolhem o caminho!"
+
+    if (personagem_coluna, personagem_linha) == (tentacao_coluna, tentacao_linha):
+        mensagem = "Cuidado com a tentação!"</pre>
+      </div></details>
+    </div>
+    <div class="panel challenge">
+      <span class="tag pixel">Desafio criativo</span>
+      <h4>A tentação do seu jeito</h4>
+      <ul>
+        <li>Mude o <code>ESPERA_PERSONAGEM</code> e o <code>ESPERA_TENTACAO</code>. Número <b>menor</b> é mais <b>rápido</b>.</li>
+        <li>Pinte a tentação de outra cor: a 😴 preguiça pode ser <code>"mediumpurple"</code>.</li>
+        <li>Troque o lugar onde ela começa (escolha um quadradinho que não seja <code>#</code>!).</li>
+      </ul>
+    </div>
+  </div>
+
+  <details>
+    <summary>Ver o código completo da Fase 7 (só para conferir no final)</summary>
+    <div class="in"><p>Use para comparar com o seu, ou para destravar se empacar.</p>
+    <pre class="py">import pgzrun
+import random
+
+# O labirinto: uma LISTA de textos. Cada texto é uma linha do mapa.
+#   "#" = parede
+#   "." = caminho com um bom hábito para coletar
+#   " " = caminho vazio
+# A primeira e a última linha ficam vazias: é o espaço dos textos.
+# A linha do meio é aberta nas pontas: é o túnel.
+MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    ",
+]
+
+# Tamanho de cada quadradinho do mapa, em pixels
+TILE = 40
+
+COLUNAS = len(MAPA[0])  # quantas letras tem uma linha do mapa (20)
+LINHAS = len(MAPA)      # quantas linhas tem o mapa (15)
+
+WIDTH = COLUNAS * TILE  # 20 x 40 = 800
+HEIGHT = LINHAS * TILE  # 15 x 40 = 600
+
+TITLE = "Crescendo como Jesus"
+
+COR_DE_FUNDO = "skyblue"
+COR_DO_TEXTO = "white"
+COR_DA_PAREDE = "navy"
+COR_DO_HABITO = "darkgreen"
+COR_DA_REGUA = "gold"
+COR_DA_TENTACAO = "crimson"
+NOME_DO_PECADOR = "Escreva seu nome aqui"
+
+# Onde o personagem começa: coluna e linha do mapa (contando a partir do 0)
+INICIO_COLUNA = 9
+INICIO_LINHA = 12
+
+# O personagem agora mora num quadradinho do mapa
+personagem_coluna = INICIO_COLUNA
+personagem_linha = INICIO_LINHA
+personagem_raio = TILE // 2 - 4
+personagem_cor = "gold"
+
+# Quanto cada bom hábito faz você crescer
+PONTOS_POR_HABITO = 10
+
+# A estatura: um contador. Começa em 0 e cresce a cada bom hábito.
+estatura = 0
+
+# O relógio do jogo: a cada ESPERA_PERSONAGEM voltas do update(), o personagem anda
+ESPERA_PERSONAGEM = 12
+quadros_personagem = 0
+
+# A direção é um par: (1, 0) direita, (-1, 0) esquerda, (0, 1) baixo, (0, -1) cima.
+# O personagem anda SOZINHO na direção guardada. As setas só escolhem a
+# próxima direção, que vale assim que der para virar.
+direcao = (0, 0)           # (0, 0) = parado
+proxima_direcao = (0, 0)
+
+# A tentação (desobediência) começa no meio do labirinto, olhando para a esquerda
+TENTACAO_INICIO_COLUNA = 9
+TENTACAO_INICIO_LINHA = 8
+tentacao_coluna = TENTACAO_INICIO_COLUNA
+tentacao_linha = TENTACAO_INICIO_LINHA
+tentacao_direcao = (-1, 0)
+
+# As quatro direções que a tentação pode tentar
+DIRECOES = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+# A tentação tem o relógio dela: é um pouco mais lenta que você
+ESPERA_TENTACAO = 16
+quadros_tentacao = 0
+
+# Os bons hábitos: uma lista com a posição (coluna, linha) de cada um.
+# Ela começa vazia e é enchida olhando o mapa: cada "." vira um hábito.
+habitos = []
+for linha in range(LINHAS):
+    for coluna in range(COLUNAS):
+        if MAPA[linha][coluna] == ".":
+            habitos.append((coluna, linha))
+
+
+def draw():
+    screen.fill(COR_DE_FUNDO)
+
+    # As paredes: passa por todas as linhas e, em cada linha, por todas as
+    # colunas. Onde o mapa tem "#", desenha um quadrado.
+    for linha in range(LINHAS):
+        for coluna in range(COLUNAS):
+            if MAPA[linha][coluna] == "#":
+                parede = Rect((coluna * TILE, linha * TILE), (TILE, TILE))
+                screen.draw.filled_rect(parede, COR_DA_PAREDE)
+
+    # Os bons hábitos: uma bolinha no centro de cada quadradinho da lista
+    for habito in habitos:
+        x = habito[0] * TILE + TILE // 2
+        y = habito[1] * TILE + TILE // 2
+        screen.draw.filled_circle((x, y), 6, COR_DO_HABITO)
+
+    # O placar (HUD): a estatura à esquerda e quantos hábitos faltam à direita.
+    # str() transforma o número em texto, para poder juntar com o +.
+    screen.draw.text(
+        "Estatura: " + str(estatura),
+        topleft=(10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )
+    screen.draw.text(
+        "Faltam: " + str(len(habitos)),
+        topright=(WIDTH - 10, 8),
+        fontsize=28,
+        color=COR_DO_TEXTO,
+    )
+
+    # A lista ficou vazia? Então todos os hábitos foram coletados!
+    if len(habitos) == 0:
+        mensagem = "Parabéns! Você cresceu!"
+    else:
+        mensagem = "As setas escolhem o caminho!"
+
+    screen.draw.text(
+        mensagem,
+        center=(WIDTH // 2, TILE // 2),
+        fontsize=24,
+        color=COR_DO_TEXTO,
+    )
+
+    screen.draw.text(
+        "Pecador: " + NOME_DO_PECADOR,
+        topleft=(10, HEIGHT - 30),
+        fontsize=16,
+        color=COR_DO_TEXTO,
+    )
+
+    # A régua da estatura: um retângulo que fica mais comprido quanto mais
+    # você cresce. A estatura máxima é 1160, e 1160 // 3 dá 386 pixels.
+    # A moldura (só a borda) mostra até onde a régua pode chegar.
+    regua = Rect((WIDTH - 400, HEIGHT - 28), (estatura // 3, 16))
+    screen.draw.filled_rect(regua, COR_DA_REGUA)
+    moldura = Rect((WIDTH - 400, HEIGHT - 28), (386, 16))
+    screen.draw.rect(moldura, COR_DO_TEXTO)
+
+    # Do quadradinho (coluna, linha) para os pixels do centro dele
+    x = personagem_coluna * TILE + TILE // 2
+    y = personagem_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), personagem_raio, personagem_cor)
+
+    # A tentação: um círculo com dois olhos que olham para onde ela vai
+    x = tentacao_coluna * TILE + TILE // 2
+    y = tentacao_linha * TILE + TILE // 2
+    screen.draw.filled_circle((x, y), TILE // 2 - 4, COR_DA_TENTACAO)
+    olhar_x = tentacao_direcao[0] * 2
+    olhar_y = tentacao_direcao[1] * 2
+    screen.draw.filled_circle((x - 6, y - 4), 5, "white")
+    screen.draw.filled_circle((x + 6, y - 4), 5, "white")
+    screen.draw.filled_circle((x - 6 + olhar_x, y - 4 + olhar_y), 2, "black")
+    screen.draw.filled_circle((x + 6 + olhar_x, y - 4 + olhar_y), 2, "black")
+
+
+def update():
+    global quadros_personagem, personagem_coluna, personagem_linha
+    global direcao, estatura
+    global quadros_tentacao, tentacao_coluna, tentacao_linha, tentacao_direcao
+
+    # ---------------- o personagem ----------------
+    quadros_personagem = quadros_personagem + 1
+    if quadros_personagem == ESPERA_PERSONAGEM:
+        quadros_personagem = 0
+
+        # 1. Dá para virar para a direção que você escolheu? Então vira.
+        nova_coluna = personagem_coluna + proxima_direcao[0]
+        nova_linha = personagem_linha + proxima_direcao[1]
+        if nova_coluna &lt; 0:
+            nova_coluna = COLUNAS - 1
+        if nova_coluna &gt;= COLUNAS:
+            nova_coluna = 0
+        if MAPA[nova_linha][nova_coluna] != "#":
+            direcao = proxima_direcao
+
+        # 2. Anda um quadradinho na direção atual, se lá não for parede
+        nova_coluna = personagem_coluna + direcao[0]
+        nova_linha = personagem_linha + direcao[1]
+        if nova_coluna &lt; 0:
+            nova_coluna = COLUNAS - 1
+        if nova_coluna &gt;= COLUNAS:
+            nova_coluna = 0
+        if MAPA[nova_linha][nova_coluna] != "#":
+            personagem_coluna = nova_coluna
+            personagem_linha = nova_linha
+
+        # 3. Parou em cima de um bom hábito? Ele sai da lista e você cresce
+        if (personagem_coluna, personagem_linha) in habitos:
+            habitos.remove((personagem_coluna, personagem_linha))
+            estatura = estatura + PONTOS_POR_HABITO
+
+    # ---------------- a tentação ----------------
+    quadros_tentacao = quadros_tentacao + 1
+    if quadros_tentacao == ESPERA_TENTACAO:
+        quadros_tentacao = 0
+
+        # 1. Quais caminhos estão livres? Ela nunca dá meia-volta.
+        meia_volta = (-tentacao_direcao[0], -tentacao_direcao[1])
+        livres = []
+        for opcao in DIRECOES:
+            if opcao != meia_volta:
+                nova_coluna = tentacao_coluna + opcao[0]
+                nova_linha = tentacao_linha + opcao[1]
+                if nova_coluna &lt; 0:
+                    nova_coluna = COLUNAS - 1
+                if nova_coluna &gt;= COLUNAS:
+                    nova_coluna = 0
+                if MAPA[nova_linha][nova_coluna] != "#":
+                    livres.append(opcao)
+
+        # 2. Sorteia um dos caminhos livres. No corredor só tem um;
+        #    no cruzamento tem dois ou três, e o random escolhe.
+        tentacao_direcao = random.choice(livres)
+
+        # 3. Anda um quadradinho para lá (com túnel)
+        tentacao_coluna = tentacao_coluna + tentacao_direcao[0]
+        tentacao_linha = tentacao_linha + tentacao_direcao[1]
+        if tentacao_coluna &lt; 0:
+            tentacao_coluna = COLUNAS - 1
+        if tentacao_coluna &gt;= COLUNAS:
+            tentacao_coluna = 0
+
+
+def on_key_down(key):
+    global personagem_coluna, personagem_linha, direcao, proxima_direcao
+
+    if key == keys.SPACE:
+        personagem_coluna = INICIO_COLUNA
+        personagem_linha = INICIO_LINHA
+        direcao = (0, 0)
+        proxima_direcao = (0, 0)
+
+    # As setas só ESCOLHEM a direção. Quem anda é o update().
+    if key == keys.RIGHT:
+        proxima_direcao = (1, 0)
+    if key == keys.LEFT:
+        proxima_direcao = (-1, 0)
+    if key == keys.DOWN:
+        proxima_direcao = (0, 1)
+    if key == keys.UP:
+        proxima_direcao = (0, -1)
+
+
+pgzrun.go()</pre></div>
+  </details>
+
+  <h3>Palavras novas</h3>
+  <dl class="gloss">
+    <div><dt><code>import random</code></dt><dd>Traz a biblioteca de sortear, que já vem com o Python.</dd></div>
+    <div><dt><code>random.randint(a, b)</code></dt><dd>Sorteia um número inteiro de <code>a</code> até <code>b</code> (os dois entram).</dd></div>
+    <div><dt><code>random.choice(lista)</code></dt><dd>Escolhe um item da lista, ao acaso.</dd></div>
+    <div><dt>Quadro</dt><dd>Cada volta do <code>update()</code> + <code>draw()</code>. São uns 60 por segundo.</dd></div>
+    <div><dt>Contador de quadros</dt><dd>Um contador que soma 1 a cada quadro, para fazer algo acontecer de tempos em tempos.</dd></div>
+    <div><dt>Direção como par</dt><dd><code>(1, 0)</code> direita, <code>(-1, 0)</code> esquerda, <code>(0, 1)</code> baixo, <code>(0, -1)</code> cima.</dd></div>
+    <div><dt>Meia-volta</dt><dd>A direção contrária: <code>(-direcao[0], -direcao[1])</code>.</dd></div>
+  </dl>
+
+  <h3>Deu erro? Tente isto primeiro</h3>
+  <div class="errs">
+    <div class="err"><b>NameError: name 'random' is not defined</b><span>Falta o <code>import random</code> lá em cima, na segunda linha do arquivo.</span></div>
+    <div class="err"><b>O terminal não mostra tic</b><span>Confira se a função se chama exatamente <code>update</code>, se está <b>antes</b> do <code>pgzrun.go()</code> e se o <code>if</code> compara com <code>==</code>.</span></div>
+    <div class="err"><b>UnboundLocalError quando o jogo abre</b><span>Falta alguma variável no <code>global</code> do <code>update()</code>: as do personagem, a <code>direcao</code>, a <code>estatura</code> ou as da tentação. O erro diz qual.</span></div>
+    <div class="err"><b>O personagem não anda quando aperta a seta</b><span>O <code>on_key_down</code> só muda a <code>proxima_direcao</code>. Confira se o <code>update()</code> está com as mudanças dos Passos 2 e 3.</span></div>
+    <div class="err"><b>O personagem pula quadradinhos ou corre demais</b><span>Sobrou o andar antigo no <code>on_key_down</code>. Ele tem que ficar só com o espaço e as quatro setas.</span></div>
+    <div class="err"><b>IndexError: Cannot choose from an empty sequence</b><span>A lista <code>livres</code> ficou vazia: a tentação está num lugar sem saída. Confira se ela começa num corredor (não num <code>#</code>) e, se você mudou o mapa, se não criou um beco sem saída.</span></div>
+    <div class="err"><b>A tentação fica indo e voltando no mesmo lugar</b><span>O <code>if opcao != meia_volta:</code> está com <code>==</code>. Tem que ser <code>!=</code>.</span></div>
+    <div class="err"><b>A tentação atravessa paredes</b><span>O <code>livres.append(opcao)</code> tem que ficar <b>dentro</b> do <code>if</code> da parede, com mais recuo.</span></div>
+    <div class="err"><b>A tentação some pela lateral</b><span>Faltou o túnel dela (os dois últimos <code>if</code>).</span></div>
+  </div>
+</section>
+
+<div class="maze-wall" role="presentation"></div>
+
+<section class="block">
+  <div class="panel">
+    <span class="tag pixel" style="color: var(--wall); font-size: .85rem;">Próxima fase</span>
+    <h3>Encostar na tentação</h3>
+    <p>Na Fase 8, encostar na tentação vai custar uma <b>vida</b>, e quando as vidas acabarem aparece a tela de fim de jogo. Você também vai aprender a criar as suas próprias <b>funções</b> com <code>def</code>, para não repetir aquele túnel três vezes. Guarde bem o seu <code>jogo.py</code>.</p>
+    <a class="prox-link" href="index.html">Ver o mapa de missões →</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Crescendo como Jesus · curso de programação com Python e Pygame Zero para crianças. Caderno de missões das Fases 6 e 7.</p>
+  </div>
+</footer>
+
+<nav class="guia" aria-label="Andar pelo caderno">
+  <button type="button" class="fase-prev" data-go="fase-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 12 12 6 18 12"/><polyline points="6 18 12 12 18 18"/></svg>Fase anterior</button>
+  <button type="button" class="passo passo-prev" data-go="passo-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 15 12 9 18 15"/></svg>Voltar</button>
+  <div class="onde" aria-live="polite"><b>Início</b><span></span></div>
+  <button type="button" class="passo passo-next next" data-go="passo-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>Seguir</button>
+  <button type="button" class="fase-next" data-go="fase-next"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 6 12 12 18 6"/><polyline points="6 12 12 18 18 12"/></svg>Próxima fase</button>
+</nav>
+
+<script>
+(function () {
+  "use strict";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- destaque de código Python ---------- */
+  var KW = { "import":1, "def":1, "if":1, "elif":1, "else":1, "global":1, "True":1, "False":1, "and":1, "or":1, "not":1, "return":1, "for":1, "in":1 };
+  var PG = { "screen":1, "keyboard":1, "keys":1, "Rect":1, "pgzrun":1, "print":1, "len":1, "range":1, "str":1, "random":1 };
+  function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+  function highlight(src) {
+    var re = /(#[^\n]*)|("(?:[^"\\\n]|\\.)*")|(\b\d+\b)|([A-Za-z_]\w*)|(\s+|[\s\S])/g;
+    var out = "", m, prev = "";
+    while ((m = re.exec(src))) {
+      if (m[1]) out += '<span class="com">' + esc(m[1]) + "</span>";
+      else if (m[2]) out += '<span class="str">' + esc(m[2]) + "</span>";
+      else if (m[3]) out += '<span class="num">' + m[3] + "</span>";
+      else if (m[4]) {
+        var w = m[4];
+        if (KW[w]) out += '<span class="kw">' + w + "</span>";
+        else if (prev === "def") out += '<span class="fn">' + w + "</span>";
+        else if (PG[w]) out += '<span class="pg">' + w + "</span>";
+        else if (/^[A-Z][A-Z_0-9]+$/.test(w)) out += '<span class="const">' + w + "</span>";
+        else out += esc(w);
+        prev = w;
+        continue;
+      } else out += esc(m[5]);
+      if (m[5] && /\S/.test(m[5])) prev = "";
+    }
+    return out;
+  }
+  function parseRanges(s) {
+    var set = {};
+    (s || "").split(",").forEach(function (p) {
+      if (!p) return;
+      var a = p.split("-"), lo = +a[0], hi = +(a[1] || a[0]);
+      for (var i = lo; i <= hi; i++) set[i] = 1;
+    });
+    return set;
+  }
+  document.querySelectorAll("pre.py").forEach(function (pre) {
+    var src = pre.textContent.replace(/^\n/, "").replace(/\s+$/, "");
+    var nw = parseRanges(pre.getAttribute("data-new"));
+    pre.innerHTML = highlight(src).split("\n").map(function (line, i) {
+      return '<span class="ln' + (nw[i + 1] ? " new" : "") + '">' + (line || " ") + "</span>";
+    }).join("");
+  });
+  function term(lines) {
+    return lines.map(function (l) {
+      var style = l[0] === "err" ? ' style="color:#ff9d8f"' : "";
+      return '<span class="ln' + (l[0] === "cmd" ? "" : " out") + '"' + style + ">" + esc(l[1]) + "</span>";
+    }).join("");
+  }
+
+  /* ---------- o mapa do jogo ---------- */
+  var MAPA = [
+    "                    ",
+    "####################",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#..................#",
+    "#.##.#.######.#.##.#",
+    "#....#...##...#....#",
+    "####.###.##.###.####",
+    "    .#........#.    ",
+    "####.#.######.#.####",
+    "#........##........#",
+    "#.##.###.##.###.##.#",
+    "#........  ........#",
+    "####################",
+    "                    "
+  ];
+  var TILE = 40, COLUNAS = 20, LINHAS = 15, IC = 9, IL = 12, TC = 9, TL = 8;
+  var DIRECOES = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  function todosHabitos() {
+    var h = [];
+    for (var l = 0; l < LINHAS; l++) for (var c = 0; c < COLUNAS; c++) if (MAPA[l][c] === ".") h.push([c, l]);
+    return h;
+  }
+  function temHabito(h, c, l) { for (var i = 0; i < h.length; i++) if (h[i][0] === c && h[i][1] === l) return i; return -1; }
+  function tunel(c) { return c < 0 ? COLUNAS - 1 : (c >= COLUNAS ? 0 : c); }
+  function livre(c, l) { return MAPA[l][tunel(c)] !== "#"; }
+
+  /* ---------- desenho (igual ao Pygame Zero) ---------- */
+  var PGC = { skyblue:"#87ceeb", navy:"#000080", darkgreen:"#006400", white:"#ffffff", gold:"#ffd700", crimson:"#dc143c", black:"#000000" };
+  function col(c) { return PGC[c] || c; }
+  function txt(ctx, t, x, y, size, anchor) {
+    ctx.font = "bold " + Math.round(size * 0.74) + "px Arial, Helvetica, sans-serif";
+    ctx.fillStyle = "#ffffff";
+    if (anchor === "topleft") { ctx.textAlign = "left"; ctx.textBaseline = "top"; }
+    else if (anchor === "topright") { ctx.textAlign = "right"; ctx.textBaseline = "top"; }
+    else { ctx.textAlign = "center"; ctx.textBaseline = "middle"; }
+    ctx.fillText(t, x, y);
+  }
+  function circ(ctx, x, y, r, c) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = col(c); ctx.fill(); }
+  var ORDEM = ["m6p1", "m6p2", "m6p3", "m6p4", "m7p1", "m7p2", "m7p3", "m7p4", "m7p5"];
+  function nivel(m) { return ORDEM.indexOf(m); }
+  function pinta(ctx, st, modo) {
+    var n = nivel(modo);
+    ctx.fillStyle = col("skyblue"); ctx.fillRect(0, 0, 800, 600);
+    ctx.fillStyle = col("navy");
+    for (var l = 0; l < LINHAS; l++) for (var c = 0; c < COLUNAS; c++) if (MAPA[l][c] === "#") ctx.fillRect(c * TILE, l * TILE, TILE, TILE);
+    st.h.forEach(function (h) { circ(ctx, h[0] * TILE + 20, h[1] * TILE + 20, 6, "darkgreen"); });
+    if (n >= 1) txt(ctx, "Estatura: " + st.est, 10, 8, 28, "topleft");
+    if (n >= 2) txt(ctx, "Faltam: " + st.h.length, 790, 8, 28, "topright");
+    var msg;
+    if (n === 0) msg = st.h.length === 0 ? "Parabéns! Você encheu sua vida de bons hábitos!" : "Setas: anda. Passe por cima dos bons hábitos.";
+    else if (n < 5) msg = st.h.length === 0 ? "Parabéns! Você cresceu!" : "Colete os bons hábitos!";
+    else msg = st.h.length === 0 ? "Parabéns! Você cresceu!" : "As setas escolhem o caminho!";
+    txt(ctx, msg, 400, 20, 24, "center");
+    txt(ctx, "Pecador: Escreva seu nome aqui", 10, 570, 16, "topleft");
+    if (n >= 3) {
+      ctx.fillStyle = col("gold"); ctx.fillRect(400, 572, Math.floor(st.est / 3), 16);
+      ctx.strokeStyle = "#ffffff"; ctx.lineWidth = 1; ctx.strokeRect(400.5, 572.5, 385, 15);
+    }
+    circ(ctx, st.c * TILE + 20, st.l * TILE + 20, 16, "gold");
+    if (n >= 7) {
+      var x = st.tc * TILE + 20, y = st.tl * TILE + 20, ox = st.td[0] * 2, oy = st.td[1] * 2;
+      circ(ctx, x, y, 16, "crimson");
+      circ(ctx, x - 6, y - 4, 5, "white"); circ(ctx, x + 6, y - 4, 5, "white");
+      circ(ctx, x - 6 + ox, y - 4 + oy, 2, "black"); circ(ctx, x + 6 + ox, y - 4 + oy, 2, "black");
+    }
+  }
+  function novoEstado() {
+    return { c: IC, l: IL, h: todosHabitos(), est: 0, dir: [0, 0], prox: [0, 0], qp: 0, tc: TC, tl: TL, td: [-1, 0], qt: 0, prints: [], ultimo: "" };
+  }
+  function coleta(st, modo) {
+    var i = temHabito(st.h, st.c, st.l);
+    if (i >= 0) {
+      st.h.splice(i, 1); st.est += 10;
+      if (modo === "m6p1") { st.prints.push(String(st.est)); if (st.prints.length > 6) st.prints.shift(); }
+    }
+  }
+  /* Fases 6: um quadradinho por aperto (igual ao on_key_down da Fase 5/6) */
+  var DIR = { right: [1, 0], left: [-1, 0], down: [0, 1], up: [0, -1] };
+  function apertaPasso(st, k, modo) {
+    if (k === "space") { st.c = IC; st.l = IL; }
+    var nc = st.c, nl = st.l;
+    if (DIR[k]) { nc += DIR[k][0]; nl += DIR[k][1]; }
+    nc = tunel(nc);
+    if (MAPA[nl][nc] !== "#") { st.c = nc; st.l = nl; }
+    coleta(st, modo);
+  }
+  /* Fase 7: as setas só escolhem; o update() anda */
+  function apertaDirecao(st, k) {
+    if (k === "space") { st.c = IC; st.l = IL; st.dir = [0, 0]; st.prox = [0, 0]; }
+    if (DIR[k]) st.prox = DIR[k].slice();
+  }
+  function quadro(st, modo) {
+    var n = nivel(modo);
+    st.qp++;
+    if (st.qp === 12) {
+      st.qp = 0;
+      if (n >= 6) { if (livre(st.c + st.prox[0], st.l + st.prox[1])) st.dir = st.prox.slice(); }
+      else st.dir = st.prox.slice();
+      var nc = tunel(st.c + st.dir[0]), nl = st.l + st.dir[1];
+      if (MAPA[nl][nc] !== "#") { st.c = nc; st.l = nl; }
+      coleta(st, modo);
+    }
+    if (n >= 8) {
+      st.qt++;
+      if (st.qt === 16) {
+        st.qt = 0;
+        var volta = [-st.td[0], -st.td[1]], livres = [];
+        DIRECOES.forEach(function (o) {
+          if (o[0] === volta[0] && o[1] === volta[1]) return;
+          if (livre(st.tc + o[0], st.tl + o[1])) livres.push(o);
+        });
+        var antes = livres.length;
+        st.td = livres[Math.floor(Math.random() * livres.length)].slice();
+        st.tc = tunel(st.tc + st.td[0]); st.tl = st.tl + st.td[1];
+        st.ultimo = antes > 1 ? "Cruzamento! A tentação sorteou entre " + antes + " caminhos." : (st.ultimo.indexOf("Cruzamento") === 0 ? st.ultimo : "Corredor: só um caminho livre, ela segue em frente.");
+      }
+    }
+  }
+
+  /* ---------- as janelinhas do jogo ---------- */
+  var T = "Crescendo como Jesus", jogos = [];
+  function nomeDir(d) { return "(" + d[0] + ", " + d[1] + ")"; }
+  document.querySelectorAll('figure.mock[data-scene="jogo"]').forEach(function (fig) {
+    var modo = fig.getAttribute("data-mode"), n = nivel(modo), cv = fig.querySelector("canvas"), ctx = cv.getContext("2d"), side = fig.closest(".side");
+    fig.querySelector(".mock-title").textContent = T;
+    var st = novoEstado(), auto = n >= 5;
+    function mostra() {
+      pinta(ctx, st, modo);
+      var v = side.querySelector(".vars");
+      if (v) {
+        var h = "";
+        if (n < 5) h = "<span>personagem_coluna</span><span>" + st.c + "</span><span>personagem_linha</span><span>" + st.l + "</span><span>estatura</span><span>" + st.est + "</span><span>len(habitos)</span><span>" + st.h.length + "</span>";
+        else h = "<span>direcao</span><span>" + nomeDir(st.dir) + "</span><span>proxima_direcao</span><span>" + nomeDir(st.prox) + "</span><span>quadros_personagem</span><span>" + st.qp + "</span>";
+        if (n >= 8) h += "<span>tentacao_direcao</span><span>" + nomeDir(st.td) + "</span>";
+        v.innerHTML = h;
+      }
+      var u = side.querySelector(".ultimo"); if (u) u.textContent = st.ultimo || "Olhe a tentação nos cruzamentos.";
+      var t = side.querySelector("[data-terminal]");
+      if (t) t.innerHTML = st.prints.length ? term(st.prints.map(function (p) { return ["out", p]; })) : '<span class="ln out">(o terminal aparece aqui)</span>';
+    }
+    function vai(k) { if (auto) apertaDirecao(st, k); else apertaPasso(st, k, modo); mostra(); }
+    var KEYMAP = { ArrowLeft: "left", ArrowRight: "right", ArrowUp: "up", ArrowDown: "down", " ": "space" };
+    cv.addEventListener("keydown", function (e) {
+      var k = KEYMAP[e.key]; if (!k) return;
+      e.preventDefault();
+      if (e.repeat && !auto) return; // no Pygame Zero o on_key_down roda uma vez por aperto
+      vai(k);
+    });
+    cv.addEventListener("pointerdown", function () { cv.focus(); });
+    side.querySelectorAll("[data-key]").forEach(function (b) { b.addEventListener("click", function () { vai(b.getAttribute("data-key")); }); });
+    side.querySelectorAll("[data-rerun]").forEach(function (b) { b.addEventListener("click", function () { st = novoEstado(); mostra(); }); });
+    var at = side.querySelector("[data-atalho]");
+    if (at) at.addEventListener("click", function () { st = novoEstado(); st.h = [[8, 12]]; st.est = 1150; mostra(); cv.focus(); });
+    jogos.push({ auto: auto || n >= 8, passo: function () { quadro(st, modo); }, mostra: mostra, st: function () { return st; } });
+    mostra();
+  });
+
+  // Só para os testes automáticos (endereço com ?teste): o aluno nunca vê isto.
+  if (location.search.indexOf("teste") >= 0) window.__jogos = jogos;
+
+  /* um relógio só para todas as janelinhas: 60 quadros por segundo, como o Pygame Zero */
+  var ultimo = 0, acc = 0, ticN = 0, ticLinhas = [];
+  var relN = document.getElementById("relogio-n"), relB = document.getElementById("relogio-bolinhas"), relOut = document.getElementById("relogio-out");
+  relB.innerHTML = new Array(13).join("<i></i>");
+  function relogio() {
+    ticN++;
+    if (ticN === 12) { ticN = 0; ticLinhas.push("tic"); if (ticLinhas.length > 7) ticLinhas.shift(); relOut.innerHTML = term(ticLinhas.map(function (x) { return ["out", x]; })); }
+    relN.textContent = "quadros_personagem = " + ticN;
+    relB.querySelectorAll("i").forEach(function (b, i) { b.classList.toggle("on", i < ticN); });
+  }
+  function laco(t) {
+    if (window.__pausa) { requestAnimationFrame(laco); return; }
+    var dt = ultimo ? Math.min(t - ultimo, 100) : 16; ultimo = t; acc += dt;
+    var mudou = false;
+    while (acc >= 1000 / 60) {
+      acc -= 1000 / 60;
+      jogos.forEach(function (j) { if (j.auto) { j.passo(); mudou = true; } });
+      relogio();
+    }
+    if (mudou) jogos.forEach(function (j) { if (j.auto) j.mostra(); });
+    requestAnimationFrame(laco);
+  }
+  if (reduce) { relN.textContent = "quadros_personagem = 0 … 12"; relOut.innerHTML = term([["out", "tic"], ["out", "tic"], ["out", "tic"]]); }
+  requestAnimationFrame(laco);
+
+  /* ---------- laboratório do contador (Fase 6) ---------- */
+  var cont = 0, contV = document.getElementById("cont-valor"), contOut = document.getElementById("cont-out");
+  document.querySelectorAll("[data-cont]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var op = b.getAttribute("data-cont"), linhas;
+      if (op === "mais") { cont += 10; linhas = [["cmd", "estatura = estatura + 10"]]; }
+      else if (op === "for") { cont += 50; linhas = [["cmd", "for numero in range(5):"], ["cmd", "    estatura = estatura + 10"], ["out", "(somou 10, cinco vezes)"]]; }
+      else if (op === "zera") { cont = 0; linhas = [["cmd", "estatura = 0"]]; }
+      else if (op === "print") linhas = [["cmd", "print(estatura)"], ["out", String(cont)]];
+      else if (op === "soma") linhas = [["cmd", "print(10 + 10)"], ["out", "20"]];
+      else if (op === "junta") linhas = [["cmd", 'print("10" + "10")'], ["out", "1010"]];
+      else if (op === "erro") linhas = [["cmd", 'print("Estatura: " + estatura)'], ["err", 'TypeError: can only concatenate str (not "int") to str']];
+      else linhas = [["cmd", 'print("Estatura: " + str(estatura))'], ["out", "Estatura: " + cont]];
+      contV.textContent = "estatura = " + cont;
+      contOut.innerHTML = term(linhas);
+    });
+  });
+
+  /* ---------- laboratório do sorteio (Fase 7) ---------- */
+  var face = document.getElementById("dado-face"), barras = document.getElementById("dado-barras"), sOut = document.getElementById("sorteio-out");
+  var contagem = [0, 0, 0, 0, 0, 0];
+  function desenhaBarras() {
+    var max = Math.max.apply(null, contagem.concat([1]));
+    barras.innerHTML = contagem.map(function (n, i) { return '<div style="height:' + Math.round(n / max * 100) + '%"><span>' + (i + 1) + ": " + n + "</span></div>"; }).join("");
+  }
+  function rola() { var n = 1 + Math.floor(Math.random() * 6); contagem[n - 1]++; return n; }
+  document.getElementById("dado-1").addEventListener("click", function () {
+    var n = rola(); face.textContent = n; desenhaBarras();
+    sOut.innerHTML = term([["cmd", "print(random.randint(1, 6))"], ["out", String(n)]]);
+  });
+  document.getElementById("dado-600").addEventListener("click", function () {
+    var n; for (var i = 0; i < 600; i++) n = rola();
+    face.textContent = n; desenhaBarras();
+    sOut.innerHTML = term([["cmd", "for vez in range(600):"], ["cmd", "    random.randint(1, 6)"], ["out", "(veja as barras: cada número saiu umas 100 vezes)"]]);
+  });
+  var CAMINHOS = ["direita", "esquerda", "cima", "baixo"];
+  document.getElementById("caminho-btn").addEventListener("click", function () {
+    sOut.innerHTML = term([["cmd", "print(random.choice(caminhos))"], ["out", CAMINHOS[Math.floor(Math.random() * 4)]]]);
+  });
+  desenhaBarras();
+  var rosaOut = document.getElementById("rosa-out");
+  document.querySelectorAll("#rosa [data-d]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var d = b.getAttribute("data-d").split(",").map(Number), v = [-d[0] || 0, -d[1] || 0];
+      document.querySelectorAll("#rosa [data-d]").forEach(function (o) {
+        var od = o.getAttribute("data-d");
+        o.classList.toggle("on", o === b);
+        o.classList.toggle("volta", od === v.join(","));
+      });
+      rosaOut.innerHTML = term([["cmd", "direcao = " + nomeDir(d)], ["cmd", "meia_volta = (-direcao[0], -direcao[1])"], ["out", "meia_volta é " + nomeDir(v)]]);
+    });
+  });
+
+  /* ---------- quiz ---------- */
+  document.querySelectorAll(".q").forEach(function (q) {
+    var why = q.querySelector(".why");
+    q.querySelectorAll("button[data-opt]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        q.querySelectorAll("button").forEach(function (x) { x.classList.remove("right", "wrong"); });
+        var ok = b.getAttribute("data-opt") === q.getAttribute("data-answer");
+        b.classList.add(ok ? "right" : "wrong");
+        why.textContent = q.getAttribute(ok ? "data-ok" : "data-no");
+        why.className = "why " + (ok ? "ok" : "no");
+      });
+    });
+  });
+
+  /* ---------- missões (progresso salvo neste navegador) ---------- */
+  var KEY = "ccj-missoes-f67", saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { saved = {}; }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(saved)); } catch (e) {} }
+  function refresh(m) {
+    var boxes = m.querySelectorAll("input[type=checkbox]"), n = 0;
+    boxes.forEach(function (b) { if (b.checked) n++; });
+    m.querySelector(".meter i").style.width = (n / boxes.length * 100) + "%";
+    m.querySelector(".done-msg").hidden = n !== boxes.length;
+    var nav = document.querySelector('[data-nav="' + m.getAttribute("data-mission") + '"]');
+    nav.querySelector(".count").textContent = n + "/" + boxes.length;
+    nav.classList.toggle("done", n === boxes.length);
+  }
+  document.querySelectorAll(".mission").forEach(function (m) {
+    m.querySelectorAll("input[type=checkbox]").forEach(function (b) {
+      b.checked = !!saved[b.id];
+      b.addEventListener("change", function () { saved[b.id] = b.checked; save(); refresh(m); });
+    });
+    refresh(m);
+  });
+
+  /* ---------- guia lateral: andar de passo em passo e de fase em fase ---------- */
+  var stops = [{ el: document.getElementById("inicio"), fase: -1, top: "Início", sub: "" }];
+  var faseIni = [];
+  document.querySelectorAll("#antes, section.block[id^='fase-']").forEach(function (sec) {
+    var num = sec.id === "antes" ? "" : sec.id.slice(5);
+    var nome = num ? "Fase " + num : "Antes";
+    var fi = faseIni.length, n = 0;
+    faseIni.push(stops.length);
+    stops.push({ el: sec, fase: fi, top: nome, sub: num ? "Começo" : "de começar" });
+    sec.querySelectorAll("article.step, .mission, .quiz, .challenges, .gloss, .errs").forEach(function (el) {
+      var alvo = el, sub;
+      if (el.matches("article.step")) sub = el.getAttribute("data-sub") || "Passo " + (++n);
+      else if (el.classList.contains("mission")) sub = "Missão";
+      else if (el.classList.contains("quiz")) { alvo = el.closest(".panel"); sub = "Quiz"; }
+      else if (el.classList.contains("challenges")) sub = "Desafios";
+      else { alvo = el.previousElementSibling || el; sub = el.classList.contains("gloss") ? "Palavras" : "Deu erro?"; }
+      stops.push({ el: alvo, fase: fi, top: nome, sub: sub });
+    });
+  });
+  var topo = document.querySelector(".nav"), guia = document.querySelector(".guia");
+  var onde = guia.querySelector(".onde"), btn = {};
+  guia.querySelectorAll("button").forEach(function (b) { btn[b.getAttribute("data-go")] = b; });
+  var atual = 0, fixo = null, pedido = false;
+  function alvos() {
+    var f = stops[atual].fase;
+    return {
+      "passo-prev": atual > 0 ? atual - 1 : null,
+      "passo-next": atual < stops.length - 1 ? atual + 1 : null,
+      "fase-prev": f < 0 ? null : (f === 0 ? 0 : faseIni[f - 1]),
+      "fase-next": f < faseIni.length - 1 ? faseIni[f + 1] : null
+    };
+  }
+  function mostraGuia() {
+    var s = stops[atual], a = alvos();
+    onde.querySelector("b").textContent = s.top;
+    onde.querySelector("span").textContent = s.sub;
+    Object.keys(btn).forEach(function (k) { btn[k].disabled = a[k] === null; });
+  }
+  function calcula() {
+    pedido = false;
+    document.documentElement.style.scrollPaddingTop = (topo.offsetHeight + 12) + "px";
+    if (fixo !== null) { atual = fixo; mostraGuia(); return; }
+    var lim = topo.offsetHeight + 60, i = 0;
+    for (var k = 1; k < stops.length; k++) {
+      if (stops[k].el.getBoundingClientRect().top > lim) break;
+      i = k;
+    }
+    atual = i;
+    mostraGuia();
+  }
+  function agenda() { if (!pedido) { pedido = true; requestAnimationFrame(calcula); } }
+  guia.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b || b.disabled) return;
+    var j = alvos()[b.getAttribute("data-go")];
+    if (j === null) return;
+    fixo = atual = j;
+    stops[j].el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    mostraGuia();
+  });
+  ["wheel", "touchstart", "keydown", "mousedown"].forEach(function (ev) {
+    window.addEventListener(ev, function (e) {
+      var noGuia = !!e.target.nodeType && guia.contains(e.target) && (e.type !== "keydown" || e.key === "Enter" || e.key === " ");
+      if (fixo !== null && !noGuia) { fixo = null; agenda(); }
+    }, { passive: true });
+  });
+  window.addEventListener("scroll", agenda, { passive: true });
+  window.addEventListener("resize", agenda);
+  calcula();
+
+  /* ---------- abertura: o jogo da Fase 7 jogando sozinho ---------- */
+  var hc = document.getElementById("hero-maze"), hx = hc.getContext("2d"), hero = novoEstado(), pausa = 0;
+  function escolheHeroi() {
+    // o "jogador" da abertura prefere caminhos com hábito e evita voltar
+    var op = [], bons = [];
+    DIRECOES.forEach(function (d) {
+      if (d[0] === -hero.dir[0] && d[1] === -hero.dir[1] && (hero.dir[0] || hero.dir[1])) return;
+      if (!livre(hero.c + d[0], hero.l + d[1])) return;
+      op.push(d);
+      if (temHabito(hero.h, tunel(hero.c + d[0]), hero.l + d[1]) >= 0) bons.push(d);
+    });
+    if (!op.length) return [-hero.dir[0], -hero.dir[1]];
+    var lista = bons.length && Math.random() < 0.85 ? bons : op;
+    return lista[Math.floor(Math.random() * lista.length)];
+  }
+  function passoHeroi() {
+    if (pausa > 0) { pausa--; if (pausa === 0) hero = novoEstado(); return; }
+    if (hero.qp === 11) hero.prox = escolheHeroi();
+    quadro(hero, "m7p5");
+    if (!hero.h.length) pausa = 120;
+  }
+  if (reduce) { pinta(hx, hero, "m7p5"); }
+  else {
+    var hu = 0, ha = 0;
+    (function heroi(t) {
+      var dt = hu ? Math.min(t - hu, 100) : 16; hu = t; ha += dt;
+      while (ha >= 1000 / 60) { ha -= 1000 / 60; passoHeroi(); }
+      pinta(hx, hero, "m7p5");
+      requestAnimationFrame(heroi);
+    })(performance.now());
+  }
+})();
+</script>

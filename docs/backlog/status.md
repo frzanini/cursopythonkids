@@ -23,7 +23,7 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   2026-08-27), mas só foi validada headless (sintaxe + conectividade do mapa + simulação de
   lógica). Falta rodar numa máquina com tela para ajustar velocidades, tamanho da janela,
   legibilidade e "sensação" do movimento. Sprites e sons continuam fora (item à parte).
-- **Módulos 6 a 12** ainda não foram escritos — só existem como linha na tabela de
+- **Módulos 8 a 12** ainda não foram escritos — só existem como linha na tabela de
   `docs/crescendo-como-jesus-conteudo-programatico.md` (título + conceitos-chave). **Prioridade
   atual do projeto: revisar e escrever o conteúdo das aulas** (`material-professor.md` +
   `material-aluno.md` + `exemplo.py`).
@@ -42,6 +42,23 @@ uma entrega/decisão acontece ou uma pendência é identificada.
   `docs/crescendo-como-jesus-conteudo-programatico.md` e `/novo-modulo`.
 
 ## Feito
+
+- 2026-11-23 — **Módulos 6 e 7 escritos e publicados** (`docs/modulo-06-a-estatura/`,
+  `docs/modulo-07-as-tentacoes-entram/`: `material-professor.md`, `material-aluno.md`,
+  `exemplo.py`) + **caderno das Fases 6 e 7** (`cadernos/caderno-de-missoes-modulos-6-7.html`),
+  liberadas no mapa (7 de 12). Módulo 6: contador (`estatura = estatura + 10`), `str()` e o
+  `TypeError` de propósito, placar com `topleft`/`topright` (`Estatura`, `Faltam`), régua da
+  estatura com moldura (`screen.draw.rect`). Módulo 7: `random` (`randint`, `choice`), o
+  `update()` volta como relógio (contador de quadros, `ESPERA_PERSONAGEM = 12`), o personagem
+  passa a andar sozinho com direção como par e `proxima_direcao` guardada até dar para virar
+  (decisão de design de 2026-09-29), e a tentação 😡 (crimson, com olhos) anda sozinha sorteando
+  entre os caminhos livres, sem meia-volta (o mapa não tem beco sem saída; conferido por script).
+  Validado: os dois `exemplo.py` compilam; aluno simulado seguindo o `material-aluno.md` passo a
+  passo no Pygame Zero sem janela (estatura 1160 coletando os 116; 5 `tic`/s; para na parede no
+  Passo 2 e vira no Passo 3; tentação 20 mil quadros sem parede nem meia-volta, visitando as 126
+  casas); janelinhas do caderno idênticas às telas reais quadro a quadro; quiz, missões, guia,
+  links e celular testados no Chrome. O túnel repetido 3× no `update()` é proposital: gancho para
+  as funções (`def`) do Módulo 8.
 
 - 2026-11-23 — **Revisão e validação dos Módulos 0-5 (material do aluno + cadernos do site).**
   O `jogo.py` do aluno foi reconstruído passo a passo a partir do `material-aluno.md` (33

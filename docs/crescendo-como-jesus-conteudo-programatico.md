@@ -93,8 +93,8 @@ O jogo final deve possuir: tela inicial (com o versículo), um **labirinto** com
 | 3 | [Movimentando o personagem](modulo-03-movimentando-o-personagem/material-professor.md) | teclado (`keyboard`/`on_key_down`), atualizar posição em `update()` | Anda nas 4 direções (livre, ainda sem parede) |
 | 4 | [Os muros do labirinto](modulo-04-os-muros-do-labirinto/material-professor.md) | **listas**, laço `for`, ler o mapa de uma grade (lista de strings), operadores relacionais | Paredes desenhadas a partir do mapa; o jogador não atravessa parede nem sai da tela |
 | 5 | [Os bons hábitos no mapa](modulo-05-os-bons-habitos-no-mapa/material-professor.md) | reforço de listas e `for`; tirar um item da lista ao coletar | Bons hábitos espalhados pelo mapa; somem quando o jogador passa por cima |
-| 6 | A estatura (pontuação) | contadores, texto/HUD na tela | Placar de estatura sobe a cada hábito coletado |
-| 7 | As tentações entram | `random`, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
+| 6 | [A estatura](modulo-06-a-estatura/material-professor.md) | contadores, `str()` (número → texto), texto/HUD na tela | Placar de estatura sobe a cada hábito coletado |
+| 7 | [As tentações entram](modulo-07-as-tentacoes-entram/material-professor.md) | `random`, contador de quadros no `update()` (o personagem passa a andar sozinho), direção como par, movimento aleatório nos cruzamentos | Um inimigo que anda sozinho pelo labirinto |
 | 8 | Encostar na tentação | funções (`def`), sistema de vidas, tela de derrota | Perde vida ao encostar; game over ao zerar as vidas |
 | 9 | A força da oração | estado com tempo (`dt`/timer), condições compostas | Power-pellet: as tentações fogem e podem ser vencidas |
 | 10 | Tentação mais esperta | perseguição (mover em direção ao jogador), lista de tentações | Várias tentações, misturando andar aleatório e perseguir |
@@ -128,4 +128,4 @@ entregável do curso**: será gerado de uma vez para todos os módulos no fim do
 conteúdo de todas as aulas estiver revisado (ver `docs/backlog/status.md` e issue #12). Não é
 feito módulo a módulo. A prioridade agora é revisar e escrever o conteúdo das aulas.
 
-> Status: módulos 0 a 5 já estão nessa estrutura. Módulos 6–12 ainda não existem.
+> Status: módulos 0 a 7 já estão nessa estrutura. Módulos 8–12 ainda não existem.
